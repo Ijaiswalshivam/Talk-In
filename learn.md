@@ -2,7 +2,7 @@
 # Stackoverflow Analysis Guidelines
 ## 👨‍💻 Demo
 
-<img src="https://github.com/Ijaiswalshivam/Talk-In/assets/94839938/9193b96a-ba36-4754-bb69-a97525b12009" align="left" height="100" width="200" >
+<img src="https://github.com/Ijaiswalshivam/Talk-In/assets/94839938/9193b96a-ba36-4754-bb69-a97525b12009" align="left" height="100" width="150" >
 <br>
 <br>
 <br>
@@ -58,8 +58,9 @@ To set up the development environment for Talk-In, follow these steps:
 
 # <a name="7 Conclusion">Conclusion</a>
 
-Talk-In is a modern messaging application that leverages the power of Kotlin, Firebase, and XML to deliver a seamless and intuitive user experience. By following the development practices outlined in this guide and utilizing the available resources, developers can contribute to the ongoing enhancement and evolution of Talk-In. Happy coding!
-Additionally, we performed machine learning models to predict the growth of languages, the salary of data scientists, what is causing job satisfaction.  We build six machine learning models for the same.
+Talk-In is a modern messaging application that leverages the power of Kotlin, Firebase, and XML to deliver a seamless and intuitive user experience. By following the development practices outlined in this guide and utilizing the available resources, developers can contribute to the ongoing enhancement and evolution of Talk-In.
+Happy coding!
+
 
 This repo is owned by @ijaiswalshivam
 
