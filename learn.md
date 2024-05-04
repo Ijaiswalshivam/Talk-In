@@ -2,7 +2,7 @@
 # Stackoverflow Analysis Guidelines
 ## 👨‍💻 Demo
 
-<img src="https://github.com/Ijaiswalshivam/Talk-In/assets/94839938/9193b96a-ba36-4754-bb69-a97525b12009" align="left" height="100" width="450" >
+<img src="https://github.com/Ijaiswalshivam/Talk-In/assets/94839938/9193b96a-ba36-4754-bb69-a97525b12009" align="left" height="100" width="200" >
 <br>
 <br>
 <br>
@@ -41,8 +41,8 @@ Talk-In is a messaging application built using modern technologies such as Kotli
 
 # <a name="2 Technologies Used">Technologies Used:</a>
 
--><b>Kotlin</b>: Kotlin is the primary programming language used for developing the Talk-In application. It offers concise syntax, null safety, and interoperability with existing Java code.
--><b>Firebase</b>: Firebase is a comprehensive mobile development platform provided by Google. In Talk-In, Firebase is utilized for various features such as real-time database, authentication, cloud messaging, and storage.
+-><b>Kotlin</b>: Kotlin is the primary programming language used for developing the Talk-In application. It offers concise syntax, null safety, and interoperability with existing Java code.<br>
+-><b>Firebase</b>: Firebase is a comprehensive mobile development platform provided by Google. In Talk-In, Firebase is utilized for various features such as real-time database, authentication, cloud messaging, and storage.<br>
 -><b>XML</b>: XML (Extensible Markup Language) is used for designing the user interface of the Talk-In application. XML layouts are employed to define the structure and appearance of different screens within the app.
 
 # <a name="3 Development Environment Setup">Development Environment Setup</a>
