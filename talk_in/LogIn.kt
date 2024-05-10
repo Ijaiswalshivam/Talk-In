@@ -41,25 +41,25 @@ class LogIn : AppCompatActivity() {
 
 
     }
-     private fun login(email: String, password: String){
-         //login for logging user
-
-         mAuth.signInWithEmailAndPassword(email, password)
-             .addOnCompleteListener(this) { task ->
-                 if (task.isSuccessful) {
-                     // code for logging
-
-                     val intent= Intent(this@LogIn,MainActivity::class.java)
-                     finish()
-                     startActivity(intent)
-
-
-
-                 } else {
-                    Toast.makeText( this@LogIn, "User doesn't exist..! Please Sign-Up..", Toast.LENGTH_SHORT).show()
-                 }
-             }
-
-     }
+    private fun login(email: String, password: String){
+        // Attempt to authenticate the user with Firebase
+        mAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Login successful, navigate to MainActivity
+                    val intent= Intent(this@LogIn, MainActivity::class.java)
+                    startActivity(intent)
+                    finish() // Finish the current activity
+                } else {
+                    // Login failed, display an error message
+                    Toast.makeText(this@LogIn, "Login failed. Please check your credentials and try again.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener(this) { exception ->
+                // Handle any exceptions that occur during authentication
+                Log.e("LoginActivity", "Login error: ${exception.message}", exception)
+                Toast.makeText(this@LogIn, "An unexpected error occurred. Please try again later.", Toast.LENGTH_SHORT).show()
+            }
+    }
 
 }

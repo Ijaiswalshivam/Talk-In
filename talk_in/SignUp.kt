@@ -16,7 +16,6 @@ class SignUp : AppCompatActivity() {
     private lateinit var edtName: EditText
     private lateinit var edtEmail: EditText
     private lateinit var edtPassword: EditText
-
     private lateinit var btnSignUp: Button
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbref: DatabaseReference
@@ -35,40 +34,46 @@ class SignUp : AppCompatActivity() {
 
         btnSignUp = findViewById(R.id.btnSignUp)
 
-
         btnSignUp.setOnClickListener{
             val name = edtName.text.toString()
             val email = edtEmail.text.toString()
             val password = edtPassword.text.toString()
 
-         signUp(name,email,password)
+            signUp(name,email,password)
         }
-
     }
 
     private fun signUp(name:String, email: String, password: String){
-        //logic of creating user
+        // Attempt to create a new user with Firebase
         mAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    //for verification of email address
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Registration successful, add user to database
+                        val uid = mAuth.currentUser?.uid
+                        if (uid != null) {
+                            addUserToDatabase(name, email, uid)
+                        }
 
-
-                   //code for jumping home activity
-                    addUserToDatabase(name,email,mAuth.currentUser?.uid!!)
-                    val intent= Intent(this@SignUp,MainActivity::class.java)
-                    finish()
-                    startActivity(intent)
-
-                } else {
-                    Toast.makeText(this@SignUp,"Please Try Again,Some Error Occurred",Toast.LENGTH_SHORT).show()
+                        // Navigate to MainActivity
+                        val intent= Intent(this@SignUp, MainActivity::class.java)
+                        startActivity(intent)
+                        finish() // Finish the current activity
+                    } else {
+                        // Registration failed, display an error message
+                        Toast.makeText(this@SignUp, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
+                .addOnFailureListener(this) { exception ->
+                    // Handle any exceptions that occur during registration
+                    Log.e("SignUpActivity", "Registration error: ${exception.message}", exception)
+                    Toast.makeText(this@SignUp, "An unexpected error occurred. Please try again later.", Toast.LENGTH_SHORT).show()
+                }
     }
 
-   private fun addUserToDatabase(name: String, email: String, uid: String){
-       mDbref = FirebaseDatabase.getInstance().getReference()
-
-       mDbref.child("user").child(uid).setValue(user(name,email,uid))
-   }
+    private fun addUserToDatabase(name: String, email: String, uid: String){
+        // Add user details to Firebase Realtime Database
+        mDbref = FirebaseDatabase.getInstance().getReference("users")
+        val user = User(name, email, uid)
+        mDbref.child(uid).setValue(user)
+    }
 }
