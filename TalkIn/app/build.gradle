@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace 'com.example.talk_in'
-    compileSdk 32
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.example.talk_in"
         minSdk 26
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
