@@ -1,5 +1,5 @@
 # Talk-In: Text Messaging Chat App
-
+![App Logo](C:\Users\adity\Downloads)
 This is a simple text messaging chat app developed using Kotlin. It allows users to send and receive text messages in real-time.
 
 ## Upcoming Features:
