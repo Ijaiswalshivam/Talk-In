@@ -36,13 +36,15 @@ This is a simple text messaging chat app developed using Kotlin. It allows users
 
 ## Installation:
 
-1. Clone the repository:
+1.🍴Fork It: Fork the project to create your own copy.
 
-2. Open the project in Android Studio.
+2. Clone the repository: $ git clone https://github.com/<your-account-username>/<your-forked-project>.git
 
-3. Connect your Android device or start an emulator.
+3. Open the project in Android Studio.
 
-4. Run the app.
+4. Connect your Android device or start an emulator.
+
+5. Run the app.
 
 ## Contributing
 
