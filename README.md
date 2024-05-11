@@ -38,7 +38,10 @@ This is a simple text messaging chat app developed using Kotlin. It allows users
 
 1.🍴Fork It: Fork the project to create your own copy.
 
-2. Clone the repository: ($ git clone https://github.com/<your-account-username>/<your-forked-project>.git)
+2. Clone the repository:
+   ```bash
+   $ git clone https://github.com/<your-account-username>/<your-forked-project>.git
+   ```
 
 3. Open the project in Android Studio.
 
