@@ -1,5 +1,6 @@
 # Talk-In: Text Messaging Chat App
-![App Logo](https://media.licdn.com/dms/image/D4D0BAQEpT4N2-geGhw/company-logo_200_200/0/1688662723423?e=1723680000&v=beta&t=N_GRW7j75ddQzmfINVyqArWKv7mEMmoRS0wfW62iCq0)
+   ![App Logo](https://media.licdn.com/dms/image/D4D0BAQEpT4N2-geGhw/company-logo_200_200/0/1688662723423?e=1723680000&v=beta&t=N_GRW7j75ddQzmfINVyqArWKv7mEMmoRS0wfW62iCq0)
+
 This is a simple text messaging chat app developed using Kotlin. It allows users to send and receive text messages in real-time.
 
 ## Upcoming Features:
