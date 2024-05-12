@@ -3,16 +3,27 @@ package com.example.talk_in
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class EntryActivity : AppCompatActivity() {
     private lateinit var videoView: VideoView // Declare videoView as a property
+    private lateinit var mAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entry)
+
+        mAuth = FirebaseAuth.getInstance()
+        if(mAuth.currentUser != null){
+            val intent = Intent(this@EntryActivity,MainActivity::class.java)
+            finish()
+            startActivity(intent)
+        }
+
         //hide actionbar
         supportActionBar?.hide()
         //video play
