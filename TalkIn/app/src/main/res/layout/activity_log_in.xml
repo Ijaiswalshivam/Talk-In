@@ -11,7 +11,7 @@
         android:id="@+id/app_logo"
         android:layout_width="177dp"
         android:layout_height="157dp"
-        android:src="@drawable/icon"
+        android:src="@drawable/talkin"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
