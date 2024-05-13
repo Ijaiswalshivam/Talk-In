@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
@@ -31,6 +32,7 @@ class LogIn : AppCompatActivity() {
     edtPassword = findViewById(R.id.edt_password)
     val btnLogIn = findViewById<Button>(R.id.btnLogin)
     val backbtn = findViewById<ImageView>(R.id.btnBack)
+    val forgetPassword = findViewById<TextView>(R.id.forgetPassword)
 
     btnLogIn.setOnClickListener {
       val email = edtEmail.text.toString()
@@ -43,6 +45,11 @@ class LogIn : AppCompatActivity() {
     }
     backbtn.setOnClickListener{
       val intent = Intent(this@LogIn,EntryActivity::class.java)
+      startActivity(intent)
+      finish()
+    }
+    forgetPassword.setOnClickListener {
+      val intent = Intent(this@LogIn, ResetPasswordActivity::class.java)
       startActivity(intent)
       finish()
     }
