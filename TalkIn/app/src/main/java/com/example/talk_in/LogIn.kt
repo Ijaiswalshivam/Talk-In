@@ -50,11 +50,18 @@ class LogIn : AppCompatActivity() {
       mAuth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener(this) { task ->
           if (task.isSuccessful) {
+            val verified = mAuth.currentUser?.isEmailVerified
+            if (verified == true){
+              val intent = Intent(this@LogIn, MainActivity::class.java)
+              finish()
+              startActivity(intent)
+
+            } else{
+              Toast.makeText(this,"Please verify your email first.",Toast.LENGTH_LONG).show()
+            }
+
             // code for logging
 
-            val intent = Intent(this@LogIn, MainActivity::class.java)
-            finish()
-            startActivity(intent)
 
 
           } else {
