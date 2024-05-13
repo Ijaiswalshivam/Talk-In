@@ -23,7 +23,6 @@ class LogIn : AppCompatActivity() {
     val edtPassword = findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edt_password)
     val btnLogIn = findViewById<Button>(R.id.btnLogin)
     val backbtn = findViewById<ImageView>(R.id.btnBack)
-
     btnLogIn.setOnClickListener {
       val email = edtEmail.text.toString()
       val password = edtPassword.text.toString()
@@ -54,6 +53,7 @@ class LogIn : AppCompatActivity() {
             val intent = Intent(this@LogIn, MainActivity::class.java)
             finish()
             startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_right);
 
 
           } else {

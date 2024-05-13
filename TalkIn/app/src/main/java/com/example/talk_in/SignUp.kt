@@ -64,6 +64,7 @@ class SignUp : AppCompatActivity() {
             val intent = Intent(this@SignUp, MainActivity::class.java)
             finish()
             startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_right);
 
           } else {
             Toast.makeText(this@SignUp, "Please Try Again,Some Error Occurred", Toast.LENGTH_SHORT)
