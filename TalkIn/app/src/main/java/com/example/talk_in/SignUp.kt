@@ -56,10 +56,10 @@ private lateinit var mDbRef: DatabaseReference
 
                     //code for jumping home activity
                     addUserToDatabase(name,email,mAuth.currentUser?.uid!!)
-                    val intent= Intent(this@SignUp,MainActivity::class.java)
+                    val intent= Intent(this@SignUp,LogIn::class.java)
                     finish()
                     startActivity(intent)
-
+                    Toast.makeText(this@SignUp, "Sign Up Successful.. Now Login..!", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this@SignUp,"Please Try Again,Some Error Occurred",Toast.LENGTH_SHORT).show()
                 }

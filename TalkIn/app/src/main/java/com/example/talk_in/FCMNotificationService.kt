@@ -19,7 +19,6 @@ class FCMNotificationService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-        Log.d(TAG, "New FCM message received")
 
         // Play notification sound
         val notification: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -38,7 +37,11 @@ class FCMNotificationService : FirebaseMessagingService() {
 
         val builder = NotificationCompat.Builder(this, "CHANNEL_ID")
         builder.setSmallIcon(resourceImage)
+
+        // Open ChatActivity when notification is clicked
         val resultIntent = Intent(this, MainActivity::class.java)
+        //resultIntent.putExtra("uid", remoteMessage.data["senderUid"])
+        //resultIntent.putExtra("name", remoteMessage.data["senderName"])
         val pendingIntent = PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         builder.setContentTitle(remoteMessage.notification?.title)
@@ -63,8 +66,4 @@ class FCMNotificationService : FirebaseMessagingService() {
 
         mNotificationManager.notify(100, builder.build())
     }
-    companion object {
-        private const val TAG = "FcmNotificationService"
-    }
 }
-
