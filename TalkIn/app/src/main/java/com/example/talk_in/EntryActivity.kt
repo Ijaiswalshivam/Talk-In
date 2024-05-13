@@ -40,14 +40,14 @@ class   EntryActivity : AppCompatActivity() {
         signInBtn.setOnClickListener {
             val intent = Intent(this, LogIn::class.java)
             startActivity(intent)
-            overridePendingTransition(R.anim.slide_out_bottom, R.anim.slide_in_bottom);
+            //overridePendingTransition(R.anim.slide_out_bottom, R.anim.slide_in_bottom);
         }
         //signup button
         val signUpBtn: Button = findViewById(R.id.signupBtn)
         signUpBtn.setOnClickListener {
             val intent = Intent(this, SignUp::class.java)
             startActivity(intent)
-            overridePendingTransition(R.anim.slide_out_bottom, R.anim.slide_in_bottom);
+            //overridePendingTransition(R.anim.slide_out_bottom, R.anim.slide_in_bottom);
         }
     }
     override fun onPause() {
