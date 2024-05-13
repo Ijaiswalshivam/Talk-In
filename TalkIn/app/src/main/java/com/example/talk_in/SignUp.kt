@@ -7,7 +7,6 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -55,23 +54,17 @@ class SignUp : AppCompatActivity() {
     //logic of creating user
     try {
       mAuth.createUserWithEmailAndPassword(email, password)
-
         .addOnCompleteListener(this) { task ->
           if (task.isSuccessful) {
             //for verification of email address
-            mAuth.currentUser?.sendEmailVerification()
-              ?.addOnCompleteListener(this){ task->
-                Toast.makeText(this,"Please Verify your E-mail",Toast.LENGTH_LONG).show()
-              }
-              ?.addOnFailureListener {
-                Toast.makeText(this,it.toString(),Toast.LENGTH_SHORT).show()
-              }
+
 
             //code for jumping home activity
             addUserToDatabase(name, email, mAuth.currentUser?.uid!!)
             val intent = Intent(this@SignUp, MainActivity::class.java)
             finish()
             startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_right);
 
           } else {
             Toast.makeText(this@SignUp, "Please Try Again,Some Error Occurred", Toast.LENGTH_SHORT)
