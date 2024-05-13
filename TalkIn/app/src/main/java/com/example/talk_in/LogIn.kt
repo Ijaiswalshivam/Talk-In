@@ -51,36 +51,36 @@ class LogIn : AppCompatActivity() {
   }
 
     private fun login(email: String, pwd: String) {
-        // CHecking for empty texts
-        if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pwd)) {
-            mAuth.signInWithEmailAndPassword(email, pwd)
-                .addOnCompleteListener(OnCompleteListener<AuthResult?> { task ->
-                    if (task.isSuccessful) {
-                        //isEmailVerified()
-                        Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this@LogIn,MainActivity::class.java)
-                        startActivity(intent)
-                        finish();
-                    }
-                }).addOnFailureListener(OnFailureListener { e ->
-                    if (e is FirebaseAuthInvalidCredentialsException) {
-                        edtPassword.error = "Invalid Password"
-                        edtPassword.requestFocus()
-                    }
-                    if (e is FirebaseAuthInvalidUserException) {
-                        edtEmail.error = "Email Not Registered"
-                        edtEmail.requestFocus()
-                    } else {
-                        Toast.makeText(
-                            this,
-                            "Something went Wrong",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                })
-        } else {
-            Toast.makeText(this, "Please Enter Email & Password", Toast.LENGTH_SHORT).show()
-        }
+      // CHecking for empty texts
+      if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pwd)) {
+        mAuth.signInWithEmailAndPassword(email, pwd)
+          .addOnCompleteListener(OnCompleteListener<AuthResult?> { task ->
+            if (task.isSuccessful) {
+              //isEmailVerified()
+              Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+              val intent = Intent(this@LogIn, MainActivity::class.java)
+              startActivity(intent)
+              finish();
+            }
+          }).addOnFailureListener(OnFailureListener { e ->
+            if (e is FirebaseAuthInvalidCredentialsException) {
+              edtPassword.error = "Invalid Password"
+              edtPassword.requestFocus()
+            }
+            if (e is FirebaseAuthInvalidUserException) {
+              edtEmail.error = "Email Not Registered"
+              edtEmail.requestFocus()
+            } else {
+              Toast.makeText(
+                this,
+                "Something went Wrong",
+                Toast.LENGTH_SHORT
+              ).show()
+            }
+          })
+      } else {
+        Toast.makeText(this, "Please Enter Email & Password", Toast.LENGTH_SHORT).show()
+      }
     }
 
 }
