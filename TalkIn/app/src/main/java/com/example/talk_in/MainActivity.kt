@@ -1,18 +1,14 @@
 package com.example.talk_in
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -66,12 +62,17 @@ class MainActivity : AppCompatActivity() {
         if (item.itemId == R.id.logout) {
             //logic for logout
             mAuth.signOut()
-            val intent = Intent(this@MainActivity,LogIn::class.java)
-            finish()
+            val intent = Intent(this@MainActivity,EntryActivity::class.java)
             startActivity(intent)
+            finish()
            // finish()
             return true
         }
         return true
+    }
+    override fun onBackPressed() {
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        startActivity(intent)
     }
 }
