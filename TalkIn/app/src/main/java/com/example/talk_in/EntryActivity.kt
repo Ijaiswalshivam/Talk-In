@@ -19,8 +19,8 @@ class EntryActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         if(mAuth.currentUser != null){
             val intent = Intent(this@EntryActivity,MainActivity::class.java)
-            finish()
             startActivity(intent)
+            finish()
         }
 
         //hide actionbar
