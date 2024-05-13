@@ -30,12 +30,11 @@
 
     <LinearLayout
         android:id="@+id/whiteBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="354dp"
+        android:layout_height="391dp"
         android:background="@drawable/rounded_corners"
         android:orientation="vertical"
         android:padding="16dp"
-        android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
