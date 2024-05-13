@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -13,9 +14,9 @@ import com.google.firebase.database.FirebaseDatabase
 
 class SignUp : AppCompatActivity() {
 
-  private lateinit var edtName: EditText
-  private lateinit var edtEmail: EditText
-  private lateinit var edtPassword: EditText
+  private lateinit var edtName: com.google.android.material.textfield.TextInputEditText
+  private lateinit var edtEmail: com.google.android.material.textfield.TextInputEditText
+  private lateinit var edtPassword: com.google.android.material.textfield.TextInputEditText
 
   private lateinit var btnSignUp: Button
   private lateinit var mAuth: FirebaseAuth
@@ -32,10 +33,9 @@ class SignUp : AppCompatActivity() {
     edtName = findViewById(R.id.edt_name)
     edtEmail = findViewById(R.id.edt_email)
     edtPassword = findViewById(R.id.edt_password)
-
+    val backbtn = findViewById<ImageView>(R.id.btnBack)
     btnSignUp = findViewById(R.id.btnSignup)
 
-    btnSignUp = findViewById(R.id.btnSignup)
 
 
     btnSignUp.setOnClickListener {
@@ -46,6 +46,11 @@ class SignUp : AppCompatActivity() {
         Toast.makeText(this, "Please enter details.", Toast.LENGTH_SHORT).show()
       } else
         signUp(name, email, password)
+      backbtn.setOnClickListener{
+        val intent = Intent(this@SignUp,EntryActivity::class.java)
+        startActivity(intent)
+        finish()
+      }
 
     }
   }
