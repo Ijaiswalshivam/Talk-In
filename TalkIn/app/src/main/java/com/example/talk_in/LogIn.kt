@@ -9,11 +9,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.play.integrity.internal.i
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
+
+
 
 
 class LogIn : AppCompatActivity() {
@@ -53,15 +54,16 @@ class LogIn : AppCompatActivity() {
       // CHecking for empty texts
       if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pwd)) {
         mAuth.signInWithEmailAndPassword(email, pwd)
-          .addOnCompleteListener(OnCompleteListener<AuthResult?> { task ->
+          .addOnCompleteListener { task ->
             if (task.isSuccessful) {
-              //isEmailVerified()
-              Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-              val intent = Intent(this@LogIn, MainActivity::class.java)
-              startActivity(intent)
-              finish();
+              if (isEmailVerified()) {
+                Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@LogIn, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+              }
             }
-          }).addOnFailureListener(OnFailureListener { e ->
+          }.addOnFailureListener { e ->
             if (e is FirebaseAuthInvalidCredentialsException) {
               edtPassword.error = "Invalid Password"
               edtPassword.requestFocus()
@@ -76,10 +78,21 @@ class LogIn : AppCompatActivity() {
                 Toast.LENGTH_SHORT
               ).show()
             }
-          })
+          }
       } else {
         Toast.makeText(this, "Please Enter Email & Password", Toast.LENGTH_SHORT).show()
       }
     }
+  private fun isEmailVerified(): Boolean {
+    if (mAuth.currentUser != null) {
+      val isEmailVerified: Boolean = mAuth.currentUser!!.isEmailVerified
+      if (isEmailVerified) {
+        return true
+      } else {
+        Toast.makeText(this, "please verify your email address first", Toast.LENGTH_SHORT).show()
+      }
+    }
+    return false
+  }
 
 }
