@@ -34,6 +34,8 @@
             android:id="@+id/edt_name"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            android:drawableStart="@drawable/user_icon"
+            android:drawablePadding="15dp"
             android:background="@drawable/custom_edit_text"
             android:hint="Enter Name"
             android:paddingLeft="15dp" />
@@ -42,6 +44,8 @@
             android:id="@+id/edt_email"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            android:drawableStart="@drawable/ic_baseline_email_24"
+            android:drawablePadding="15dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/custom_edit_text"
             android:hint="Enter Email"
@@ -51,6 +55,8 @@
             android:id="@+id/edt_password"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            android:drawableStart="@drawable/password_icon"
+            android:drawablePadding="15dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/custom_edit_text"
             android:hint="Enter Password"
@@ -59,12 +65,12 @@
         <Button
             android:id="@+id/btnSignup"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:background="@drawable/edt_background2"
             android:text="Sign Up"
             android:textColor="@color/white"
-            android:textSize="19sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
