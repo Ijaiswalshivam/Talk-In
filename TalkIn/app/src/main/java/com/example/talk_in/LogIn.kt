@@ -30,6 +30,7 @@ class LogIn : AppCompatActivity() {
     btnSignUp.setOnClickListener {
       val intent = Intent(this, SignUp::class.java)
       startActivity(intent)
+      overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_right);
     }
     btnLogIn.setOnClickListener {
       val email = edtEmail.text.toString()
@@ -55,6 +56,7 @@ class LogIn : AppCompatActivity() {
             val intent = Intent(this@LogIn, MainActivity::class.java)
             finish()
             startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_right);
 
 
           } else {
