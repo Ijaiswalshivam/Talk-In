@@ -6,12 +6,20 @@ labels: ''
 assignees: ''
 
 ---
+**Description:**
+A clear and concise description of the desired feature.
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**Problem:**
+What problem does this feature aim to solve?
 
-**Feature problem and its solution**
-What problem is this feature trying to solve?
+**Proposed Solution:**
+A brief overview of the proposed solution.
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+**Steps for Implementation:**
+1. Step one...
+2. Step two...
+   - Substep or additional details if needed.
+3. ...
+
+**Additional Context:**
+Any additional context or relevant information.
