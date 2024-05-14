@@ -8,4 +8,5 @@ class Message {
         this.message=message
         this.senderId=senderId
     }
+   
 }

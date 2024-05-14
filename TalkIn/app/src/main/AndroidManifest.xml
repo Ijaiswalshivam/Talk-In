@@ -16,6 +16,16 @@
         android:theme="@style/Theme.TalkIn"
         tools:targetApi="31">
         <activity
+            android:name=".ResetPasswordActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:name=".MobileAuthActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LogIn"
+            android:exported="false" />
+        <activity
             android:name=".ChatActivity"
             android:exported="false">
             <meta-data
@@ -24,7 +34,7 @@
         </activity>
         <activity android:name=".SignUp" />
         <activity
-            android:name=".LogIn"
+            android:name=".EntryActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,6 +42,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
         <activity android:name=".MainActivity"></activity>
 
         <service android:name=".FCMNotificationService"
@@ -40,6 +51,13 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+=======
+        <activity android:name=".MainActivity" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+>>>>>>> 9ad769bdd105a202435e8abca418a2e893826d8f
     </application>
 
 </manifest>

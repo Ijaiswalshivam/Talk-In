@@ -1,18 +1,14 @@
 package com.example.talk_in
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -64,6 +60,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
+<<<<<<< HEAD
             // Remove device token from Firebase database
             val currentUser = mAuth.currentUser
             currentUser?.uid?.let { userId ->
@@ -77,9 +74,25 @@ class MainActivity : AppCompatActivity() {
                     .addOnFailureListener { e ->
                     }
             }
+=======
+            //logic for logout
+            mAuth.signOut()
+            val intent = Intent(this@MainActivity,EntryActivity::class.java)
+            startActivity(intent)
+            finish()
+           // finish()
+>>>>>>> 9ad769bdd105a202435e8abca418a2e893826d8f
             return true
         }
         return super.onOptionsItemSelected(item)
     }
+<<<<<<< HEAD
 
+=======
+    override fun onBackPressed() {
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        startActivity(intent)
+    }
+>>>>>>> 9ad769bdd105a202435e8abca418a2e893826d8f
 }
