@@ -46,6 +46,21 @@ class SignUp : AppCompatActivity() {
         Toast.makeText(this@SignUp, "Enter Details", Toast.LENGTH_SHORT).show()
       } else {
         mAuth.createUserWithEmailAndPassword(email, password)
+<<<<<<< HEAD
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    //for verification of email address
+
+
+                    //code for jumping home activity
+                    addUserToDatabase(name,email,mAuth.currentUser?.uid!!)
+                    val intent= Intent(this@SignUp,LogIn::class.java)
+                    finish()
+                    startActivity(intent)
+                    Toast.makeText(this@SignUp, "Sign Up Successful.. Now Login..!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@SignUp,"Please Try Again,Some Error Occurred",Toast.LENGTH_SHORT).show()
+=======
           .addOnCompleteListener { task ->
             if (task.isSuccessful) {
               val currentUserId = mAuth.currentUser?.uid ?: ""
@@ -57,6 +72,7 @@ class SignUp : AppCompatActivity() {
                   val intent = Intent(this@SignUp,LogIn::class.java)
                   startActivity(intent)
                   finish()
+>>>>>>> 9ad769bdd105a202435e8abca418a2e893826d8f
                 }
                 .addOnFailureListener { e ->
                   Toast.makeText(this@SignUp, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
