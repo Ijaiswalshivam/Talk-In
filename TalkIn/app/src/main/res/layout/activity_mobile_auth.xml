@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Mobile Number Input -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Mobile Number Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/mobileNumberInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Enter Mobile Number">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/mobileNumberEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:inputType="phone"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Get OTP Button -->
+        <Button
+            android:id="@+id/getOtpButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Get OTP"
+            android:layout_gravity="end|center"
+            android:layout_marginStart="8dp"
+            android:onClick="getOtp"/>
+
+    </LinearLayout>
+
+
+    <!-- OTP Grid Layout -->
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/otpGridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:columnCount="6"
+        app:rowCount="1">
+
+        <!-- OTP Digit Input Boxes -->
+        <EditText
+            android:id="@+id/otpDigit1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:background="@drawable/button_border"
+            app:layout_columnWeight="1" />
+
+        <!-- Include similar EditTexts for otpDigit2 to otpDigit6 -->
+
+    </androidx.gridlayout.widget.GridLayout>
+
+    <!-- Button to Verify OTP -->
+    <Button
+        android:id="@+id/verifyOtpButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Verify OTP"
+        android:layout_below="@id/otpGridLayout"
+        android:layout_marginTop="16dp"/>
+
+</RelativeLayout>

@@ -22,7 +22,7 @@ class FcmNotificationsSender(
 ) {
     private val requestQueue: RequestQueue = Volley.newRequestQueue(mContext)
     private val postUrl = "https://fcm.googleapis.com/fcm/send"
-    private val fcmServerKey = "Enter FCM Server KEY"
+    private val fcmServerKey = "Enter your FCM Server Key"
 
     fun sendNotifications() {
         Log.d(TAG, "Sending FCM notification")
