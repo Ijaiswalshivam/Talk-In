@@ -18,8 +18,7 @@ class   EntryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_entry)
 
         mAuth = FirebaseAuth.getInstance()
-        val isEmailVerified: Boolean = mAuth.currentUser!!.isEmailVerified
-        if(mAuth.currentUser != null && isEmailVerified){
+        if(mAuth.currentUser != null){
             val intent = Intent(this@EntryActivity,MainActivity::class.java)
             finish()
             startActivity(intent)
