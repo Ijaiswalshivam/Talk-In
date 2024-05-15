@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ChatActivity">
 
+
     <androidx.recyclerview.widget.RecyclerView
        android:id="@+id/chatRecyclerView"
        android:layout_above="@id/linearLayout"
@@ -32,15 +33,12 @@
             android:paddingLeft="10dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="90"/>
-
         <ImageView
             android:id="@+id/sendButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="20"
-            android:padding="5dp"
-            android:layout_gravity="right"
-            android:src="@drawable/img_4"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/send"
+            android:layout_weight="20"/>
 
     </LinearLayout>
 </RelativeLayout>
