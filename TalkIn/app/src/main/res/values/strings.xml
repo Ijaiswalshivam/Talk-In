@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Talk-In</string>
+    <string name="welcome_to_talk_in">Welcome to Talk-In</string>
 </resources>
