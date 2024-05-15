@@ -50,7 +50,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
             android:letterSpacing="0.1"
-            android:text="Welcome to TalkIn"
+            android:text="@string/welcome_to_talk_in"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold" />
