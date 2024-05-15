@@ -1,14 +1,13 @@
 {
   "project_info": {
-    "project_number": "787210585909",
-    "firebase_url": "https://talk-in-f3bde-default-rtdb.firebaseio.com",
-    "project_id": "talk-in-f3bde",
-    "storage_bucket": "talk-in-f3bde.appspot.com"
+    "project_number": "793581227962",
+    "project_id": "talkin-ac89b",
+    "storage_bucket": "talkin-ac89b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:787210585909:android:f35591b3ba262950226e7c",
+        "mobilesdk_app_id": "1:793581227962:android:a0ce9b5c17de16f7acd783",
         "android_client_info": {
           "package_name": "com.example.talk_in"
         }
@@ -16,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDJzORrmvrlUIFor_h1o8g3R_NqlHia-Ps"
+          "current_key": "AIzaSyA_IHvKJbMI358bSYsO1Hy4cRTLhFjsnxk"
         }
       ],
       "services": {
