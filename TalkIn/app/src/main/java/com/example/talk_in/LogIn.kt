@@ -33,6 +33,11 @@ class LogIn : AppCompatActivity() {
     val btnLogIn = findViewById<Button>(R.id.btnLogin)
     val backbtn = findViewById<ImageView>(R.id.btnBack)
     val forgetPassword = findViewById<TextView>(R.id.forgetPassword)
+    val loginMobBtn = findViewById<Button>(R.id.loginMobile)
+    loginMobBtn.setOnClickListener {
+      val i = Intent(this@LogIn,MobileAuthActivity::class.java)
+      startActivity(i)
+    }
 
     btnLogIn.setOnClickListener {
       val email = edtEmail.text.toString()
