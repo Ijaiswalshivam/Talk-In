@@ -17,6 +17,7 @@ class   EntryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entry)
 
+ 
 //        mAuth = FirebaseAuth.getInstance()
 //        val isEmailVerified: Boolean = mAuth.currentUser!!.isEmailVerified
 //        if(mAuth.currentUser != null && isEmailVerified){
@@ -26,6 +27,15 @@ class   EntryActivity : AppCompatActivity() {
 //            overridePendingTransition(R.anim.slide_out_bottom, R.anim.slide_in_bottom);
 //        }
 
+        mAuth = FirebaseAuth.getInstance()
+        if(mAuth.currentUser != null){
+            val intent = Intent(this@EntryActivity,MainActivity::class.java)
+            finish()
+            startActivity(intent)
+            overridePendingTransition(R.anim.slide_out_bottom, R.anim.slide_in_bottom);
+        }
+ 
+      
         //hide actionbar
         supportActionBar?.hide()
         //video play
