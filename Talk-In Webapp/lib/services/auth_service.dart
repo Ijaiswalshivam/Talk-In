@@ -12,7 +12,7 @@ class AuthService{
     if(userCredential.user!=null){
       bool isUserAdded = await DataService().addUserToFirebase(context,userCredential.user!.uid, name, email, password);
       if(isUserAdded){
-        Navigator.push(context, MaterialPageRoute(builder: (context){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
           return HomeScreen();
         }));
       }else{
@@ -29,7 +29,7 @@ class AuthService{
     UserCredential userCredential = await auth.signInWithEmailAndPassword(email: email, password: password);
     if(userCredential.user!=null){
       await DataService().getUserFromFirebase(context,userCredential.user!.uid);
-      Navigator.push(context, MaterialPageRoute(builder: (context){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
         return HomeScreen();
       }));
     }else{

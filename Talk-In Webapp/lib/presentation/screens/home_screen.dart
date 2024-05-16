@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:talk_in_web/presentation/screens/find_people.dart';
+import 'package:talk_in_web/presentation/screens/messaging_screen.dart';
 import 'package:talk_in_web/presentation/screens/notification_screen.dart';
 import 'package:talk_in_web/services/user_service.dart';
 
@@ -75,11 +76,16 @@ class _HomeScreenState extends State<HomeScreen> {
             String name = friendList[index]["name"].toString();
             String profilePic = friendList[index]["profilePic"].toString();
             return ListTile(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                  return MessagingScreen(friendList[index]);
+                }));
+              },
               title: Text(name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),),
               leading: profilePic=="null"?Image.asset("assets/images/profile.png",width: 30,height:30,):Image.network(profilePic,width: 30,height:30,),
             );
 
-      }):Align(
+          }):Align(
         alignment: Alignment.center,
         child: Text("No friends to show. Go and find some people you introvert!!",style: TextStyle(color: Colors.lightGreenAccent),),
       ),

@@ -9,6 +9,7 @@ class DataService{
 
 
   DatabaseReference userRef = FirebaseDatabase.instance.ref("Users");
+  DatabaseReference messageRef = FirebaseDatabase.instance.ref("Messages");
 
   Future<bool> addUserToFirebase(BuildContext context,String authId,String name,String email,String password) async{
     try{
@@ -28,7 +29,7 @@ class DataService{
     }catch(e){
       print(e);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Something went wrong",style: TextStyle(color: Colors.white),)));
-     return false;
+      return false;
     }
   }
 
@@ -55,7 +56,7 @@ class DataService{
         print(data);
         final result = jsonDecode(jsonEncode(data));
         if(result["id"].toString()!=UserService.userData!["id"].toString())
-        userList.add(result);
+          userList.add(result);
       }
       return userList;
     }catch(e){
@@ -63,7 +64,7 @@ class DataService{
       return [];
     }
   }
-  
+
   Future<void> sendFriendRequest(BuildContext context,Map<String,dynamic> user) async{
     try{
       String currentUserAuthId = UserService.userData!["id"].toString();
@@ -74,13 +75,15 @@ class DataService{
       print(e);
     }
   }
-  
+
   Future<void> acceptFriendRequest(BuildContext context,Map<String,dynamic> user) async{
     try{
       String currentUserAuthId = UserService.userData!["id"].toString();
       final friendsRef = userRef.child(currentUserAuthId).child("Friends");
-      await friendsRef.child(user["id"]).set(user);
+      await friendsRef.child(user["id"].toString()).set(user);
       await userRef.child(currentUserAuthId).child("Requests").child(user["id"]).remove();
+      final friendsRef1 = userRef.child(user["id"].toString()).child("Friends");
+      await friendsRef1.child(currentUserAuthId).set(UserService.userData);
     }catch(e){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Something went wrong",style: TextStyle(color: Colors.white),)));
       print(e);
@@ -120,6 +123,20 @@ class DataService{
     }catch(e){
       print(e);
       return [];
+    }
+  }
+
+  void addChatToDatabase(String messageId, String text, String senderId, String receiverId,DateTime dateTime) async{
+    try{
+      await messageRef.child(messageId).push().set({
+        "messageId":messageId,
+        "SendBy":senderId,
+        "ReceivedBy":receiverId,
+        "Message":text,
+        "DateTime":dateTime.toString()
+      });
+    }catch(e){
+      print(e);
     }
   }
 
