@@ -46,6 +46,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 onPressed: () async{
                   await DataService().acceptFriendRequest(context, requestList[index]);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Accepted",style: TextStyle(color: Colors.white),)));
+                  setState(() {
+                    requestList.removeAt(index);
+                  });
                 },
                 child: Text("Accept friend Request"),
               ),
