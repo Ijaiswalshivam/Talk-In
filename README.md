@@ -128,12 +128,23 @@ If you find this project useful, please consider giving it a star! ⭐️
 
 2. **Hosting**
    The Website is deployed using the Firebase Hosting.
+
 3. **Method to Host on Firebase**
-   1. Install the Firebase CLI using the command- ```bash $ npm install -g firebase-tools" ``` 
+   1. Install the Firebase CLI using the command- 
+      ```bash
+      $ npm install -g firebase-tools" 
+      ``` 
    2. Initialise your project 
-      1. ```bash $ firebase login" ```
-      2. ```bash $ firebase init" ```
-   3. Deploy to Firebase using the command - ```bash $ firebase deploy" ```
+      1. ```bash
+         $ firebase login" 
+         ```
+      2. ```bash
+         $ firebase init"
+          ```
+   3. Deploy to Firebase using the command - 
+      ```bash
+      $ firebase deploy" 
+      ```
 
 
 ## Contact for help:
