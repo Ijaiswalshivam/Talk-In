@@ -74,7 +74,6 @@ class LogIn : AppCompatActivity() {
               finish()
             } else {
               Toast.makeText(this, "Please verify your email id.", Toast.LENGTH_SHORT).show()
-              sendVerificationEmail()
             }
           }
         }.addOnFailureListener { e ->
@@ -96,15 +95,4 @@ class LogIn : AppCompatActivity() {
       Toast.makeText(this, "Please Enter Email & Password", Toast.LENGTH_SHORT).show()
     }
   }
-
-  fun sendVerificationEmail() {
-    mAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task ->
-      if (task.isSuccessful) {
-        Toast.makeText(this@LogIn, "Verification email sent to your email id.", Toast.LENGTH_SHORT).show()
-      } else {
-        Toast.makeText(this@LogIn, "Failed to send verification email.", Toast.LENGTH_SHORT).show()
-      }
-    }
-  }
-
 }
