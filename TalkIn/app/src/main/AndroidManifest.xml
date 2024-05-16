@@ -13,9 +13,15 @@
         android:theme="@style/Theme.TalkIn"
         tools:targetApi="31">
         <activity
-            android:name=".ResetPasswordActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:name=".ChatList"
             android:exported="false" />
+        <activity
+            android:name=".UserProfile"
+            android:exported="false" />
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".MobileAuthActivity"
             android:exported="false" />
