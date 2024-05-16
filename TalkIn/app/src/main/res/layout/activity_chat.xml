@@ -35,10 +35,9 @@
             android:layout_weight="90"/>
         <ImageView
             android:id="@+id/sendButton"
-            android:layout_width="45dp"
-            android:layout_height="35dp"
-            android:layout_gravity="bottom"
-            android:src="@drawable/img_4"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/send"
             android:layout_weight="20"/>
 
     </LinearLayout>
