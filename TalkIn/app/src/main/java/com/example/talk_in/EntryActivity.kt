@@ -18,7 +18,7 @@ class   EntryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_entry)
 
         mAuth = FirebaseAuth.getInstance()
-        if(mAuth.currentUser != null && mAuth.currentUser!!.isEmailVerified){
+        if(mAuth.currentUser != null){
             val intent = Intent(this@EntryActivity,MainActivity::class.java)
             finish()
             startActivity(intent)
@@ -40,14 +40,14 @@ class   EntryActivity : AppCompatActivity() {
         signInBtn.setOnClickListener {
             val intent = Intent(this, LogIn::class.java)
             startActivity(intent)
-            overridePendingTransition(R.anim.slide_out_bottom, R.anim.slide_in_bottom);
+            //overridePendingTransition(R.anim.slide_out_bottom, R.anim.slide_in_bottom);
         }
         //signup button
         val signUpBtn: Button = findViewById(R.id.signupBtn)
         signUpBtn.setOnClickListener {
             val intent = Intent(this, SignUp::class.java)
             startActivity(intent)
-            overridePendingTransition(R.anim.slide_out_bottom, R.anim.slide_in_bottom);
+            //overridePendingTransition(R.anim.slide_out_bottom, R.anim.slide_in_bottom);
         }
     }
     override fun onPause() {
