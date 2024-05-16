@@ -33,6 +33,11 @@ class SignUp : AppCompatActivity() {
     edtPassword = findViewById(R.id.edt_password)
     btnSignUp = findViewById(R.id.btnSignup)
     val backbtn = findViewById<ImageView>(R.id.btnBack)
+    val loginMobBtn = findViewById<Button>(R.id.loginMobile)
+    loginMobBtn.setOnClickListener {
+      val i = Intent(this@SignUp,MobileAuthActivity::class.java)
+      startActivity(i)
+    }
 
     backbtn.setOnClickListener {
       startActivity(Intent(this@SignUp, EntryActivity::class.java))
