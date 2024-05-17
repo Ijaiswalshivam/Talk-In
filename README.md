@@ -120,11 +120,40 @@ Contributions are welcome! If you'd like to contribute to this project, follow t
 9. **Wait for Review:**
     Your pull request will now be available for review by the project maintainers. They may provide feedback or ask for changes before merging your pull request into the main branch of the ResourceHub repository.
 
+
+
+# TalkIn Website
+1. **Technologies**
+   The Web App is coded in dart programming language using the Flutter SDK.
+
+2. **Hosting**
+   The Website is deployed using the Firebase Hosting.
+
+3. **Method to Host on Firebase**
+   1. Install the Firebase CLI using the command- 
+      ```bash
+      $ npm install -g firebase-tools" 
+      ``` 
+   2. Initialise your project 
+      1. ```bash
+         $ firebase login" 
+         ```
+      2. ```bash
+         $ firebase init"
+          ```
+   3. Deploy to Firebase using the command - 
+      ```bash
+      $ firebase deploy" 
+      ```
+
+
 If you find this project useful, please consider giving it a star! ⭐️
+
 
 ## Contact for help:
 1. Admin- Shivam Jaiswal
    For questions or inquiries, please contact [Shivam Jaiswal](mailto:Forcollegeintern@gmail.com)
+
 
 2. Mentors- Aman Nishad , Amanpreet Kaur
    For questions or inquiries, please contact [Aman Nishad](mailto:amannishad0512@gmail.com)
