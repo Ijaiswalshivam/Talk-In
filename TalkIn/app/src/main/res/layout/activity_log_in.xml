@@ -123,6 +123,14 @@
             android:text="Sign In"
             android:textColor="@color/white" />
 
+        <ProgressBar
+            android:id="@+id/progressLogin"
+            android:layout_marginTop="10dp"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
         <TextView
             android:id="@+id/forgetPassword"
             android:layout_width="wrap_content"
