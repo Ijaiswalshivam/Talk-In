@@ -8,6 +8,8 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 
 class SignUp : AppCompatActivity() {
@@ -17,7 +19,7 @@ class SignUp : AppCompatActivity() {
   private lateinit var edtPassword: com.google.android.material.textfield.TextInputEditText
   private lateinit var btnSignUp: Button
   private lateinit var mAuth: FirebaseAuth
-  private val db = FirebaseFirestore.getInstance()
+  private lateinit var mDbref: DatabaseReference
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -31,6 +33,11 @@ class SignUp : AppCompatActivity() {
     edtPassword = findViewById(R.id.edt_password)
     btnSignUp = findViewById(R.id.btnSignup)
     val backbtn = findViewById<ImageView>(R.id.btnBack)
+    val loginMobBtn = findViewById<Button>(R.id.loginMobile)
+    loginMobBtn.setOnClickListener {
+      val i = Intent(this@SignUp,MobileAuthActivity::class.java)
+      startActivity(i)
+    }
 
     backbtn.setOnClickListener {
       startActivity(Intent(this@SignUp, EntryActivity::class.java))
@@ -42,41 +49,45 @@ class SignUp : AppCompatActivity() {
       val password = edtPassword.text.toString().trim()
       val username = edtName.text.toString().trim()
 
-      if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+      if (TextUtils.isEmpty(username) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
         Toast.makeText(this@SignUp, "Enter Details", Toast.LENGTH_SHORT).show()
       } else {
-        mAuth.createUserWithEmailAndPassword(email, password)
-          .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-              val currentUserId = mAuth.currentUser?.uid ?: ""
-              val userObj = hashMapOf("email" to email, "username" to username)
-              db.collection("User").document(currentUserId).set(userObj)
-                .addOnSuccessListener {
-                  Toast.makeText(this@SignUp, "Registration Successful", Toast.LENGTH_SHORT).show()
-                  sendVerificationEmail()
-                  val intent = Intent(this@SignUp,LogIn::class.java)
-                  startActivity(intent)
-                  finish()
-                }
-                .addOnFailureListener { e ->
-                  Toast.makeText(this@SignUp, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-              Toast.makeText(this@SignUp, "Error: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-            }
-          }
+        signUp(username, email, password)
       }
     }
   }
 
-  private fun sendVerificationEmail() {
-    mAuth.currentUser?.sendEmailVerification()
-      ?.addOnCompleteListener { task ->
+  private fun signUp(name:String, email: String, password: String){
+    // Creating user
+    mAuth.createUserWithEmailAndPassword(email, password)
+      .addOnCompleteListener(this) { task ->
         if (task.isSuccessful) {
-          Toast.makeText(this@SignUp, "Verification email sent", Toast.LENGTH_SHORT).show()
+          //code for jumping home activity
+          addUserToDatabase(name,email,mAuth.currentUser?.uid!!)
+          sendVerificationEmail()
+          val intent= Intent(this@SignUp,LogIn::class.java)
+          finish()
+          startActivity(intent)
+
         } else {
-          Toast.makeText(this@SignUp, "Error: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+          Toast.makeText(this@SignUp,"Please Try Again,Some Error Occurred",Toast.LENGTH_SHORT).show()
         }
       }
+  }
+
+  private fun addUserToDatabase(name: String, email: String, uid: String){
+    mDbref = FirebaseDatabase.getInstance().getReference()
+
+    mDbref.child("user").child(uid).setValue(User(name,email,uid))
+  }
+
+  fun sendVerificationEmail() {
+    mAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task ->
+      if (task.isSuccessful) {
+        Toast.makeText(this, "Verification email sent to your email id.", Toast.LENGTH_SHORT).show()
+      } else {
+        Toast.makeText(this, "Failed to send verification email.", Toast.LENGTH_SHORT).show()
+      }
+    }
   }
 }
