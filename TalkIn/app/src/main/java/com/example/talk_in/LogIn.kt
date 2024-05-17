@@ -33,6 +33,11 @@ class LogIn : AppCompatActivity() {
     val btnLogIn = findViewById<Button>(R.id.btnLogin)
     val backbtn = findViewById<ImageView>(R.id.btnBack)
     val forgetPassword = findViewById<TextView>(R.id.forgetPassword)
+    val loginMobBtn = findViewById<Button>(R.id.loginMobile)
+    loginMobBtn.setOnClickListener {
+      val i = Intent(this@LogIn,MobileAuthActivity::class.java)
+      startActivity(i)
+    }
 
     btnLogIn.setOnClickListener {
       val email = edtEmail.text.toString()
@@ -57,49 +62,37 @@ class LogIn : AppCompatActivity() {
 
   }
 
-    private fun login(email: String, pwd: String) {
-      // CHecking for empty texts
-      if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pwd)) {
-        mAuth.signInWithEmailAndPassword(email, pwd)
-          .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-              if (isEmailVerified()) {
-                Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this@LogIn, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-              }
+  private fun login(email: String, pwd: String) {
+    if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pwd)) {
+      mAuth.signInWithEmailAndPassword(email, pwd)
+        .addOnCompleteListener { task ->
+          if (task.isSuccessful) {
+            if (mAuth.currentUser?.isEmailVerified == true) {
+              val intent = Intent(this@LogIn, MainActivity::class.java)
+              Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+              startActivity(intent)
+              finish()
+            } else {
+              Toast.makeText(this, "Please verify your email id.", Toast.LENGTH_SHORT).show()
             }
-          }.addOnFailureListener { e ->
-            if (e is FirebaseAuthInvalidCredentialsException) {
+          }
+        }.addOnFailureListener { e ->
+          when (e) {
+            is FirebaseAuthInvalidCredentialsException -> {
               edtPassword.error = "Invalid Password"
               edtPassword.requestFocus()
             }
-            if (e is FirebaseAuthInvalidUserException) {
+            is FirebaseAuthInvalidUserException -> {
               edtEmail.error = "Email Not Registered"
               edtEmail.requestFocus()
-            } else {
-              Toast.makeText(
-                this,
-                "Something went Wrong",
-                Toast.LENGTH_SHORT
-              ).show()
+            }
+            else -> {
+              Toast.makeText(this, "Something went Wrong", Toast.LENGTH_SHORT).show()
             }
           }
-      } else {
-        Toast.makeText(this, "Please Enter Email & Password", Toast.LENGTH_SHORT).show()
-      }
+        }
+    } else {
+      Toast.makeText(this, "Please Enter Email & Password", Toast.LENGTH_SHORT).show()
     }
-  private fun isEmailVerified(): Boolean {
-    if (mAuth.currentUser != null) {
-      val isEmailVerified: Boolean = mAuth.currentUser!!.isEmailVerified
-      if (isEmailVerified) {
-        return true
-      } else {
-        Toast.makeText(this, "please verify your email address first", Toast.LENGTH_SHORT).show()
-      }
-    }
-    return false
   }
-
 }
