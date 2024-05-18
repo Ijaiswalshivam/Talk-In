@@ -39,6 +39,7 @@ dependencies:
   firebase_auth: ^4.19.5
   firebase_database: ^10.5.5
   flutter_chat_bubble: ^2.0.2
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:

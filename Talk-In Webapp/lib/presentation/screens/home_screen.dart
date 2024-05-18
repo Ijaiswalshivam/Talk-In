@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:talk_in_web/presentation/screens/find_people.dart';
 import 'package:talk_in_web/presentation/screens/messaging_screen.dart';
 import 'package:talk_in_web/presentation/screens/notification_screen.dart';
@@ -14,23 +15,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  List<Map<String,dynamic>> friendList = [];
-
-  void loadFriends() async{
-    final list = await DataService().getFriendsList();
-    setState(() {
-      friendList = list;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    loadFriends();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final dataServiceViewModel = Provider.of<DataService>(context);
+    Future.delayed(Duration.zero,(){
+      dataServiceViewModel.getFriendsList();
+      dataServiceViewModel.getRequestsList();
+    });
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -50,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return NotificationScreen();
             }));
           }
-            , label: Text("Notification",style: TextStyle(color: Colors.white),),
+            , label: Text("Notification",style: TextStyle(color: dataServiceViewModel.requestList.length>0? Colors.greenAccent : Colors.white),),
             icon: Icon(Icons.message,color: Colors.white,),
           ),
           IconButton(
@@ -67,18 +59,18 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: friendList.length>0?
+      body: dataServiceViewModel.friendList.length>0?
       ListView.builder(
-          itemCount: friendList.length,
+          itemCount: dataServiceViewModel.friendList.length,
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           itemBuilder: (context,index){
-            String name = friendList[index]["name"].toString();
-            String profilePic = friendList[index]["profilePic"].toString();
+            String name = dataServiceViewModel.friendList[index]["name"].toString();
+            String profilePic = dataServiceViewModel.friendList[index]["profilePic"].toString();
             return ListTile(
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context){
-                  return MessagingScreen(friendList[index]);
+                  return MessagingScreen(dataServiceViewModel.friendList[index]);
                 }));
               },
               title: Text(name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),),
@@ -87,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           }):Align(
         alignment: Alignment.center,
-        child: Text("No friends to show. Go and find some people you introvert!!",style: TextStyle(color: Colors.lightGreenAccent),),
+        child: Text("No friends to show. Go and find some people, you introvert!!",style: TextStyle(color: Colors.lightGreenAccent),),
       ),
     );
   }
