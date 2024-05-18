@@ -9,7 +9,7 @@
 
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
-        android:background="@drawable/edt_background"
+        android:background="@drawable/edt_background2"
         >
 
         <TextView
@@ -19,6 +19,7 @@
 
             android:padding="10dp"
             android:text="This is receive message"
+            android:textColor="@color/white"
             android:textSize="18sp"/>
     </RelativeLayout>
 </RelativeLayout>
