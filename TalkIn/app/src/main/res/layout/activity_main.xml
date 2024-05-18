@@ -28,12 +28,32 @@
     android:layout_below="@id/main_toolbar"
     android:layout_above="@id/divider"
     />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/userSearchBar"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginVertical="60dp"
+        android:background="@drawable/custom_edit_text"
+        android:focusedByDefault="true"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        android:textSize="16dp"
+        app:queryHint="Search Name" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/userRecyclerView"
+        android:layout_marginTop="90dp"
         android:layout_below="@id/main_toolbar"
         android:layout_above="@id/divider"/>
+
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="2dp"
@@ -47,7 +67,4 @@
         android:layout_alignParentBottom="true"
         android:background="?attr/selectableItemBackgroundBorderless"
         app:menu="@menu/bottom_navigation_menu"/>
-
-
-
 </RelativeLayout>

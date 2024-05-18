@@ -9,10 +9,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.firebase.auth.FirebaseAuth
 
-class MessageAdapter(val context: Context, val messageList: ArrayList<Message>) :
+class MessageAdapter(val context: Context, var messageList: ArrayList<Message>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val ITEM_RECEIVE = 1
     val ITEMSENT = 2
+
+    fun updateList(newList: ArrayList<Message>) {
+        messageList = newList
+        notifyDataSetChanged()
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         if (viewType == 1) {
             //inflate receive
