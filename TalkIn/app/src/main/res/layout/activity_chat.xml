@@ -8,8 +8,8 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatRecyclerView"
-        android:layout_above="@id/linearLayout"
+       android:id="@+id/chatRecyclerView"
+       android:layout_above="@id/linearLayout"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         android:layout_marginBottom="5dp"
         android:orientation="horizontal"
         android:weightSum="100">
-
+        
         <EditText
             android:id="@+id/messageBox"
             android:layout_width="wrap_content"
@@ -35,10 +35,9 @@
             android:layout_weight="90"/>
         <ImageView
             android:id="@+id/sendButton"
-            android:layout_width="45dp"
-            android:layout_height="35dp"
-            android:layout_gravity="bottom"
-            android:src="@drawable/img_4"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/send"
             android:layout_weight="20"/>
 
     </LinearLayout>

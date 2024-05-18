@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:title="Chats"
+    android:icon="@drawable/img_2"
+    android:id="@+id/menu_chat"
+    />
     <item android:title="Send"
         android:icon="@drawable/img"
         android:id="@+id/menu_send"
-        />
-    <item android:title="Chats"
-        android:icon="@drawable/img_2"
-        android:id="@+id/menu_chat"
-        />
-    <item android:title="Groups"
-        android:icon="@drawable/img_3"
-        android:id="@+id/menu_groups"
-        />
-    <item android:title="Search"
-        android:icon="@drawable/img_7"
-        android:id="@+id/menu_search"
         />
     <item android:title="Profile"
         android:icon="@drawable/img_1"
         android:id="@+id/menu_profile"
         />
-
 </menu>

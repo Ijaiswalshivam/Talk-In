@@ -1,63 +1,76 @@
 package com.example.talk_in
 
-import CameraFragment
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var chatFragment: ChatListFragment
-    private lateinit var profileFragment: ProfileFragment
-    private lateinit var groupFragment: GroupFragment
-    private lateinit var cameraFragment: CameraFragment
+    private lateinit var userRecyclerView: RecyclerView
+    private lateinit var userList: ArrayList<User>
+    private lateinit var adapter: UserAdapter
+    private lateinit var mAuth: FirebaseAuth
+    private lateinit var mDbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        chatFragment = ChatListFragment()
-        profileFragment = ProfileFragment()
-        groupFragment = GroupFragment()
-        cameraFragment = CameraFragment()
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.menu_chat -> {
-                    replaceFragment(chatFragment)
-                    true
-                }
-                R.id.menu_groups -> {
-                    replaceFragment(groupFragment)
-                    true
-                }
-                R.id.menu_profile -> {
-                    replaceFragment(profileFragment)
-                    true
-                }
-                R.id.menu_send -> {
-                    replaceFragment(cameraFragment)
-                    true
-                }
-                R.id.menu_search ->{
-                    val intent =Intent(this,SearchActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-                else -> false
-            }
-        }
+        mAuth = FirebaseAuth.getInstance()
+        mDbRef = FirebaseDatabase.getInstance().getReference()
 
-        bottomNavigationView.selectedItemId = R.id.menu_chat
+        userList = ArrayList()
+        adapter=UserAdapter(this,userList)
+
+        userRecyclerView = findViewById(R.id.userRecyclerView)
+
+        userRecyclerView.layoutManager = LinearLayoutManager(this)
+        userRecyclerView.adapter = adapter
+
+        mDbRef.child("user").addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                userList.clear()
+                for(postSnapshot in snapshot.children){
+                    val currentUser = postSnapshot.getValue(User::class.java)
+                    if(mAuth.currentUser?.uid != currentUser?.uid){
+                        userList.add(currentUser!!)
+                    }
+
+                }
+                adapter.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).commit()
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu,menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.logout) {
+            //logic for logout
+            mAuth.signOut()
+            val intent = Intent(this@MainActivity,EntryActivity::class.java)
+            startActivity(intent)
+            finish()
+           // finish()
+            return true
+        }
+        return true
     }
     override fun onBackPressed() {
-        super.onBackPressed()
         val intent = Intent(Intent.ACTION_MAIN)
         intent.addCategory(Intent.CATEGORY_HOME)
         startActivity(intent)
