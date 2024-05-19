@@ -3,6 +3,5 @@
     <item android:id="@+id/viewProfile" android:title="View Profile"/>
     <item android:id="@+id/sharedMedia" android:title="Shared Media"/>
     <item android:id="@+id/search" android:title="Search"/>
-    <item android:id="@+id/maplocation" android:title="Locate"/>
-
+    <item android:id="@+id/locateNow" android:title="Locate Now"/>
 </menu>

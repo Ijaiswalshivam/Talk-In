@@ -76,16 +76,16 @@
             android:background="@drawable/message_box_background"
             android:paddingLeft="17dp"
             android:layout_marginLeft="10dp"
-            android:layout_weight="80"/>
+            android:layout_marginBottom="4dp"
+            android:layout_weight="90"/>
 
         <ImageView
             android:id="@+id/sendButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/send"
-            android:layout_marginBottom="4dp"
-            android:layout_weight="20"/>
-
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:src="@drawable/send_icon"
+            android:layout_marginLeft="15dp"/>
 
     </LinearLayout>
 </RelativeLayout>
