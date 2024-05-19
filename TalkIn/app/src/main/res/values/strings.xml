@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">Talk-In</string>
-    <string name="this_is_receive_message">This is receive message</string>
-    <string name="this_is_sent_message">This is sent message</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.talk_in
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -25,29 +26,13 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
-    private var receiverRoom: String? = null
-    private var senderRoom: String? = null
-    private lateinit var receiverUid: String
-    private lateinit var senderName: String
+    var receiverRoom: String?=null
+    var senderRoom: String?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        val name = intent.getStringExtra("name")
-        receiverUid = intent.getStringExtra("uid") ?: ""
-        val senderUid = FirebaseAuth.getInstance().currentUser?.uid
-        mDbRef = FirebaseDatabase.getInstance().reference
-        senderRoom = "$receiverUid$senderUid"
-        receiverRoom = "$senderUid$receiverUid"
-        supportActionBar?.title = name
-
-
-        chatRecyclerView = findViewById(R.id.chatRecyclerView)
-        messageBox = findViewById(R.id.messageBox)
-        sendButton = findViewById(R.id.sendButton)
-        messageList = ArrayList()
-        messageAdapter = MessageAdapter(this, messageList)
 
         val name= intent.getStringExtra("name")
         val receiveruid= intent.getStringExtra("uid")
@@ -82,37 +67,19 @@ class ChatActivity : AppCompatActivity() {
                    messageAdapter.notifyDataSetChanged()
                 }
 
-
-        chatRecyclerView.layoutManager = LinearLayoutManager(this)
-        chatRecyclerView.adapter = messageAdapter
-
-        // Fetch sender's name
-        senderUid?.let {
-            mDbRef.child("user").child(it).addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    senderName = dataSnapshot.child("name").value.toString()
-                    // Load chat messages
-                    loadChatMessages()
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
+                override fun onCancelled(error: DatabaseError) {
 
                 }
-
             })
-        }
-
-        // Adding message to database
-        sendButton.setOnClickListener {
-            val message = messageBox.text.toString()
-            val messageObject = Message(message, senderUid)
+       //adding message to data base
+        sendButton.setOnClickListener{
+         val message=messageBox.text.toString()
+            val messageObject= Message(message,senderUid)
             mDbRef.child("chats").child(senderRoom!!).child("messages").push()
                 .setValue(messageObject).addOnSuccessListener {
                     mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
                         .setValue(messageObject)
-                        .addOnSuccessListener {
-                            sendNotificationToReceiver(receiverUid, message)
-                        }
+
                 }
             messageBox.setText("")
         }
@@ -150,47 +117,5 @@ class ChatActivity : AppCompatActivity() {
             }
         }
         popupMenu.show()
-    }
-
-    private fun loadChatMessages() {
-        mDbRef.child("chats").child(senderRoom!!).child("messages").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                messageList.clear()
-                for (postSnapshot in snapshot.children) {
-                    val message = postSnapshot.getValue(Message::class.java)
-                    messageList.add(message!!)
-                }
-                messageAdapter.notifyDataSetChanged()
-                // Scroll RecyclerView to the bottom
-                chatRecyclerView.scrollToPosition(messageAdapter.itemCount - 1)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-            }
-        })
-    }
-
-    private fun sendNotificationToReceiver(receiverUid: String, message: String) {
-        // Fetch receiver's device token
-        mDbRef.child("users-device-tokens").child(receiverUid).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val receiverDeviceToken = dataSnapshot.child("deviceToken").value.toString()
-
-                val notificationSender = FcmNotificationsSender(
-                    receiverDeviceToken,
-                    "New Message from $senderName",
-                    message,
-                    FirebaseAuth.getInstance().currentUser?.uid ?: "",
-                    senderName,
-                    applicationContext,
-                    this@ChatActivity
-                )
-                notificationSender.sendNotifications()
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-
-            }
-        })
     }
 }
