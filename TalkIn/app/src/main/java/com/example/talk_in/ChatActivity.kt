@@ -113,6 +113,10 @@ class ChatActivity : AppCompatActivity() {
                     Toast.makeText(this, "Search Clicked", Toast.LENGTH_SHORT).show()
                     true
                 }
+                R.id.locateNow -> {
+                    Toast.makeText(this, "Locate Now Clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
                 else -> false
             }
         }
