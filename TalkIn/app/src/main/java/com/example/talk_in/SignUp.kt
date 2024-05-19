@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.FirebaseFirestore
 
 class SignUp : AppCompatActivity() {
 
@@ -68,7 +67,7 @@ class SignUp : AppCompatActivity() {
       .addOnCompleteListener(this) { task ->
         if (task.isSuccessful) {
           //code for jumping home activity
-          addUserToDatabase(name,email,mAuth.currentUser?.uid!!)
+          addUserToDatabase(name,email,null, mAuth.currentUser?.uid!!)
           sendVerificationEmail()
           progressSignUp.visibility = View.GONE
           val intent= Intent(this@SignUp,LogIn::class.java)
@@ -82,10 +81,10 @@ class SignUp : AppCompatActivity() {
       }
   }
 
-  private fun addUserToDatabase(name: String, email: String, uid: String){
+  private fun addUserToDatabase(name: String, email: String, mobile: String?, uid: String){
     mDbref = FirebaseDatabase.getInstance().getReference()
 
-    mDbref.child("user").child(uid).setValue(User(name,email,uid))
+    mDbref.child("user").child(uid).setValue(User(name,email, null, uid))
   }
 
   fun sendVerificationEmail() {
