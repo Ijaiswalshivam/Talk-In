@@ -60,17 +60,25 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
-            //logic for logout
-            mAuth.signOut()
-            val intent = Intent(this@MainActivity,EntryActivity::class.java)
-            startActivity(intent)
-            finish()
-           // finish()
+            // Remove device token from Firebase database
+            val currentUser = mAuth.currentUser
+            currentUser?.uid?.let { userId ->
+                mDbRef.child("users-device-tokens").child(userId).removeValue()
+                    .addOnSuccessListener {
+                        mAuth.signOut()
+                        val intent = Intent(this@MainActivity, LogIn::class.java)
+                        finish()
+                        startActivity(intent)
+                    }
+                    .addOnFailureListener { e ->
+                    }
+            }
             return true
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
     override fun onBackPressed() {
+        super.onBackPressed()
         val intent = Intent(Intent.ACTION_MAIN)
         intent.addCategory(Intent.CATEGORY_HOME)
         startActivity(intent)
