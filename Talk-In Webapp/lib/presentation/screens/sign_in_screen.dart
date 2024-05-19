@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../services/auth_service.dart';
 class SignInScreen extends StatefulWidget {
@@ -17,7 +18,16 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final authServiceViewModel = Provider.of<AuthService>(context);
+    return authServiceViewModel.loading?Scaffold(
+      backgroundColor: Colors.black,
+      body: Align(
+        alignment: Alignment.center,
+        child: CircularProgressIndicator(
+          color: Colors.white,backgroundColor: Colors.black,
+        ),
+      ),
+    ):Scaffold(
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -128,15 +138,18 @@ class _SignInScreenState extends State<SignInScreen> {
                               String email = emailController.text;
                               String password = passwordController.text;
                               if(email.isEmpty){
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Email field is required",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)));
                                 return null;
                               }
                               if(password.isEmpty){
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Password field is required",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)));
                                 return null;
                               }
                               if(password.length<8){
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Password should be 8 characters long",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)));
                                 return null;
                               }
-                              AuthService().logIntoAccount(context,email, password);
+                              authServiceViewModel.logIntoAccount(context,email, password);
 
                             },
                             child: Text("Log Into Account",style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Colors.white),),
