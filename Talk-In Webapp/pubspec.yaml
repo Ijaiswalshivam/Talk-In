@@ -40,6 +40,8 @@ dependencies:
   firebase_database: ^10.5.5
   flutter_chat_bubble: ^2.0.2
   provider: ^6.1.2
+  firebase_storage: ^11.7.5
+  file_picker: ^8.0.3
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:talk_in_web/presentation/screens/find_people.dart';
 import 'package:talk_in_web/presentation/screens/messaging_screen.dart';
 import 'package:talk_in_web/presentation/screens/notification_screen.dart';
+import 'package:talk_in_web/presentation/screens/settings_screen.dart';
 import 'package:talk_in_web/services/user_service.dart';
 
 import '../../services/data_service.dart';
@@ -47,7 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           IconButton(
               onPressed: (){
-
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                  return SettingsScreen();
+                }));
               },
               icon: Icon(Icons.settings,color: Colors.white,)
           ),

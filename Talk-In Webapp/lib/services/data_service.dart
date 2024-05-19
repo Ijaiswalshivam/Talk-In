@@ -58,13 +58,17 @@ class DataService extends ChangeNotifier{
         "id":authId,
         "name":name,
         "email":email,
-        "password":password
+        "password":password,
+        "about":"Hey! I am using TalkIn",
+        "profileVisibility":"true"
       });
       UserService.userData = {
         "id":authId,
         "name":name,
         "email":email,
-        "password":password
+        "password":password,
+        "about":"Hey! I am using TalkIn",
+        "profileVisibility":"true",
       };
       return true;
     }catch(e){

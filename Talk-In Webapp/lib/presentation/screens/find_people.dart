@@ -30,8 +30,6 @@ class _FindPeopleState extends State<FindPeople> {
     final dataServiceViewModel = Provider.of<DataService>(context);
     Future.delayed(Duration.zero,() async{
       dataServiceViewModel.getAllUsersExceptCurrentUser();
-      // dataServiceViewModel.getFriendsList();
-      // dataServiceViewModel.getMySentRequests();
     });
     return Scaffold(
       backgroundColor: Colors.black,
@@ -49,6 +47,7 @@ class _FindPeopleState extends State<FindPeople> {
             // bool isRequested = dataServiceViewModel.sentRequestList.contains(dataServiceViewModel.userList[index]);
             bool isFriend = false;
             bool isRequested = false;
+            bool profileVisibility = bool.parse(dataServiceViewModel.userList[index]["profileVisibility"].toString());
             dataServiceViewModel.friendList.forEach((element) {
               if(element["id"].toString().compareTo(dataServiceViewModel.userList[index]["id"].toString())==0){
                 isFriend = true;
@@ -64,7 +63,36 @@ class _FindPeopleState extends State<FindPeople> {
             print("Find People $isFriend $isRequested");
             return ListTile(
               title: Text(name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),),
-              leading: profilePic=="null"?Image.asset("assets/images/profile.png",width: 30,height:30,):Image.network(profilePic,width: 30,height:30,),
+              leading: GestureDetector(
+                onTap: (){
+                  if(profileVisibility || isFriend){
+                    showDialog(context: context, builder: (BuildContext context){
+                      return AlertDialog(
+                        backgroundColor: Colors.black38,
+                        title: CircleAvatar(
+                          backgroundColor: Colors.black,
+                          radius: 100,
+                          //maxRadius: 100,// Image radius
+                          backgroundImage: profilePic=="null"?Image.asset("assets/images/profile.png").image:Image.network(profilePic).image,
+                        ),
+                      );
+                    });
+                  }else {
+                    showDialog(context: context, builder: (BuildContext context){
+                      return AlertDialog(
+                        backgroundColor: Colors.black38,
+                        title: CircleAvatar(
+                          backgroundColor: Colors.black,
+                          radius: 100,
+                          //maxRadius: 100,// Image radius
+                          backgroundImage: Image.asset("assets/images/profile.png").image,
+                        ),
+                      );
+                    });
+                  }
+                },
+                child: profilePic=="null"?Image.asset("assets/images/profile.png",width: 30,height:30,):Image.network(profilePic,width: 30,height:30,),
+              ),
               trailing: ElevatedButton(
                 onPressed: isRequested? null: isFriend? (){
 
