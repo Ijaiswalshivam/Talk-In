@@ -40,16 +40,23 @@ class AuthService extends ChangeNotifier{
 
   void logIntoAccount(BuildContext context,String email,String password) async{
     setLoading(true);
-    UserCredential userCredential = await auth.signInWithEmailAndPassword(email: email, password: password);
-    if(userCredential.user!=null){
-      await DataService().getUserFromFirebase(context,userCredential.user!.uid);
+    try {
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(email: email, password: password);
+      print(userCredential);
+      if(userCredential.user!=null){
+        await DataService().getUserFromFirebase(context,userCredential.user!.uid);
+        setLoading(false);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+          return HomeScreen();
+        }));
+      }else{
+        setLoading(false);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Something went wrong",style: TextStyle(color: Colors.white),)));
+      }
+    } on Exception catch (e) {
+      // TODO
+      print(e);
       setLoading(false);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-        return HomeScreen();
-      }));
-    }else{
-      setLoading(false);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Something went wrong",style: TextStyle(color: Colors.white),)));
     }
   }
 
