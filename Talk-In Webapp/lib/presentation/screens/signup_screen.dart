@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:talk_in_web/services/auth_service.dart';
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -17,7 +19,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final authServiceViewModel = Provider.of<AuthService>(context);
+    return authServiceViewModel.loading?Scaffold(
+      backgroundColor: Colors.black,
+      body: Align(
+        alignment: Alignment.center,
+        child: CircularProgressIndicator(
+          color: Colors.white,backgroundColor: Colors.black,
+        ),
+      ),
+    ):Scaffold(
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -100,7 +111,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             controller: emailController,
                             decoration: InputDecoration(
                                 icon: Icon(Icons.mail),
-                               // labelText: "Enter Email *"
+                                // labelText: "Enter Email *"
                                 hintText: "Enter Email",
                                 border: InputBorder.none
                             ),
@@ -132,18 +143,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             obscureText: obscure,
                             maxLines: 1,
                             decoration: InputDecoration(
-                              icon: Icon(Icons.security),
-                               suffixIcon:IconButton(
-                                 onPressed: (){
-                                   setState(() {
-                                     obscure = !obscure;
-                                   });
-                                 },
-                                 icon: Icon(obscure?Icons.remove_red_eye_rounded:Icons.remove_red_eye_outlined),
-                               ),
-                               // labelText: "Enter Password *",
-                              hintText: "Enter Password",
-                              border: InputBorder.none
+                                icon: Icon(Icons.security),
+                                suffixIcon:IconButton(
+                                  onPressed: (){
+                                    setState(() {
+                                      obscure = !obscure;
+                                    });
+                                  },
+                                  icon: Icon(obscure?Icons.remove_red_eye_rounded:Icons.remove_red_eye_outlined),
+                                ),
+                                // labelText: "Enter Password *",
+                                hintText: "Enter Password",
+                                border: InputBorder.none
                             ),
                           ),
                         ),
@@ -156,22 +167,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 40,
                         child: ElevatedButton(
                             onPressed: (){
-                                String name = nameController.text;
-                                String email = emailController.text;
-                                String password = passwordController.text;
-                                if(name.isEmpty){
-                                  return null;
-                                }
-                                if(email.isEmpty){
-                                  return null;
-                                }
-                                if(password.isEmpty){
-                                  return null;
-                                }
-                                if(password.length<8){
-                                  return null;
-                                }
-                                AuthService().createAnAccount(context,name, email, password);
+                              String name = nameController.text;
+                              String email = emailController.text;
+                              String password = passwordController.text;
+                              if(name.isEmpty){
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Name field is required",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)));
+                                return null;
+                              }
+                              if(email.isEmpty){
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Email field is required",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)));
+                                return null;
+                              }
+                              if(password.isEmpty){
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Password field is required",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)));
+                                return null;
+                              }
+                              if(password.length<8){
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Password should be 8 characters long",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)));
+                                return null;
+                              }
+                              authServiceViewModel.createAnAccount(context,name, email, password);
                             },
                             child: Text("Create An Account",style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Colors.white),),
                             style: ButtonStyle(

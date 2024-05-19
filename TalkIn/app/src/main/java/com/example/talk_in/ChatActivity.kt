@@ -7,11 +7,19 @@ import android.media.Image
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+
 import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.View
+import android.widget.PopupMenu
+import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -25,8 +33,12 @@ class ChatActivity : AppCompatActivity() {
 
     private lateinit var chatRecyclerView: RecyclerView
     private lateinit var messageBox: EditText
+    private lateinit var nameOfUser: TextView
     private lateinit var sendButton: ImageView
     private lateinit var mapLoaction: ImageView
+
+    private lateinit var backbtnImage: ImageView
+
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
@@ -59,14 +71,21 @@ class ChatActivity : AppCompatActivity() {
 
         senderRoom= receiveruid+senderUid
         receiverRoom=senderUid+receiveruid
-        supportActionBar?.title=name
+        supportActionBar?.hide()
 
         chatRecyclerView=findViewById(R.id.chatRecyclerView)
         messageBox=findViewById(R.id.messageBox)
         sendButton=findViewById(R.id.sendButton)
+
         mapLoaction = findViewById(R.id.maplocation)
+
+        nameOfUser=findViewById(R.id.nameOfUser)
+        backbtnImage=findViewById(R.id.backbtnImage)
+
         messageList=ArrayList()
         messageAdapter=MessageAdapter(this,messageList)
+
+        nameOfUser.setText(name)
 
         chatRecyclerView.layoutManager=LinearLayoutManager(this)
         chatRecyclerView.adapter=messageAdapter
@@ -86,8 +105,6 @@ class ChatActivity : AppCompatActivity() {
                 override fun onCancelled(error: DatabaseError) {
 
                 }
-
-
             })
        //adding message to data base
         sendButton.setOnClickListener{
@@ -102,6 +119,7 @@ class ChatActivity : AppCompatActivity() {
             messageBox.setText("")
         }
 
+
         mapLoaction.setOnClickListener {
 
             if (receiveruid.isNullOrEmpty()) {
@@ -115,6 +133,40 @@ class ChatActivity : AppCompatActivity() {
 
 
         }
+
+        backbtnImage.setOnClickListener {
+            val intent = Intent(this@ChatActivity, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        val popupMenuBtn: ImageView = findViewById(R.id.popupMenuBtn)
+        popupMenuBtn.setOnClickListener { view ->
+            showPopupMenu(view)
+        }
+    }
+    private fun showPopupMenu(view: View) {
+        val popupMenu = PopupMenu(this, view)
+        val inflater: MenuInflater = popupMenu.menuInflater
+        inflater.inflate(R.menu.user_chat_menu, popupMenu.menu)
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.viewProfile -> {
+                    Toast.makeText(this, "View Profile Clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.sharedMedia -> {
+                    Toast.makeText(this, "Shared Media Clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.search -> {
+                    Toast.makeText(this, "Search Clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                else -> false
+            }
+        }
+        popupMenu.show()
     }
 
     private fun getSenderLocation() {
