@@ -26,22 +26,21 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
-    private var receiverRoom: String? = null
-    private var senderRoom: String? = null
-    private lateinit var receiverUid: String
-    private lateinit var senderName: String
+    private lateinit var receiveruid: String
+    var receiverRoom: String?=null
+    var senderRoom: String?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
 
-        val name = intent.getStringExtra("name")
-        receiverUid = intent.getStringExtra("uid") ?: ""
+        val name= intent.getStringExtra("name")
+        receiveruid= intent.getStringExtra("uid").toString()
         val senderUid= FirebaseAuth.getInstance().currentUser?.uid
         mDbRef= FirebaseDatabase.getInstance().getReference()
-        senderRoom = "$receiverUid$senderUid"
-        receiverRoom = "$senderUid$receiverUid"
+        senderRoom= receiveruid+senderUid
+        receiverRoom=senderUid+receiveruid
         supportActionBar?.hide()
 
         chatRecyclerView=findViewById(R.id.chatRecyclerView)
@@ -56,38 +55,35 @@ class ChatActivity : AppCompatActivity() {
 
         chatRecyclerView.layoutManager=LinearLayoutManager(this)
         chatRecyclerView.adapter=messageAdapter
+        //logic to add data to recyclerview
+        mDbRef.child("chats").child(senderRoom!!).child("messages")
+            .addValueEventListener(object: ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    messageList.clear()
 
-        // Fetch sender's name
-        senderUid?.let {
-            mDbRef.child("user").child(it).addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    senderName = dataSnapshot.child("name").value.toString()
-                    // Load chat messages
-                    loadChatMessages()
+                    for (postSnapshot in snapshot.children){
+                        val message = postSnapshot.getValue(Message::class.java)
+                        messageList.add(message!!)
+                    }
+                    messageAdapter.notifyDataSetChanged()
                 }
 
-                override fun onCancelled(databaseError: DatabaseError) {
+                override fun onCancelled(error: DatabaseError) {
 
                 }
-
             })
-        }
-
-        // Adding message to database
-        sendButton.setOnClickListener {
-            val message = messageBox.text.toString()
-            val messageObject = Message(message, senderUid)
+        //adding message to data base
+        sendButton.setOnClickListener{
+            val message=messageBox.text.toString()
+            val messageObject= Message(message,senderUid)
             mDbRef.child("chats").child(senderRoom!!).child("messages").push()
                 .setValue(messageObject).addOnSuccessListener {
                     mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
                         .setValue(messageObject)
-                        .addOnSuccessListener {
-                            sendNotificationToReceiver(receiverUid, message)
-                        }
+
                 }
             messageBox.setText("")
         }
-
 
         backbtnImage.setOnClickListener {
             val intent = Intent(this@ChatActivity, MainActivity::class.java)
@@ -107,7 +103,10 @@ class ChatActivity : AppCompatActivity() {
         popupMenu.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.viewProfile -> {
-                    Toast.makeText(this, "View Profile Clicked", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, UserProfileScreen::class.java)
+                    intent.putExtra("MODE", "RECEIVER_USER")
+                    intent.putExtra("RECEIVER_UID", receiveruid)
+                    startActivity(intent)
                     true
                 }
                 R.id.sharedMedia -> {
@@ -126,47 +125,5 @@ class ChatActivity : AppCompatActivity() {
             }
         }
         popupMenu.show()
-    }
-
-    private fun loadChatMessages() {
-        mDbRef.child("chats").child(senderRoom!!).child("messages").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                messageList.clear()
-                for (postSnapshot in snapshot.children) {
-                    val message = postSnapshot.getValue(Message::class.java)
-                    messageList.add(message!!)
-                }
-                messageAdapter.notifyDataSetChanged()
-                // Scroll RecyclerView to the bottom
-                chatRecyclerView.scrollToPosition(messageAdapter.itemCount - 1)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-            }
-        })
-    }
-
-    private fun sendNotificationToReceiver(receiverUid: String, message: String) {
-        // Fetch receiver's device token
-        mDbRef.child("users-device-tokens").child(receiverUid).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val receiverDeviceToken = dataSnapshot.child("deviceToken").value.toString()
-
-                val notificationSender = FcmNotificationsSender(
-                    receiverDeviceToken,
-                    "New Message from $senderName",
-                    message,
-                    FirebaseAuth.getInstance().currentUser?.uid ?: "",
-                    senderName,
-                    applicationContext,
-                    this@ChatActivity
-                )
-                notificationSender.sendNotifications()
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-
-            }
-        })
     }
 }
