@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -17,13 +17,9 @@
         android:theme="@style/Theme.TalkIn"
         tools:targetApi="31">
         <activity
-            android:name=".UserProfileScreen"
+            android:name=".ResetPasswordActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="false" />
-        <activity
-            android:name=".ResetPasswordActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".MobileAuthActivity"
             android:exported="false" />
@@ -49,11 +45,9 @@
         </activity>
         <activity android:name=".MainActivity" />
 
-        <service
-            android:name=".FCMNotificationService"
-            android:exported="true">
+        <service android:name=".FCMNotificationService" android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 
