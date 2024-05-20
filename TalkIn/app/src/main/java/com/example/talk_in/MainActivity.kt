@@ -21,12 +21,36 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tempUserList: ArrayList<User>
     private lateinit var tempAdapter: UserAdapter
     private lateinit var userSearchBar:SearchView
+    private lateinit var bottomNavigationView: com.google.android.material.bottomnavigation.BottomNavigationView
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_chat -> {
+                    true
+                }
+
+                R.id.menu_send -> {
+                    true
+                }
+
+                R.id.menu_profile -> {
+                    val intent = Intent(this, UserProfileScreen::class.java)
+                    intent.putExtra("MODE", "CURRENT_USER")
+                    startActivity(intent)
+                    true
+                }
+
+                else -> false
+            }
+        }
 
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
