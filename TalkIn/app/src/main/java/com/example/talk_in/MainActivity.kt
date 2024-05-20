@@ -114,24 +114,6 @@ class MainActivity : AppCompatActivity() {
             tempAdapter.notifyDataSetChanged()
         }
     }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu,menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.logout) {
-            //logic for logout
-            mAuth.signOut()
-            val intent = Intent(this@MainActivity,EntryActivity::class.java)
-            startActivity(intent)
-            finish()
-           // finish()
-            return true
-        }
-        return true
-    }
     override fun onBackPressed() {
         val intent = Intent(Intent.ACTION_MAIN)
         intent.addCategory(Intent.CATEGORY_HOME)
