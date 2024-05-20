@@ -26,18 +26,19 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
-    private var receiverRoom: String? = null
-    private var senderRoom: String? = null
+    private lateinit var receiveruid: String
     private lateinit var receiverUid: String
     private lateinit var senderName: String
+    var receiverRoom: String?=null
+    var senderRoom: String?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
+        val name= intent.getStringExtra("name")
+        receiveruid= intent.getStringExtra("uid").toString()
 
-        val name = intent.getStringExtra("name")
-        receiverUid = intent.getStringExtra("uid") ?: ""
         val senderUid= FirebaseAuth.getInstance().currentUser?.uid
         mDbRef= FirebaseDatabase.getInstance().getReference()
         senderRoom = "$receiverUid$senderUid"
@@ -107,7 +108,10 @@ class ChatActivity : AppCompatActivity() {
         popupMenu.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.viewProfile -> {
-                    Toast.makeText(this, "View Profile Clicked", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, UserProfileScreen::class.java)
+                    intent.putExtra("MODE", "RECEIVER_USER")
+                    intent.putExtra("RECEIVER_UID", receiveruid)
+                    startActivity(intent)
                     true
                 }
                 R.id.sharedMedia -> {
