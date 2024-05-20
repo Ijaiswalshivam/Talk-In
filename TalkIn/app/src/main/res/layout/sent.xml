@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<RelativeLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-
-    android:layout_height="wrap_content"
-    android:layout_alignParentRight="true"
-    android:layout_marginRight="5dp"
-    android:layout_marginTop="5dp"
-    android:background="@drawable/edt_background2"
-    >
-
-    <TextView
-        android:id="@+id/txt_sent_message"
+    android:layout_height="wrap_content">
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-       android:textColor="@color/white"
-        android:padding="10dp"
-        android:text="This is sent message"
-        android:textSize="18sp"/>
-</RelativeLayout>
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/edt_background2"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:id="@+id/txt_sent_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           android:textColor="@color/white"
+            android:padding="10dp"
+            android:text="@string/this_is_sent_message"
+            android:textSize="18sp"/>
+    </RelativeLayout>
 </RelativeLayout>
