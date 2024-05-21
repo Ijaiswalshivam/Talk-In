@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:talk_in_web/presentation/screens/sign_in_screen.dart';
 import 'package:talk_in_web/presentation/screens/signup_screen.dart';
+import 'package:talk_in_web/services/auth_service.dart';
 class EntryScreen extends StatefulWidget {
   const EntryScreen({super.key});
 
@@ -73,9 +74,9 @@ class _EntryScreenState extends State<EntryScreen> {
                       height: 40,
                       child: ElevatedButton(
                           onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context){
-                                return SignUpScreen();
-                              }));
+                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                              return SignUpScreen();
+                            }));
                           },
                           child: Text("Sign Up",style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Colors.black),),
                           style: ButtonStyle(
@@ -108,7 +109,7 @@ class _EntryScreenState extends State<EntryScreen> {
                     children: [
                       GestureDetector(
                         onTap: (){
-
+                          AuthService().GoogleAuthentication(context);
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -117,7 +118,7 @@ class _EntryScreenState extends State<EntryScreen> {
                       ),
                       GestureDetector(
                         onTap: (){
-
+                          AuthService().FacebookAuthentication();
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -126,7 +127,7 @@ class _EntryScreenState extends State<EntryScreen> {
                       ),
                       GestureDetector(
                         onTap: (){
-
+                          AuthService().TwitterAuthentication();
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -135,7 +136,7 @@ class _EntryScreenState extends State<EntryScreen> {
                       ),
                       GestureDetector(
                         onTap: (){
-
+                          AuthService().YahooAuthentication();
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -156,20 +157,20 @@ class _EntryScreenState extends State<EntryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children:[
+        backgroundColor: Colors.black,
+        body: Stack(
+          children:[
 
-      Center(
-        child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Image.asset("assets/videos/bg.gif"),
+            Center(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Image.asset("assets/videos/bg.gif"),
+              ),
             ),
-      ),
-          loadScreen()
-        ],
-      )
+            loadScreen()
+          ],
+        )
     );
   }
 }
