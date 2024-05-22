@@ -51,8 +51,8 @@
         android:src="@drawable/popup_menu_icon" />
 
     <androidx.recyclerview.widget.RecyclerView
-       android:id="@+id/chatRecyclerView"
-       android:layout_above="@id/linearLayout"
+        android:id="@+id/chatRecyclerView"
+        android:layout_above="@id/linearLayout"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_gravity="center"
-            android:src="@drawable/send_icon"
+            android:src="@drawable/send_icon_dull"
             android:layout_marginLeft="15dp"/>
 
     </LinearLayout>
