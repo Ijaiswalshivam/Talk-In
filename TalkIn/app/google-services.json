@@ -13,7 +13,20 @@
           "package_name": "com.example.talk_in"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "787210585909-68vpnbhirlm4tqmqgoeos6hk6kkkujfj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.talk_in",
+            "certificate_hash": "7d801a80702c6ad19852e46118e503d5b2bf6e06"
+          }
+        },
+        {
+          "client_id": "787210585909-1h4j24s2vr4mvk05n3n2vkl2ga61hdu9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDJzORrmvrlUIFor_h1o8g3R_NqlHia-Ps"
@@ -21,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "787210585909-1h4j24s2vr4mvk05n3n2vkl2ga61hdu9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
