@@ -7,6 +7,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.LinearLayout
+import android.widget.Switch
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -26,6 +29,8 @@ class UserProfileScreen : AppCompatActivity() {
     private lateinit var aboutMeTextView: TextView
     private lateinit var editAboutIcon: ImageView
     private lateinit var editContactIcon: ImageView
+    private lateinit var showLocationSection: LinearLayout
+    private lateinit var showLocationToggleBtn: Switch
     private lateinit var emailid: TextView
     private lateinit var backBtn: ImageView
     private var USER_MODE: String? = null
@@ -43,6 +48,8 @@ class UserProfileScreen : AppCompatActivity() {
         aboutMeTextView = findViewById(R.id.aboutMeTextView)
         editAboutIcon = findViewById(R.id.editAboutIcon)
         editContactIcon = findViewById(R.id.editContactIcon)
+        showLocationSection = findViewById(R.id.showLocationSection)
+        showLocationToggleBtn = findViewById(R.id.showLocationToggleBtn)
         emailid = findViewById(R.id.emailid)
         backBtn = findViewById(R.id.backBtn)
 
@@ -63,16 +70,28 @@ class UserProfileScreen : AppCompatActivity() {
             logoutBtn.visibility = View.GONE
             editAboutIcon.visibility = View.GONE
             editContactIcon.visibility = View.GONE
+            showLocationSection.visibility = View.GONE
         }
         if (currentUserUid != null) {
             mDbRef.child("user").child(currentUserUid).get().addOnSuccessListener { snapshot ->
                 val currentUser = snapshot.getValue(User::class.java)
                 nameOfUser.setText(currentUser?.name)
                 emailid.setText(currentUser?.email)
+                if (currentUser?.showLocation == true)
+                    showLocationToggleBtn.isChecked = true
+                else
+                    showLocationToggleBtn.isChecked = false
             }.addOnFailureListener { exception ->
                 // Handle any potential errors here
             }
         }
+
+        showLocationToggleBtn.setOnCheckedChangeListener { _, isChecked ->
+            currentUserUid?.let { uid ->
+                mDbRef.child("user").child(uid).child("showLocation").setValue(isChecked)
+            }
+        }
+
 
         logoutBtn.setOnClickListener {
             mAuth.signOut()

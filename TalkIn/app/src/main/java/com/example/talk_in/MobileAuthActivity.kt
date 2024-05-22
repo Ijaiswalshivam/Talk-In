@@ -193,6 +193,6 @@ class MobileAuthActivity : AppCompatActivity() {
     private fun addUserToDatabase(name: String, email: String?, mobile: String, uid: String){
         mDbref = FirebaseDatabase.getInstance().getReference()
 
-        mDbref.child("user").child(uid).setValue(User(name,email, mobile,uid))
+        mDbref.child("user").child(uid).setValue(User(name,email, mobile, false,uid))
     }
 }

@@ -121,6 +121,46 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <LinearLayout
+                    android:id="@+id/showLocationSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/circularbordersolid"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/showLocationTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Show Location"
+                                android:fontFamily="@font/proximanovaregular"
+                                android:textColor="@color/black"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <Switch
+                                android:id="@+id/showLocationToggleBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                tools:ignore="UseSwitchCompatOrMaterialXml" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
                 <!--About Me Card-->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -266,6 +306,7 @@
                 android:layout_marginTop="13dp"
                 android:text="Log Out"
                 android:textSize="15sp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/circularbordersolidblack"/>
 
         </LinearLayout>
