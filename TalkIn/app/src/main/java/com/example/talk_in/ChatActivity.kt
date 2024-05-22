@@ -3,6 +3,8 @@ package com.example.talk_in
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
@@ -53,6 +55,21 @@ class ChatActivity : AppCompatActivity() {
 
         nameOfUser.setText(name)
 
+        messageBox.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val currentText = s.toString()
+                if (messageBox.text.toString().length > 0){
+                    sendButton.setImageResource(R.drawable.send_icon_dark)
+                }
+                else{
+                    sendButton.setImageResource(R.drawable.send_icon_dull)
+                }
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun afterTextChanged(editable: Editable?) {}
+        })
+
         chatRecyclerView.layoutManager=LinearLayoutManager(this)
         chatRecyclerView.adapter=messageAdapter
         //logic to add data to recyclerview
@@ -75,14 +92,16 @@ class ChatActivity : AppCompatActivity() {
         //adding message to data base
         sendButton.setOnClickListener{
             val message=messageBox.text.toString()
-            val messageObject= Message(message,senderUid)
-            mDbRef.child("chats").child(senderRoom!!).child("messages").push()
-                .setValue(messageObject).addOnSuccessListener {
-                    mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
-                        .setValue(messageObject)
+            if (message.length > 0) {
+                val messageObject = Message(message, senderUid)
+                mDbRef.child("chats").child(senderRoom!!).child("messages").push()
+                    .setValue(messageObject).addOnSuccessListener {
+                        mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
+                            .setValue(messageObject)
 
-                }
-            messageBox.setText("")
+                    }
+                messageBox.setText("")
+            }
         }
 
         backbtnImage.setOnClickListener {
