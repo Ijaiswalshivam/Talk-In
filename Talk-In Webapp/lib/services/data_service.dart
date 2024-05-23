@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'dart:js_util';
-
+import 'dart:html';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:talk_in_web/services/user_service.dart';
 
@@ -82,7 +82,7 @@ class DataService extends ChangeNotifier{
     try{
       DataSnapshot snapshot = await userRef.child(authId).get();
       final data = snapshot.value;
-      print(data);
+      //print(data);
       final result = jsonDecode(jsonEncode(data));
       UserService.userData = result;
       print(UserService.userData);
@@ -99,7 +99,7 @@ class DataService extends ChangeNotifier{
       List<Map<String,dynamic>> usersList = [];
       for(DataSnapshot snap in snapshot.children){
         final data = snap.value;
-        print(data);
+        //print(data);
         final result = jsonDecode(jsonEncode(data));
         if(result["id"].toString()!=UserService.userData!["id"].toString())
           usersList.add(result);
@@ -157,7 +157,7 @@ class DataService extends ChangeNotifier{
       List<Map<String,dynamic>> requestsList = [];
       for(DataSnapshot snap in requestSnap.children){
         final data = snap.value;
-        print(data);
+        //print(data);
         final result = jsonDecode(jsonEncode(data));
         requestsList.add(result);
       }
@@ -178,7 +178,7 @@ class DataService extends ChangeNotifier{
       List<Map<String,dynamic>> friendsList = [];
       for(DataSnapshot snap in friendSnap.children){
         final data = snap.value;
-        print(data);
+        // print(data);
         final result = jsonDecode(jsonEncode(data));
         friendsList.add(result);
       }
@@ -191,16 +191,82 @@ class DataService extends ChangeNotifier{
     }
   }
 
-  void addChatToDatabase(String messageId, String text, String senderId, String receiverId,DateTime dateTime) async{
+  void addChatToDatabase(BuildContext context,String messageId, String text, String senderId, String receiverId,DateTime dateTime,String tag) async{
     try{
-      await messageRef.child(messageId).push().set({
-        "messageId":messageId,
-        "SendBy":senderId,
-        "ReceivedBy":receiverId,
-        "Message":text,
-        "DateTime":dateTime.toString()
-      });
+      print("11111111111111111111111111111111111111111111111111");
+      if(tag=="text"){
+        await messageRef.child(messageId).push().set({
+          "messageId":messageId,
+          "SendBy":senderId,
+          "ReceivedBy":receiverId,
+          "Message":text,
+          "MediaUrl":"",
+          "DateTime":dateTime.toString(),
+          "tag":tag
+        });
+      }else{
+        print("11111111111111111111111111111111111111111111111111");
+        String fileAccept = "";
+        if(tag=="image"){
+          fileAccept = "image/*";
+        }else if(tag=="document"){
+          fileAccept = "application/pdf";
+        }else{
+          fileAccept = "audio/mp3";
+        }
+        print("11111111111111111111111111111111111111111111111111");
+        FileUploadInputElement fileUploadInputElement = FileUploadInputElement();
+        fileUploadInputElement.multiple = false;
+        fileUploadInputElement.accept = fileAccept;
+        fileUploadInputElement.click();
+        fileUploadInputElement.onChange.listen((e) {
+          final files = fileUploadInputElement.files;
+          if(files!.length==1){
+            final file = files[0];
+            final reader = new FileReader();
+            print("123");
+            reader.onLoadEnd.listen((e) async {
+              print("11111111111111111111111111111111111111111111111111");
+              print(e);
+              print('loaded: ${file.name}');
+              print('type: ${reader.result.runtimeType}');
+              print('file size = ${file.size}');
+              if((file.size/1024)/1024<=10){
+                final encoded = reader.result.toString();
+                final base64d = base64.decode(encoded.split(',').last);
+                print(base64d);
+                await FirebaseStorage.instance.ref("MessageMedia")
+                    .child(messageId)
+                    .child(dateTime.toString())
+                    .putData(base64d,/**SettableMetadata(contentType: fileAccept)**/)
+                    .then((taskSnapshot) async{
+                  String url = await taskSnapshot.ref.getDownloadURL();
+                  print("11111111111111111111111111111111111111111111111111");
+                  await messageRef.child(messageId).push().set({
+                    "messageId":messageId,
+                    "SendBy":senderId,
+                    "ReceivedBy":receiverId,
+                    "Message":text,
+                    "MediaUrl":url,
+                    "DateTime":dateTime.toString(),
+                    "tag":tag
+                  });
+                  print("Media Sent Successfully");
+                });
+              }else{
+                print("LARGE FILE");
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("File Size exceeds 10 MB limit",style: TextStyle(color: Colors.white),)));
+              }
+            });
+            reader.readAsDataUrl(file);
+          }else{
+            print("NO FILE CHOSEN");
+          }
+        });
+
+      }
     }catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Something went wrong",style: TextStyle(color: Colors.white),)));
       print(e);
     }
   }
@@ -212,7 +278,7 @@ class DataService extends ChangeNotifier{
       List<Map<String,dynamic>> requestsList = [];
       for(DataSnapshot snap in requestSnap.children){
         final data = snap.value;
-        print(data);
+        //print(data);
         final result = jsonDecode(jsonEncode(data));
         requestsList.add(result);
       }
