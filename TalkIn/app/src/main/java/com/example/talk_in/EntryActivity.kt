@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.talk_in.databinding.ActivityEntryBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -19,6 +20,10 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 class   EntryActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityEntryBinding
+
+
     private lateinit var videoView: VideoView // Declare videoView as a property
     private lateinit var mAuth: FirebaseAuth
     private lateinit var google_icon: ImageView
@@ -31,7 +36,9 @@ class   EntryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_entry)
+//        setContentView(R.layout.activity_entry)
+        binding = ActivityEntryBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         google_icon = findViewById(R.id.google_icon)
 
