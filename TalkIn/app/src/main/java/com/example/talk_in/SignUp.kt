@@ -12,70 +12,63 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.example.talk_in.databinding.ActivitySignUpBinding
 
 class SignUp : AppCompatActivity() {
 
-  private lateinit var edtName: com.google.android.material.textfield.TextInputEditText
-  private lateinit var edtEmail: com.google.android.material.textfield.TextInputEditText
-  private lateinit var edtPassword: com.google.android.material.textfield.TextInputEditText
-  private lateinit var btnSignUp: Button
+  private lateinit var binding: ActivitySignUpBinding
   private lateinit var mAuth: FirebaseAuth
   private lateinit var mDbref: DatabaseReference
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_sign_up)
+    binding = ActivitySignUpBinding.inflate(layoutInflater)
+    setContentView(binding.root)
     supportActionBar?.hide()
 
     mAuth = FirebaseAuth.getInstance()
 
-    edtName = findViewById(R.id.edt_name)
-    edtEmail = findViewById(R.id.edt_email)
-    edtPassword = findViewById(R.id.edt_password)
-    btnSignUp = findViewById(R.id.btnSignup)
-    val progressSignUp: ProgressBar = findViewById(R.id.progressSignUp)
-    val backbtn = findViewById<ImageView>(R.id.btnBack)
-    val loginMobBtn = findViewById<Button>(R.id.loginMobile)
-    loginMobBtn.setOnClickListener {
-      val i = Intent(this@SignUp,MobileAuthActivity::class.java)
-      startActivity(i)
-    }
+    binding.apply {
+      btnSignup.setOnClickListener {
+        val email = edtEmail.text.toString().trim()
+        val password = edtPassword.text.toString().trim()
+        val username = edtName.text.toString().trim()
 
-    backbtn.setOnClickListener {
-      startActivity(Intent(this@SignUp, EntryActivity::class.java))
-      finish()
-    }
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+          Toast.makeText(this@SignUp, "Enter Details", Toast.LENGTH_SHORT).show()
+        } else {
+          progressSignUp.visibility = View.VISIBLE
+          signUp(username, email, password)
+        }
+      }
 
-    btnSignUp.setOnClickListener {
-      val email = edtEmail.text.toString().trim()
-      val password = edtPassword.text.toString().trim()
-      val username = edtName.text.toString().trim()
+      loginMobile.setOnClickListener {
+        val i = Intent(this@SignUp, MobileAuthActivity::class.java)
+        startActivity(i)
+      }
 
-      if (TextUtils.isEmpty(username) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-        Toast.makeText(this@SignUp, "Enter Details", Toast.LENGTH_SHORT).show()
-      } else {
-        progressSignUp.visibility = View.VISIBLE
-        signUp(username, email, password)
+      btnBack.setOnClickListener {
+        startActivity(Intent(this@SignUp, EntryActivity::class.java))
+        finish()
       }
     }
   }
 
   private fun signUp(name:String, email: String, password: String){
-    val progressSignUp: ProgressBar = findViewById(R.id.progressSignUp)
+    binding.progressSignUp.visibility = View.VISIBLE
     // Creating user
     mAuth.createUserWithEmailAndPassword(email, password)
       .addOnCompleteListener(this) { task ->
         if (task.isSuccessful) {
           //code for jumping home activity
-          addUserToDatabase(name,email,null, mAuth.currentUser?.uid!!)
+          addUserToDatabase(name, email, null, mAuth.currentUser?.uid!!)
           sendVerificationEmail()
-          progressSignUp.visibility = View.GONE
-          val intent= Intent(this@SignUp,LogIn::class.java)
+          binding.progressSignUp.visibility = View.GONE
+          val intent= Intent(this@SignUp, LogIn::class.java)
           finish()
           startActivity(intent)
-
         } else {
-          progressSignUp.visibility = View.GONE
+          binding.progressSignUp.visibility = View.GONE
           Toast.makeText(this@SignUp,"Please Try Again,Some Error Occurred",Toast.LENGTH_SHORT).show()
         }
       }
@@ -83,18 +76,16 @@ class SignUp : AppCompatActivity() {
 
   private fun addUserToDatabase(name: String, email: String, mobile: String?, uid: String){
     mDbref = FirebaseDatabase.getInstance().getReference()
-
-    mDbref.child("user").child(uid).setValue(User(name,email, null, false, uid))
+    mDbref.child("user").child(uid).setValue(User(name, email, null, false, uid))
   }
 
   fun sendVerificationEmail() {
-    val progressSignUp: ProgressBar = findViewById(R.id.progressSignUp)
     mAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task ->
       if (task.isSuccessful) {
-        progressSignUp.visibility = View.GONE
+        binding.progressSignUp.visibility = View.GONE
         Toast.makeText(this, "Verification email sent to your email id.", Toast.LENGTH_SHORT).show()
       } else {
-        progressSignUp.visibility = View.GONE
+        binding.progressSignUp.visibility = View.GONE
         Toast.makeText(this, "Failed to send verification email.", Toast.LENGTH_SHORT).show()
       }
     }

@@ -2,92 +2,60 @@ package com.example.talk_in
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.talk_in.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
+
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var userRecyclerView: RecyclerView
+    private lateinit var binding: ActivityMainBinding
     private lateinit var userList: ArrayList<User>
     private lateinit var adapter: UserAdapter
     private lateinit var tempUserList: ArrayList<User>
     private lateinit var tempAdapter: UserAdapter
-    private lateinit var userSearchBar:SearchView
-    private lateinit var bottomNavigationView: com.google.android.material.bottomnavigation.BottomNavigationView
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        bottomNavigationView = findViewById(R.id.bottom_navigation)
-
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.menu_chat -> {
-                    true
-                }
-
-                R.id.menu_send -> {
-                    true
-                }
-
-                R.id.menu_profile -> {
-                    val intent = Intent(this, UserProfileScreen::class.java)
-                    intent.putExtra("MODE", "CURRENT_USER")
-                    startActivity(intent)
-                    true
-                }
-
-                else -> false
-            }
-        }
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
-        userSearchBar = findViewById(R.id.userSearchBar)
-
         userList = ArrayList()
-        adapter=UserAdapter(this,userList)
+        adapter = UserAdapter(this, userList)
 
         tempUserList = ArrayList()
-        tempAdapter=UserAdapter(this,tempUserList)
+        tempAdapter = UserAdapter(this, tempUserList)
 
-        userRecyclerView = findViewById(R.id.userRecyclerView)
+        binding.userRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.userRecyclerView.adapter = adapter
 
-        userRecyclerView.layoutManager = LinearLayoutManager(this)
-        userRecyclerView.adapter = adapter
-
-        mDbRef.child("user").addValueEventListener(object: ValueEventListener{
+        mDbRef.child("user").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 userList.clear()
-                for(postSnapshot in snapshot.children){
+                for (postSnapshot in snapshot.children) {
                     val currentUser = postSnapshot.getValue(User::class.java)
-                    if(mAuth.currentUser?.uid != currentUser?.uid){
+                    if (mAuth.currentUser?.uid != currentUser?.uid) {
                         userList.add(currentUser!!)
                     }
-
                 }
                 adapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                // Handle possible errors.
             }
-
         })
 
-        userSearchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.userSearchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 return false
             }
@@ -97,11 +65,25 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
         })
+
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_chat -> true
+                R.id.menu_send -> true
+                R.id.menu_profile -> {
+                    val intent = Intent(this, UserProfileScreen::class.java)
+                    intent.putExtra("MODE", "CURRENT_USER")
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun filterList(text: String) {
         tempUserList.clear()
-        userRecyclerView.adapter = tempAdapter
+        binding.userRecyclerView.adapter = tempAdapter
         for (user in userList) {
             if (user.name?.startsWith(text, ignoreCase = true) == true) {
                 tempUserList.add(user)

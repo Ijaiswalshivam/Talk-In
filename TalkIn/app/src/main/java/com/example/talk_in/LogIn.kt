@@ -4,12 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.talk_in.databinding.ActivityLogInBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -22,46 +19,41 @@ import com.google.firebase.messaging.FirebaseMessaging
 
 class LogIn : AppCompatActivity() {
   private lateinit var mAuth: FirebaseAuth
-  private lateinit var edtEmail: com.google.android.material.textfield.TextInputEditText
-  private lateinit var edtPassword: com.google.android.material.textfield.TextInputEditText
   private lateinit var mDbRef: DatabaseReference
+  private lateinit var binding: ActivityLogInBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_log_in)
+    binding = ActivityLogInBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
     mAuth = FirebaseAuth.getInstance()
     mDbRef = FirebaseDatabase.getInstance().reference
     supportActionBar?.hide()
 
-    edtEmail = findViewById(R.id.edt_email)
-    edtPassword = findViewById(R.id.edt_password)
-    val progressLogin: ProgressBar = findViewById(R.id.progressLogin)
-    val btnLogIn = findViewById<Button>(R.id.btnLogin)
-    val backbtn = findViewById<ImageView>(R.id.btnBack)
-    val forgetPassword = findViewById<TextView>(R.id.forgetPassword)
-    val loginMobBtn = findViewById<Button>(R.id.loginMobile)
-
-    loginMobBtn.setOnClickListener {
+    binding.loginMobile.setOnClickListener {
       val i = Intent(this@LogIn, MobileAuthActivity::class.java)
       startActivity(i)
     }
 
-    btnLogIn.setOnClickListener {
-      val email = edtEmail.text.toString()
-      val password = edtPassword.text.toString()
+    binding.btnLogin.setOnClickListener {
+      val email = binding.edtEmail.text.toString()
+      val password = binding.edtPassword.text.toString()
       if (email.isBlank() || password.isBlank()) {
         Toast.makeText(this, "Please enter details.", Toast.LENGTH_SHORT).show()
       } else {
-        progressLogin.visibility = View.VISIBLE
+        binding.progressLogin.visibility = View.VISIBLE
         login(email, password)
       }
     }
-    backbtn.setOnClickListener {
+
+    binding.btnBack.setOnClickListener {
       val intent = Intent(this@LogIn, EntryActivity::class.java)
       startActivity(intent)
       finish()
     }
-    forgetPassword.setOnClickListener {
+
+    binding.forgetPassword.setOnClickListener {
       val intent = Intent(this@LogIn, ResetPasswordActivity::class.java)
       startActivity(intent)
       finish()
@@ -69,7 +61,6 @@ class LogIn : AppCompatActivity() {
   }
 
   private fun login(email: String, pwd: String) {
-    val progressLogin: ProgressBar = findViewById(R.id.progressLogin)
     if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pwd)) {
       mAuth.signInWithEmailAndPassword(email, pwd)
         .addOnCompleteListener { task ->
@@ -78,27 +69,27 @@ class LogIn : AppCompatActivity() {
               FirebaseMessaging.getInstance().token.addOnCompleteListener { tokenTask ->
                 if (tokenTask.isSuccessful) {
                   val deviceToken = tokenTask.result
-                  handleDeviceToken(deviceToken, email, progressLogin)
+                  handleDeviceToken(deviceToken, email)
                 } else {
-                  progressLogin.visibility = View.GONE
+                  binding.progressLogin.visibility = View.GONE
                   Toast.makeText(this, "Failed to get device token: ${tokenTask.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
               }
             } else {
-              progressLogin.visibility = View.GONE
+              binding.progressLogin.visibility = View.GONE
               Toast.makeText(this, "Please verify your email id.", Toast.LENGTH_SHORT).show()
             }
           }
         }.addOnFailureListener { e ->
-          progressLogin.visibility = View.GONE
+          binding.progressLogin.visibility = View.GONE
           when (e) {
             is FirebaseAuthInvalidCredentialsException -> {
-              edtPassword.error = "Invalid Password"
-              edtPassword.requestFocus()
+              binding.edtPassword.error = "Invalid Password"
+              binding.edtPassword.requestFocus()
             }
             is FirebaseAuthInvalidUserException -> {
-              edtEmail.error = "Email Not Registered"
-              edtEmail.requestFocus()
+              binding.edtEmail.error = "Email Not Registered"
+              binding.edtEmail.requestFocus()
             }
             else -> {
               Toast.makeText(this, "Something went Wrong", Toast.LENGTH_SHORT).show()
@@ -106,12 +97,12 @@ class LogIn : AppCompatActivity() {
           }
         }
     } else {
-      progressLogin.visibility = View.GONE
+      binding.progressLogin.visibility = View.GONE
       Toast.makeText(this, "Please Enter Email & Password", Toast.LENGTH_SHORT).show()
     }
   }
 
-  private fun handleDeviceToken(deviceToken: String, email: String, progressLogin: ProgressBar) {
+  private fun handleDeviceToken(deviceToken: String, email: String) {
     val usersRef = mDbRef.child("users-device-tokens")
     usersRef.orderByChild("deviceToken").equalTo(deviceToken).addListenerForSingleValueEvent(object : ValueEventListener {
       override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -120,20 +111,20 @@ class LogIn : AppCompatActivity() {
             val storedEmail = userSnapshot.child("email").getValue(String::class.java)
             if (storedEmail == email) {
               saveDeviceToken(mAuth.currentUser?.uid!!, deviceToken)
-              navigateToMainActivity(progressLogin)
+              navigateToMainActivity()
             } else {
-              progressLogin.visibility = View.GONE
+              binding.progressLogin.visibility = View.GONE
               Toast.makeText(this@LogIn, "Another user is already logged in with this device!", Toast.LENGTH_SHORT).show()
             }
           }
         } else {
           saveDeviceToken(mAuth.currentUser?.uid!!, deviceToken)
-          navigateToMainActivity(progressLogin)
+          navigateToMainActivity()
         }
       }
 
       override fun onCancelled(databaseError: DatabaseError) {
-        progressLogin.visibility = View.GONE
+        binding.progressLogin.visibility = View.GONE
         Toast.makeText(this@LogIn, "Failed to check device token: ${databaseError.message}", Toast.LENGTH_SHORT).show()
       }
     })
@@ -155,8 +146,8 @@ class LogIn : AppCompatActivity() {
       }
   }
 
-  private fun navigateToMainActivity(progressLogin: ProgressBar) {
-    progressLogin.visibility = View.GONE
+  private fun navigateToMainActivity() {
+    binding.progressLogin.visibility = View.GONE
     val intent = Intent(this@LogIn, MainActivity::class.java)
     startActivity(intent)
     finish()
