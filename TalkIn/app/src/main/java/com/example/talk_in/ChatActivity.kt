@@ -1,6 +1,7 @@
 package com.example.talk_in
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -9,10 +10,15 @@ import android.view.MenuInflater
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.talk_in.databinding.ActivityChatBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.io.File
+import java.io.IOException
 
 class ChatActivity : AppCompatActivity() {
 
@@ -20,6 +26,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
+    private lateinit var storageReference: StorageReference
     private lateinit var receiveruid: String
     var receiverRoom: String? = null
     var senderRoom: String? = null
@@ -41,6 +48,7 @@ class ChatActivity : AppCompatActivity() {
         messageAdapter = MessageAdapter(this, messageList)
 
         binding.nameOfUser.text = name
+        setProfileImage(receiveruid)
 
         binding.messageBox.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -128,5 +136,20 @@ class ChatActivity : AppCompatActivity() {
             }
         }
         popupMenu.show()
+    }
+    private fun setProfileImage(UserUid: String) {
+        storageReference = FirebaseStorage.getInstance().reference.child("user_profile_images").child("$UserUid.jpg")
+        try {
+            val localFile = File.createTempFile("tempfile", ".jpg")
+            storageReference.getFile(localFile)
+                .addOnSuccessListener {
+                    val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
+                    val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(resources, bitmap)
+                    circularBitmapDrawable.isCircular = true
+                    binding.userprofileImage.setImageDrawable(circularBitmapDrawable)
+                }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 }
