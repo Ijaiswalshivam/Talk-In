@@ -12,7 +12,6 @@ class UserProfileScreen : AppCompatActivity() {
 
     private lateinit var binding: ActivityUserProfileScreenBinding
     private var USER_MODE: String? = null
-    private var RECEIVER_UID: String? = null
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
 
@@ -25,9 +24,10 @@ class UserProfileScreen : AppCompatActivity() {
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
         USER_MODE = intent.getStringExtra("MODE").toString()
+        var currentUserUid = mAuth.currentUser?.uid.toString()
 
         if (USER_MODE == "RECEIVER_USER") {
-            RECEIVER_UID = intent.getStringExtra("RECEIVER_UID").toString()
+            currentUserUid = intent.getStringExtra("RECEIVER_UID").toString()
             binding.aboutMeTextView.text = "About"
             binding.logoutBtn.visibility = View.GONE
             binding.editAboutIcon.visibility = View.GONE
@@ -35,15 +35,11 @@ class UserProfileScreen : AppCompatActivity() {
             binding.showLocationSection.visibility = View.GONE
         }
 
-        val currentUserUid = mAuth.currentUser?.uid
-        currentUserUid?.let { uid ->
-            mDbRef.child("user").child(uid).get().addOnSuccessListener { snapshot ->
+        if (currentUserUid != null) {
+            mDbRef.child("user").child(currentUserUid).get().addOnSuccessListener { snapshot ->
                 val currentUser = snapshot.getValue(User::class.java)
-                currentUser?.let {
-                    binding.nameOfUser.text = it.name
-                    binding.emailid.text = it.email
-                    binding.showLocationToggleBtn.isChecked = it.showLocation!!
-                }
+                binding.nameOfUser.setText(currentUser?.name)
+                binding.emailid.setText(currentUser?.email)
             }.addOnFailureListener { exception ->
                 // Handle any potential errors here
             }
