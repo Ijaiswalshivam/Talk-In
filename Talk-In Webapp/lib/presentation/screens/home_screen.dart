@@ -1,7 +1,9 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:talk_in_web/presentation/screens/find_people.dart';
 import 'package:talk_in_web/presentation/screens/messaging_screen.dart';
+import 'package:talk_in_web/presentation/screens/my_group_screen.dart';
 import 'package:talk_in_web/presentation/screens/notification_screen.dart';
 import 'package:talk_in_web/presentation/screens/settings_screen.dart';
 import 'package:talk_in_web/services/user_service.dart';
@@ -16,6 +18,101 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+  bool isFriendAdded(List<String> list,Map<String,dynamic> friend){
+    for(int i=0;i<list.length;i++){
+      if(list[i].toString().compareTo(friend["id"].toString())==0){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void createGroup(List<Map<String,dynamic>> friends){
+    List<String> list = [];
+    showDialog(context: context, builder: (context){
+      return StatefulBuilder(
+          builder: (context,StateSetter setInnerState){
+            TextEditingController groupNameController = TextEditingController();
+            return AlertDialog(
+              title: Column(
+                children: [
+                  Text("Add Friends",style: TextStyle(color: Colors.black),),
+                  SizedBox(height: 10,),
+                  Container(
+                    width: MediaQuery.of(context).size.width/2,
+                    child: TextField(
+                      controller: groupNameController,
+                      maxLines: 1,
+                      decoration: InputDecoration(
+                          hintText: "Enter a group name"
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              content: Container(
+                height: MediaQuery.of(context).size.height/3,
+                width: MediaQuery.of(context).size.width/2,
+                child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: friends.length,
+                    itemBuilder: (context,index){
+                      String name = friends[index]["name"].toString();
+                      String profilePic = friends[index]["profilePic"].toString();
+                      return ListTile(
+                        onTap: (){
+                          setInnerState(() {
+                            if(!isFriendAdded(list, friends[index])){
+                              list.add(friends[index]["id"].toString());
+                              //print(list);
+                            }else{
+                              int ind = -1;
+                              for(int i=0;i<list.length;i++){
+                                if(list[i].toString().compareTo(friends[index]["id"].toString())==0){
+                                  ind = i;
+                                  break;
+                                }
+                              }
+                              list.removeAt(ind);
+                              //print(list);
+                            }
+                          });
+                        },
+                        trailing: isFriendAdded(list, friends[index]) ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank),
+                        title: Text(name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.black),),
+                        leading: profilePic=="null"?Image.asset("assets/images/profile.png",width: 30,height:30,):Image.network(profilePic,width: 30,height:30,),
+                      );
+                    }),
+              ),
+              actions: [
+                TextButton(onPressed: (){Navigator.of(context).pop();}, child: Text("Cancel")),
+                TextButton(onPressed: () async{
+                  if(list.length>0 && groupNameController.text.isNotEmpty){
+                    //print(list.length);
+                    final groupRef = FirebaseDatabase.instance.ref("Groups");
+                    String? key = groupRef.push().key;
+                    if(key!=null){
+                      list.add(UserService.userData!["id"].toString());
+                      String groupId = key;
+                      await groupRef.child(groupId).set({
+                        "id":groupId,
+                        "name":groupNameController.text,
+                        "Members":list,
+                        "Admin":UserService.userData!["id"].toString(),
+                      }).then((value){
+                        print("send");
+                        Navigator.of(context).pop();
+                      });
+                    }
+                  }
+                }, child: Text("Create")),
+              ],
+            );
+          }
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +127,23 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.black26,
         title: Text("Hello ${UserService.userData!["name"]}",style: TextStyle(color: Colors.white),),
         actions: [
+          TextButton.icon(onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context){
+              return MyGroupsScreen();
+            }));
+          }
+            , label: Text("My Groups",style: TextStyle(color: Colors.white),),
+            icon: Icon(Icons.people_alt,color: Colors.white,),
+          ),
+          TextButton.icon(onPressed: (){
+            // Navigator.push(context, MaterialPageRoute(builder: (context){
+            //   return NotificationScreen();
+            // }));
+            createGroup(dataServiceViewModel.friendList);
+          }
+            , label: Text("Create Group",style: TextStyle(color: Colors.white),),
+            icon: Icon(Icons.add,color: Colors.white,),
+          ),
           TextButton.icon(onPressed: (){
             Navigator.push(context, MaterialPageRoute(builder: (context){
               return FindPeople();

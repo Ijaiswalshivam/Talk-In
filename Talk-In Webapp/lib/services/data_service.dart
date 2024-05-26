@@ -289,4 +289,80 @@ class DataService extends ChangeNotifier{
     }
   }
 
+  void addGroupChatToDatabase(BuildContext context,String text,String senderId,String tag,DateTime dateTime,String groupId) async{
+    final groupRef = FirebaseDatabase.instance.ref("Groups").child(groupId).child("Messages");
+    try{
+      if(tag=="text"){
+        await groupRef.push().set({
+          "Message":text,
+          "SendBy":senderId,
+          "tag":tag,
+          "DateTime":dateTime.toString(),
+          "MediaUrl":""
+        });
+      }else{
+        print("11111111111111111111111111111111111111111111111111");
+        String fileAccept = "";
+        if(tag=="image"){
+          fileAccept = "image/*";
+        }else if(tag=="document"){
+          fileAccept = "application/pdf";
+        }else{
+          fileAccept = "audio/mp3";
+        }
+        print("11111111111111111111111111111111111111111111111111");
+        FileUploadInputElement fileUploadInputElement = FileUploadInputElement();
+        fileUploadInputElement.multiple = false;
+        fileUploadInputElement.accept = fileAccept;
+        fileUploadInputElement.click();
+        fileUploadInputElement.onChange.listen((e) {
+          final files = fileUploadInputElement.files;
+          if(files!.length==1){
+            final file = files[0];
+            final reader = new FileReader();
+            print("123");
+            reader.onLoadEnd.listen((e) async {
+              print("11111111111111111111111111111111111111111111111111");
+              print(e);
+              print('loaded: ${file.name}');
+              print('type: ${reader.result.runtimeType}');
+              print('file size = ${file.size}');
+              if((file.size/1024)/1024<=10){
+                final encoded = reader.result.toString();
+                final base64d = base64.decode(encoded.split(',').last);
+                print(base64d);
+                await FirebaseStorage.instance.ref("MessageMedia")
+                    .child(groupId)
+                    .child(dateTime.toString())
+                    .putData(base64d,/**SettableMetadata(contentType: fileAccept)**/)
+                    .then((taskSnapshot) async{
+                  String url = await taskSnapshot.ref.getDownloadURL();
+                  print("11111111111111111111111111111111111111111111111111");
+                  await groupRef.push().set({
+                    "Message":text,
+                    "SendBy":senderId,
+                    "tag":tag,
+                    "DateTime":dateTime.toString(),
+                    "MediaUrl":url
+                  });
+                  print("Media Sent Successfully");
+                });
+              }else{
+                print("LARGE FILE");
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("File Size exceeds 10 MB limit",style: TextStyle(color: Colors.white),)));
+              }
+            });
+            reader.readAsDataUrl(file);
+          }else{
+            print("NO FILE CHOSEN");
+          }
+        });
+
+      }
+    }catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Something went wrong",style: TextStyle(color: Colors.white),)));
+      print(e);
+    }
+  }
+
 }

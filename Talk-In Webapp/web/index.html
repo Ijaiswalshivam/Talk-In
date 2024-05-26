@@ -40,9 +40,9 @@
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
 
-  <!--  <script type="text/javascript">-->
-  <!--    window.flutterWebRenderer = "html";-->
-  <!--  </script>-->
+  <script type="text/javascript">
+    window.flutterWebRenderer = "html";
+  </script>
 
   <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
@@ -77,10 +77,7 @@
         serviceWorkerVersion: serviceWorkerVersion,
       },
       onEntrypointLoaded: async function(engineInitializer) {
-        let appRunner = await engineInitializer.initializeEngine({
-              hostElement: document.querySelector("#flutter_app"),
-              renderer: "canvaskit"
-        });
+        let appRunner = await engineInitializer.initializeEngine();
         appRunner.runApp();
       }
     });
