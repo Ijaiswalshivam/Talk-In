@@ -14,13 +14,13 @@ import org.json.JSONObject
 import java.util.HashMap
 
 class FcmNotificationsSender(
-    private val userFcmToken: String,
-    private val title: String,
-    private val body: String,
-    private val senderUid: String,
-    private val senderName: String,
-    private val mContext: Context,
-    private val mActivity: Activity
+        private val userFcmToken: String,
+        private val title: String,
+        private val body: String,
+        private val senderUid: String,
+        private val senderName: String,
+        private val mContext: Context,
+        private val mActivity: Activity
 ) {
     private val requestQueue: RequestQueue = Volley.newRequestQueue(mContext)
     private val postUrl = "https://fcm.googleapis.com/fcm/send"
@@ -45,13 +45,13 @@ class FcmNotificationsSender(
             mainObj.put("data", dataObject)
 
             val request = object : JsonObjectRequest(
-                Request.Method.POST, postUrl, mainObj,
-                Response.Listener { response ->
+                    Request.Method.POST, postUrl, mainObj,
+                    Response.Listener { response ->
 
-                },
-                Response.ErrorListener { error ->
+                    },
+                    Response.ErrorListener { error ->
 
-                }
+                    }
             ) {
                 @Throws(AuthFailureError::class)
                 override fun getHeaders(): Map<String, String> {

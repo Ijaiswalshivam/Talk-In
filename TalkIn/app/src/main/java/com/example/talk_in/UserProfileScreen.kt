@@ -74,10 +74,18 @@ class UserProfileScreen : AppCompatActivity() {
         }
 
         binding.logoutBtn.setOnClickListener {
-            mAuth.signOut()
-            val intent = Intent(this@UserProfileScreen, EntryActivity::class.java)
-            finish()
-            startActivity(intent)
+            val currentUser = mAuth.currentUser
+            currentUser?.uid?.let { userId ->
+                mDbRef.child("users-device-tokens").child(userId).removeValue()
+                        .addOnSuccessListener {
+                            mAuth.signOut()
+                            val intent = Intent(this@UserProfileScreen, LogIn::class.java)
+                            finish()
+                            startActivity(intent)
+                        }
+                        .addOnFailureListener { e ->
+                        }
+            }
         }
 
         binding.backBtn.setOnClickListener {

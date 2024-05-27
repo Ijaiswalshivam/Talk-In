@@ -62,9 +62,9 @@ class FCMNotificationService : FirebaseMessagingService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "Your_channel_id"
             val channel = NotificationChannel(
-                channelId,
-                "Messages Notification",
-                NotificationManager.IMPORTANCE_HIGH
+                    channelId,
+                    "Messages Notification",
+                    NotificationManager.IMPORTANCE_HIGH
             )
             mNotificationManager.createNotificationChannel(channel)
             builder.setChannelId(channelId)

@@ -6,63 +6,87 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.firebase.auth.FirebaseAuth
+import java.text.SimpleDateFormat
+import java.util.*
 
-class MessageAdapter(val context: Context, var messageList: ArrayList<Message>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    val ITEM_RECEIVE = 1
-    val ITEMSENT = 2
+class MessageAdapter(private val context: Context, private var messageList: ArrayList<Message>) :
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val ITEM_RECEIVE = 1
+    private val ITEM_SENT = 2
+    private val ITEM_DATE = 3
+
+    private val timeFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
 
     fun updateList(newList: ArrayList<Message>) {
         messageList = newList
         notifyDataSetChanged()
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        if (viewType == 1) {
-            //inflate receive
-            val view: View = LayoutInflater.from(context).inflate(R.layout.receive, parent, false)
-            return ReceiveViewHolder(view)
-        } else {
-            val view: View = LayoutInflater.from(context).inflate(R.layout.sent, parent, false)
-            return SentViewHolder(view)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(context)
+        return when (viewType) {
+            ITEM_RECEIVE -> {
+                val view = inflater.inflate(R.layout.receive, parent, false)
+                ReceiveViewHolder(view)
+            }
+            ITEM_SENT -> {
+                val view = inflater.inflate(R.layout.sent, parent, false)
+                SentViewHolder(view)
+            }
+            ITEM_DATE -> {
+                val view = inflater.inflate(R.layout.date_section, parent, false)
+                DateViewHolder(view)
+            }
+            else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val currentMessage = messageList[position]
-        if (holder.javaClass == SentViewHolder::class.java) {
-            //stuff for sent View holder
 
-            val viewHolder = holder as SentViewHolder
-            holder.sentMessage.text = currentMessage.message
+        if (currentMessage.isDateSection) {
+            val dateHolder = holder as DateViewHolder
+            dateHolder.dateTextView.text = currentMessage.message
         } else {
-            //stuff for receive view holder
-            val viewHolder = holder as ReceiveViewHolder
-            holder.receiveMessage.text = currentMessage.message
+            val formattedTime = timeFormat.format(Date(currentMessage.timestamp ?: 0L))
+
+            when (holder) {
+                is SentViewHolder -> {
+                    holder.sentMessage.text = currentMessage.message
+                    holder.sendTimestamp.text = formattedTime
+                }
+                is ReceiveViewHolder -> {
+                    holder.receiveMessage.text = currentMessage.message
+                    holder.receiveTimestamp.text = formattedTime
+                }
+            }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         val currentMessage = messageList[position]
-        if (FirebaseAuth.getInstance().currentUser?.uid.equals(currentMessage.senderId)) {
-            return ITEMSENT
-        } else {
-            return ITEM_RECEIVE
+        return when {
+            currentMessage.isDateSection -> ITEM_DATE
+            FirebaseAuth.getInstance().currentUser?.uid == currentMessage.senderId -> ITEM_SENT
+            else -> ITEM_RECEIVE
         }
     }
 
-    override fun getItemCount(): Int {
-        return messageList.size
-    }
+    override fun getItemCount(): Int = messageList.size
 
     class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val sentMessage = itemView.findViewById<TextView>(R.id.txt_sent_message)
+        val sentMessage: TextView = itemView.findViewById(R.id.txt_sent_message)
+        val sendTimestamp: TextView = itemView.findViewById(R.id.send_timestamp)
     }
 
     class ReceiveViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val receiveMessage = itemView.findViewById<TextView>(R.id.txt_receive_message)
+        val receiveMessage: TextView = itemView.findViewById(R.id.txt_receive_message)
+        val receiveTimestamp: TextView = itemView.findViewById(R.id.received_timestamp)
     }
 
-
+    class DateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val dateTextView: TextView = itemView.findViewById(R.id.date_section_text)
+    }
 }
