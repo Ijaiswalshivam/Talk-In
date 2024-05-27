@@ -76,7 +76,7 @@ class SignUp : AppCompatActivity() {
 
   private fun addUserToDatabase(name: String, email: String, mobile: String?, uid: String){
     mDbref = FirebaseDatabase.getInstance().getReference()
-    mDbref.child("user").child(uid).setValue(User(name, email, null, false, uid))
+    mDbref.child("user").child(uid).setValue(User(name, email, null, false, "Hey There! I am using Talk-In", uid))
   }
 
   fun sendVerificationEmail() {

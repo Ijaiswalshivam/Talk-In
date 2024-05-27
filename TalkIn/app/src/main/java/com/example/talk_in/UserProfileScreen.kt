@@ -1,10 +1,18 @@
 package com.example.talk_in
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.example.talk_in.databinding.ActivityUserProfileScreenBinding
@@ -14,6 +22,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
 import java.io.IOException
+
 
 class UserProfileScreen : AppCompatActivity() {
 
@@ -37,7 +46,7 @@ class UserProfileScreen : AppCompatActivity() {
         var currentUserUid = mAuth.currentUser?.uid.toString()
         if (USER_MODE == "RECEIVER_USER") {
             currentUserUid = intent.getStringExtra("RECEIVER_UID").toString()
-            binding.aboutMeTextView.text = "About"
+            binding.aboutMeTextViewTitle.text = "About"
             binding.logoutBtn.visibility = View.GONE
             binding.editAboutIcon.visibility = View.GONE
             binding.editContactIcon.visibility = View.GONE
@@ -54,6 +63,7 @@ class UserProfileScreen : AppCompatActivity() {
                     binding.nameOfUser.text = it.name
                     binding.emailid.text = it.email
                     binding.showLocationToggleBtn.isChecked = it.showLocation!!
+                    binding.aboutMeTextView.text = it.aboutMe
                 }
             }.addOnFailureListener { exception ->
                 // Handle any potential errors here
@@ -93,7 +103,37 @@ class UserProfileScreen : AppCompatActivity() {
             finish()
             startActivity(intent)
         }
+
+        binding.editAboutIcon.setOnClickListener {
+            // Call the function passing the activity context and a lambda for handling the result
+            showCustomDialog(this) { newText ->
+                // Handle the result (newText) here
+                Toast.makeText(this, "New text: $newText", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
+
+    fun showCustomDialog(context: Context, listener: (String) -> Unit) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.custom_dialog_layout, null)
+        val editText = dialogView.findViewById<EditText>(R.id.edit_text)
+
+        val dialog = AlertDialog.Builder(context)
+            .setView(dialogView)
+            .setTitle("Edit Status")
+            .setPositiveButton("Save") { _, _ ->
+                val newText = editText.text.toString()
+                listener.invoke(newText)
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.cancel()
+            }
+            .create()
+
+        dialog.show()
+    }
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -102,13 +142,16 @@ class UserProfileScreen : AppCompatActivity() {
             uploadImageToFirebaseStorage(imageUri)
         }
     }
+
     private fun uploadImageToFirebaseStorage(imageUri: Uri) {
         val currentUserUid = mAuth.currentUser?.uid ?: return
-        storageReference = FirebaseStorage.getInstance().reference.child("user_profile_images").child("$currentUserUid.jpg")
+        storageReference = FirebaseStorage.getInstance().reference.child("user_profile_images")
+            .child("$currentUserUid.jpg")
         storageReference.putFile(imageUri)
             .addOnSuccessListener { taskSnapshot ->
                 storageReference.downloadUrl.addOnSuccessListener { uri ->
-                    mDbRef.child("user").child(currentUserUid).child("profileImageUrl").setValue(uri.toString())
+                    mDbRef.child("user").child(currentUserUid).child("profileImageUrl")
+                        .setValue(uri.toString())
                     setProfileImage(currentUserUid)
                 }
             }
@@ -118,18 +161,38 @@ class UserProfileScreen : AppCompatActivity() {
     }
 
     private fun setProfileImage(currentUserUid: String) {
-        storageReference = FirebaseStorage.getInstance().reference.child("user_profile_images").child("$currentUserUid.jpg")
+        storageReference = FirebaseStorage.getInstance().reference.child("user_profile_images")
+            .child("$currentUserUid.jpg")
         try {
             val localFile = File.createTempFile("tempfile", ".jpg")
             storageReference.getFile(localFile)
                 .addOnSuccessListener {
                     val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
-                    val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(resources, bitmap)
+                    val circularBitmapDrawable =
+                        RoundedBitmapDrawableFactory.create(resources, bitmap)
                     circularBitmapDrawable.isCircular = true
                     binding.userprofileImage.setImageDrawable(circularBitmapDrawable)
                 }
         } catch (e: IOException) {
             e.printStackTrace()
+        }
+    }
+    private fun updateAboutMe(aboutMe: String, currentUserUid: String){
+
+        currentUserUid.let { uid ->
+            mDbRef.child("user").child(uid).get().addOnSuccessListener { snapshot ->
+                val currentUser = snapshot.getValue(User::class.java)
+                val name = currentUser?.name
+                val email = currentUser?.email
+                val mobile = currentUser?.mobile
+                val showLocation = currentUser?.showLocation
+
+                mDbRef.child("user").child(uid).setValue(User(name, email, mobile, showLocation, aboutMe, currentUserUid))
+            }.addOnFailureListener { exception ->
+                // Handle any potential errors here
+            }.addOnSuccessListener {
+                binding.aboutMeTextView.text = aboutMe
+            }
         }
     }
 }
