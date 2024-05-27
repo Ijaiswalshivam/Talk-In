@@ -48,7 +48,12 @@ class FCMNotificationService : FirebaseMessagingService() {
             putExtra("name", senderName)
         }
 
-        val pendingIntent = PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(
+                this,
+                1,
+                resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         builder.setContentTitle(remoteMessage.notification?.title)
         builder.setContentText(remoteMessage.notification?.body)
