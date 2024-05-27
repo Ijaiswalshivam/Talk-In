@@ -6,8 +6,12 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
@@ -93,20 +97,22 @@ class UserProfileScreen : AppCompatActivity() {
         }
 
         binding.editAboutIcon.setOnClickListener {
-            showEditDialog(this, "me") { newText ->
-                updateAboutMe(newText, currentUserUid)
+            // Call the function passing the activity context and a lambda for handling the result
+            showCustomDialog(this) { newText ->
+                // Handle the result (newText) here
+                Toast.makeText(this, "New text: $newText", Toast.LENGTH_SHORT).show()
             }
         }
+
     }
 
-    fun showEditDialog(context: Context, currentText: String, listener: (String) -> Unit) {
-        val editText = EditText(context).apply {
-            setText(currentText)
-        }
+    fun showCustomDialog(context: Context, listener: (String) -> Unit) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.custom_dialog_layout, null)
+        val editText = dialogView.findViewById<EditText>(R.id.edit_text)
 
         val dialog = AlertDialog.Builder(context)
-            .setTitle("Edit About Me")
-            .setView(editText)
+            .setView(dialogView)
+            .setTitle("Edit Status")
             .setPositiveButton("Save") { _, _ ->
                 val newText = editText.text.toString()
                 listener.invoke(newText)
@@ -118,6 +124,7 @@ class UserProfileScreen : AppCompatActivity() {
 
         dialog.show()
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
