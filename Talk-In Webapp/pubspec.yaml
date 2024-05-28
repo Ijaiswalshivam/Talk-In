@@ -45,6 +45,7 @@ dependencies:
   google_sign_in: ^6.2.1
   http: ^1.2.1
   url_launcher: ^6.2.6
+  expandable_menu: ^0.0.5
 
 dev_dependencies:
   flutter_test:

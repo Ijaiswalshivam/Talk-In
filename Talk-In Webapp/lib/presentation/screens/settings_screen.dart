@@ -113,134 +113,134 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black26,
-        title: Text("Profile",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+        title: Text("Your Profile",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
       ),
       body: Center(
         child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(14),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.black,
-                    radius: 100,
-                    //maxRadius: 100,// Image radius
-                    backgroundImage: profilePic=="null"?Image.asset("assets/images/profile.png").image:Image.network(profilePic).image,
-                  ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(14),
+              child: CircleAvatar(
+                backgroundColor: Colors.black,
+                radius: 100,
+                //maxRadius: 100,// Image radius
+                backgroundImage: profilePic=="null"?Image.asset("assets/images/profile.png").image:Image.network(profilePic).image,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(onPressed: () async{
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(onPressed: () async{
 
-                    await FirebaseDatabase.instance.ref("Users").child(UserService.userData!["id"]).update({
-                      "profileVisibility":(!bool.parse(UserService.userData!["profileVisibility"].toString())).toString()
-                    });
+                  await FirebaseDatabase.instance.ref("Users").child(UserService.userData!["id"]).update({
+                    "profileVisibility":(!bool.parse(UserService.userData!["profileVisibility"].toString())).toString()
+                  });
 
+                  setState(() {
+                    UserService.userData!["profileVisibility"] = (!bool.parse(UserService.userData!["profileVisibility"].toString())).toString();
+                  });
+
+                }, icon: Icon( bool.parse(UserService.userData!["profileVisibility"].toString())? Icons.visibility : Icons.visibility_off,color: Colors.white,),splashColor: Colors.red,),
+                IconButton(onPressed: () async{
+
+                  setState(() {
+                    isLoading = true;
+                  });
+
+                  await uploadProfilePic();
+
+                }, icon: Icon(Icons.edit,color: Colors.white,),splashColor: Colors.red,),
+              ],
+            ),
+            SizedBox(height: 20,),
+            Text("Your Name",style: TextStyle(color: Colors.green,fontSize: 15),),
+            SizedBox(height: 30,),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(450,0,300,20),
+              child: !isEditingName? ListTile(
+                title: Text(name,style: TextStyle(color: Colors.white,fontSize: 20),),
+                trailing: IconButton(
+                  onPressed: (){
                     setState(() {
-                      UserService.userData!["profileVisibility"] = (!bool.parse(UserService.userData!["profileVisibility"].toString())).toString();
+                      nameController.text = name;
+                      isEditingName = !isEditingName;
                     });
-
-                  }, icon: Icon( bool.parse(UserService.userData!["profileVisibility"].toString())? Icons.visibility : Icons.visibility_off,color: Colors.white,),splashColor: Colors.red,),
-                  IconButton(onPressed: () async{
-
-                    setState(() {
-                      isLoading = true;
-                    });
-                    
-                    await uploadProfilePic();
-
-                  }, icon: Icon(Icons.edit,color: Colors.white,),splashColor: Colors.red,),
-                ],
-              ),
-              SizedBox(height: 20,),
-              Text("Your Name",style: TextStyle(color: Colors.green,fontSize: 15),),
-              SizedBox(height: 30,),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(450,0,300,20),
-                child: !isEditingName? ListTile(
-                  title: Text(name,style: TextStyle(color: Colors.white,fontSize: 20),),
-                  trailing: IconButton(
-                    onPressed: (){
-                      setState(() {
-                        nameController.text = name;
-                        isEditingName = !isEditingName;
-                      });
-                    },
-                    icon: Icon(Icons.edit,color: Colors.white,),
-                  ),
-                ): ListTile(
-                  title: TextFormField(
-                    maxLines: 1,
-                    maxLength: 40,
-                    controller: nameController,
-                    cursorColor: Colors.green,
-                    style: TextStyle(
+                  },
+                  icon: Icon(Icons.edit,color: Colors.white,),
+                ),
+              ): ListTile(
+                title: TextFormField(
+                  maxLines: 1,
+                  maxLength: 40,
+                  controller: nameController,
+                  cursorColor: Colors.green,
+                  style: TextStyle(
                       color: Colors.white
-                    ),
                   ),
-                  trailing: IconButton(
-                    onPressed: () async{
-                      setState(() {
-                        name = nameController.text;
-                        isEditingName = !isEditingName;
-                      });
-                      await FirebaseDatabase.instance.ref("Users").child(UserService.userData!["id"]).update({
-                        "name":name
-                      });
+                ),
+                trailing: IconButton(
+                  onPressed: () async{
+                    setState(() {
+                      name = nameController.text;
+                      isEditingName = !isEditingName;
+                    });
+                    await FirebaseDatabase.instance.ref("Users").child(UserService.userData!["id"]).update({
+                      "name":name
+                    });
 
-                      UserService.userData!["name"] = name;
+                    UserService.userData!["name"] = name;
 
-                    },
-                    icon: Icon(Icons.check,color: Colors.white,),
+                  },
+                  icon: Icon(Icons.check,color: Colors.white,),
+                ),
+              ) ,
+            ),
+            Text("This name will be visible to other users",style: TextStyle(color: Colors.grey,fontSize: 10),),
+            SizedBox(height: 20,),
+            Text("About",style: TextStyle(color: Colors.green,fontSize: 15),),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(450,0,300,20),
+              child: !isEditingAbout? ListTile(
+                title: Text(about,style: TextStyle(color: Colors.white,fontSize: 20),),
+                trailing: IconButton(
+                  onPressed: (){
+                    setState(() {
+                      aboutController.text = about;
+                      isEditingAbout = !isEditingAbout;
+                    });
+                  },
+                  icon: Icon(Icons.edit,color: Colors.white,),
+                ),
+              ) : ListTile(
+                title: TextFormField(
+                  maxLines: 2,
+                  maxLength: 90,
+                  controller: aboutController,
+                  cursorColor: Colors.green,
+                  style: TextStyle(
+                      color: Colors.white
                   ),
-                ) ,
-              ),
-              Text("This name will be visible to other users",style: TextStyle(color: Colors.grey,fontSize: 10),),
-              SizedBox(height: 20,),
-              Text("About",style: TextStyle(color: Colors.green,fontSize: 15),),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(450,0,300,20),
-                child: !isEditingAbout? ListTile(
-                  title: Text(about,style: TextStyle(color: Colors.white,fontSize: 20),),
-                  trailing: IconButton(
-                    onPressed: (){
-                      setState(() {
-                        aboutController.text = about;
-                        isEditingAbout = !isEditingAbout;
-                      });
-                    },
-                    icon: Icon(Icons.edit,color: Colors.white,),
-                  ),
-                ) : ListTile(
-                  title: TextFormField(
-                    maxLines: 2,
-                    maxLength: 90,
-                    controller: aboutController,
-                    cursorColor: Colors.green,
-                    style: TextStyle(
-                        color: Colors.white
-                    ),
-                  ),
-                  trailing: IconButton(
-                    onPressed: () async{
-                      setState(() {
-                        about = aboutController.text;
-                        isEditingAbout = !isEditingAbout;
-                      });
-                      await FirebaseDatabase.instance.ref("Users").child(UserService.userData!["id"]).update({
-                        "about":about.length>0?about:"Hey! I am using TalkIn"
-                      });
+                ),
+                trailing: IconButton(
+                  onPressed: () async{
+                    setState(() {
+                      about = aboutController.text;
+                      isEditingAbout = !isEditingAbout;
+                    });
+                    await FirebaseDatabase.instance.ref("Users").child(UserService.userData!["id"]).update({
+                      "about":about.length>0?about:"Hey! I am using TalkIn"
+                    });
 
-                      UserService.userData!["about"] = about;
+                    UserService.userData!["about"] = about;
 
-                    },
-                    icon: Icon(Icons.check,color: Colors.white,),
-                  ),
-                ) ,
-              ),
-              isLoading?CircularProgressIndicator(backgroundColor: Colors.black,color:Colors.white,):Container()
-            ],
-          ),
+                  },
+                  icon: Icon(Icons.check,color: Colors.white,),
+                ),
+              ) ,
+            ),
+            isLoading?CircularProgressIndicator(backgroundColor: Colors.black,color:Colors.white,):Container()
+          ],
+        ),
       ),
     );
   }

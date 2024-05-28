@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:talk_in_web/presentation/screens/profile_screen.dart';
 import 'package:talk_in_web/services/user_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -39,13 +40,24 @@ class _MessagingScreenState extends State<MessagingScreen> {
         backgroundColor: Colors.black26,
         title: Row(
           children: [
-            friendData["profilePic"].toString()=="null"?Image.asset("assets/images/profile.png",width: 30,height:30,):Image.network(friendData["profilePic"].toString(),width: 30,height:30,),
+            friendData["profilePic"].toString()=="null"?Image.asset("assets/images/profile.png",width: 40,height:40,):Image.network(friendData["profilePic"].toString(),width: 40,height:40,),
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Text(friendData["name"].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),),
             ),
           ],
         ),
+        actions: [
+          TextButton.icon(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                  return ProfileScreen(friendData);
+                }));
+              },
+              icon: Icon(Icons.person,color: Colors.white,),
+              label: Text("See ${friendData["name"].toString()}'s profile",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.white),)
+          ),
+        ],
       ),
       body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
