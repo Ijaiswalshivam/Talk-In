@@ -82,123 +82,205 @@ class _MessagingScreenState extends State<MessagingScreen> {
                           final data = jsonDecode(jsonEncode(result));
                           //print(data);
                           bool isUserMessage=data["SendBy"].toString()==UserService.userData!["id"].toString();
-                          Timer(Duration(milliseconds: 500), () {
+                          Timer(Duration(milliseconds: 300), () {
                             scrollController.jumpTo(scrollController.position.maxScrollExtent);
                           });
                           return isUserMessage?
-                          ChatBubble(
-                            clipper: ChatBubbleClipper1(type: BubbleType.sendBubble),
-                            alignment: Alignment.topRight,
-                            margin: EdgeInsets.only(top: 20),
-                            backGroundColor: Colors.blue,
-                            child: Container(
-                              constraints: BoxConstraints(
-                                maxWidth: MediaQuery.of(context).size.width * 0.7,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(14.0),
+                                child: Text(" Send on ${DateTime.parse(data["DateTime"].toString()).day}-${DateTime.parse(data["DateTime"].toString()).month}-${DateTime.parse(data["DateTime"].toString()).year} at ${DateTime.parse(data["DateTime"].toString()).hour}:${DateTime.parse(data["DateTime"].toString()).minute} ",style: TextStyle(color: Colors.white),),
                               ),
-                              child: data["tag"]=="text"? Text(
-                                data["Message"]!=null?data["Message"].toString():"Waiting for the message...",
-                                style: TextStyle(color: Colors.white),
-                              ): data["tag"] == "image"? Column(
-                                children: [
-                                  Stack(
+                              ChatBubble(
+                                clipper: ChatBubbleClipper1(type: BubbleType.sendBubble),
+                                alignment: Alignment.topRight,
+                                margin: EdgeInsets.only(top: 20),
+                                backGroundColor: Colors.blue,
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                    maxWidth: MediaQuery.of(context).size.width/4,
+                                  ),
+                                  child: data["tag"]=="text"? Column(
                                     children: [
-                                      Icon(Icons.image,color: Colors.black,size: 100,),
-                                      IconButton(onPressed: () async{
-                                        await launchUrl(Uri.parse(data["MediaUrl"].toString()));
-                                      },
-                                          icon: Icon(Icons.download,color: Colors.white,size: 40,)
-                                      )
+                                      Text(
+                                        data["Message"]!=null?data["Message"].toString():"Waiting for the message...",
+                                        style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+                                      ),
+                                      // Row(
+                                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      //   children: [
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).day}-${DateTime.parse(data["DateTime"].toString()).month}-${DateTime.parse(data["DateTime"].toString()).year}",style: TextStyle(color: Colors.white),),
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).hour}:${DateTime.parse(data["DateTime"].toString()).minute}",style: TextStyle(color: Colors.white),),
+                                      //   ],
+                                      // ),
+                                    ],
+                                  ): data["tag"] == "image"? Column(
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          Icon(Icons.image,color: Colors.black,size: 100,),
+                                          IconButton(onPressed: () async{
+                                            await launchUrl(Uri.parse(data["MediaUrl"].toString()));
+                                          },
+                                              icon: Icon(Icons.download,color: Colors.white,size: 40,)
+                                          )
+                                        ],
+                                      ),
+                                      Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
+                                      // Row(
+                                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      //   children: [
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).day}-${DateTime.parse(data["DateTime"].toString()).month}-${DateTime.parse(data["DateTime"].toString()).year}",style: TextStyle(color: Colors.white),),
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).hour}:${DateTime.parse(data["DateTime"].toString()).minute}",style: TextStyle(color: Colors.white),),
+                                      //   ],
+                                      // ),
+                                    ],
+                                  ) : data["tag"] == "document"? Column(
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          Icon(Icons.picture_as_pdf,color: Colors.black,size: 100,),
+                                          IconButton(onPressed: () async{
+                                            await launchUrl(Uri.parse(data["MediaUrl"].toString()));
+                                          },
+                                              icon: Icon(Icons.download,color: Colors.white,size: 40,)
+                                          )
+                                        ],
+                                      ),
+                                      Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
+                                      // Row(
+                                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      //   children: [
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).day}-${DateTime.parse(data["DateTime"].toString()).month}-${DateTime.parse(data["DateTime"].toString()).year}",style: TextStyle(color: Colors.white),),
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).hour}:${DateTime.parse(data["DateTime"].toString()).minute}",style: TextStyle(color: Colors.white),),
+                                      //   ],
+                                      // ),
+                                    ],
+                                  ) : Column(
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          Icon(Icons.audio_file,color: Colors.black,size: 100,),
+                                          IconButton(onPressed: () async{
+                                            await launchUrl(Uri.parse(data["MediaUrl"].toString()));
+                                          },
+                                              icon: Icon(Icons.download,color: Colors.white,size: 40,)
+                                          )
+                                        ],
+                                      ),
+                                      Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
+                                      // Row(
+                                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      //   children: [
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).day}-${DateTime.parse(data["DateTime"].toString()).month}-${DateTime.parse(data["DateTime"].toString()).year}",style: TextStyle(color: Colors.white),),
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).hour}:${DateTime.parse(data["DateTime"].toString()).minute}",style: TextStyle(color: Colors.white),),
+                                      //   ],
+                                      // ),
                                     ],
                                   ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white)),
-                                ],
-                              ) : data["tag"] == "document"? Column(
-                                children: [
-                                  Stack(
-                                    children: [
-                                      Icon(Icons.picture_as_pdf,color: Colors.black,size: 100,),
-                                      IconButton(onPressed: () async{
-                                        await launchUrl(Uri.parse(data["MediaUrl"].toString()));
-                                      },
-                                          icon: Icon(Icons.download,color: Colors.white,size: 40,)
-                                      )
-                                    ],
-                                  ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white)),
-                                ],
-                              ) : Column(
-                                children: [
-                                  Stack(
-                                    children: [
-                                      Icon(Icons.audio_file,color: Colors.black,size: 100,),
-                                      IconButton(onPressed: () async{
-                                        await launchUrl(Uri.parse(data["MediaUrl"].toString()));
-                                      },
-                                          icon: Icon(Icons.download,color: Colors.white,size: 40,)
-                                      )
-                                    ],
-                                  ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white)),
-                                ],
+                                ),
                               ),
-                            ),
+                            ],
                           )
                               :
-                          ChatBubble(
-                            clipper: ChatBubbleClipper1(type: BubbleType.receiverBubble),
-                            backGroundColor: Color(0xffE7E7ED),
-                            margin: EdgeInsets.only(top: 20),
-                            child: Container(
-                              constraints: BoxConstraints(
-                                maxWidth: MediaQuery.of(context).size.width * 0.7,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ChatBubble(
+                                clipper: ChatBubbleClipper1(type: BubbleType.receiverBubble),
+                                backGroundColor: Color(0xffE7E7ED),
+                                margin: EdgeInsets.only(top: 20),
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                    maxWidth: MediaQuery.of(context).size.width * 0.7,
+                                  ),
+                                  child: data["tag"]=="text"? Column(
+                                    children: [
+                                      Text(
+                                        data["Message"]!=null?data["Message"].toString():"Waiting for the message...",
+                                        style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+                                      ),
+                                      // Row(
+                                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      //   children: [
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).day}-${DateTime.parse(data["DateTime"].toString()).month}-${DateTime.parse(data["DateTime"].toString()).year}",style: TextStyle(color: Colors.white),),
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).hour}:${DateTime.parse(data["DateTime"].toString()).minute}",style: TextStyle(color: Colors.white),),
+                                      //   ],
+                                      // ),
+                                    ],
+                                  ): data["tag"] == "image"? Column(
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          Icon(Icons.image,color: Colors.black,size: 100,),
+                                          IconButton(onPressed: () async{
+                                            await launchUrl(Uri.parse(data["MediaUrl"].toString()));
+                                          },
+                                              icon: Icon(Icons.download,color: Colors.white,size: 40,)
+                                          )
+                                        ],
+                                      ),
+                                      Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+                                      // Row(
+                                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      //   children: [
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).day}-${DateTime.parse(data["DateTime"].toString()).month}-${DateTime.parse(data["DateTime"].toString()).year}",style: TextStyle(color: Colors.white),),
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).hour}:${DateTime.parse(data["DateTime"].toString()).minute}",style: TextStyle(color: Colors.white),),
+                                      //   ],
+                                      // ),
+                                    ],
+                                  ) : data["tag"] == "document"? Column(
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          Icon(Icons.picture_as_pdf,color: Colors.black,size: 100,),
+                                          IconButton(onPressed: () async{
+                                            await launchUrl(Uri.parse(data["MediaUrl"].toString()));
+                                          },
+                                              icon: Icon(Icons.download,color: Colors.white,size: 40,)
+                                          )
+                                        ],
+                                      ),
+                                      Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+                                      // Row(
+                                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      //   children: [
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).day}-${DateTime.parse(data["DateTime"].toString()).month}-${DateTime.parse(data["DateTime"].toString()).year}",style: TextStyle(color: Colors.white),),
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).hour}:${DateTime.parse(data["DateTime"].toString()).minute}",style: TextStyle(color: Colors.white),),
+                                      //   ],
+                                      // ),
+                                    ],
+                                  ) : Column(
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          Icon(Icons.audio_file,color: Colors.black,size: 100,),
+                                          IconButton(onPressed: () async{
+                                            await launchUrl(Uri.parse(data["MediaUrl"].toString()));
+                                          },
+                                              icon: Icon(Icons.download,color: Colors.white,size: 40,)
+                                          )
+                                        ],
+                                      ),
+                                      Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+                                      // Row(
+                                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      //   children: [
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).day}-${DateTime.parse(data["DateTime"].toString()).month}-${DateTime.parse(data["DateTime"].toString()).year}",style: TextStyle(color: Colors.white),),
+                                      //     Text("${DateTime.parse(data["DateTime"].toString()).hour}:${DateTime.parse(data["DateTime"].toString()).minute}",style: TextStyle(color: Colors.white),),
+                                      //   ],
+                                      // ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              child: data["tag"]=="text"? Text(
-                                data["Message"]!=null?data["Message"].toString():"Waiting for the message...",
-                                style: TextStyle(color: Colors.white),
-                              ): data["tag"] == "image"? Column(
-                                children: [
-                                  Stack(
-                                    children: [
-                                      Icon(Icons.image,color: Colors.black,size: 100,),
-                                      IconButton(onPressed: () async{
-                                        await launchUrl(Uri.parse(data["MediaUrl"].toString()));
-                                      },
-                                          icon: Icon(Icons.download,color: Colors.white,size: 40,)
-                                      )
-                                    ],
-                                  ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white)),
-                                ],
-                              ) : data["tag"] == "document"? Column(
-                                children: [
-                                  Stack(
-                                    children: [
-                                      Icon(Icons.picture_as_pdf,color: Colors.black,size: 100,),
-                                      IconButton(onPressed: () async{
-                                        await launchUrl(Uri.parse(data["MediaUrl"].toString()));
-                                      },
-                                          icon: Icon(Icons.download,color: Colors.white,size: 40,)
-                                      )
-                                    ],
-                                  ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white)),
-                                ],
-                              ) : Column(
-                                children: [
-                                  Stack(
-                                    children: [
-                                      Icon(Icons.audio_file,color: Colors.black,size: 100,),
-                                      IconButton(onPressed: () async{
-                                        await launchUrl(Uri.parse(data["MediaUrl"].toString()));
-                                      },
-                                          icon: Icon(Icons.download,color: Colors.white,size: 40,)
-                                      )
-                                    ],
-                                  ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white)),
-                                ],
+                              Padding(
+                                padding: const EdgeInsets.all(14.0),
+                                child: Text(" Received on ${DateTime.parse(data["DateTime"].toString()).day}-${DateTime.parse(data["DateTime"].toString()).month}-${DateTime.parse(data["DateTime"].toString()).year} at ${DateTime.parse(data["DateTime"].toString()).hour}:${DateTime.parse(data["DateTime"].toString()).minute} ",style: TextStyle(color: Colors.white),),
                               ),
-                            ),
+                            ],
                           );
                         }
                     ),
