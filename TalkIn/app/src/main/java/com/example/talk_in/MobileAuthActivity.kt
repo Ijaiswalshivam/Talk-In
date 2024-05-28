@@ -96,6 +96,7 @@ class MobileAuthActivity : AppCompatActivity() {
                     addUserToDatabase(binding.edtName.text.toString(), null, "+91${binding.edtPhone.text.toString()}", mAuth.currentUser?.uid!!)
                     binding.progressSignUp.visibility = View.GONE
                     val intent = Intent(this@MobileAuthActivity, MainActivity::class.java)
+                    finish()
                     startActivity(intent)
                 } else {
                     binding.progressSignUp.visibility = View.GONE

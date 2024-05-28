@@ -49,14 +49,13 @@ class LogIn : AppCompatActivity() {
 
     binding.btnBack.setOnClickListener {
       val intent = Intent(this@LogIn, EntryActivity::class.java)
-      startActivity(intent)
       finish()
+      startActivity(intent)
     }
 
     binding.forgetPassword.setOnClickListener {
       val intent = Intent(this@LogIn, ResetPasswordActivity::class.java)
       startActivity(intent)
-      finish()
     }
   }
 

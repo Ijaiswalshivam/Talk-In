@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_profile -> {
                     val intent = Intent(this, UserProfileScreen::class.java)
                     intent.putExtra("MODE", "CURRENT_USER")
+                    finish()
                     startActivity(intent)
                     true
                 }
@@ -101,6 +102,7 @@ class MainActivity : AppCompatActivity() {
         super.onBackPressed()
         val intent = Intent(Intent.ACTION_MAIN)
         intent.addCategory(Intent.CATEGORY_HOME)
+        finish()
         startActivity(intent)
     }
 }
