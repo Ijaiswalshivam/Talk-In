@@ -195,4 +195,10 @@ class UserProfileScreen : AppCompatActivity() {
             }
         }
     }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this@UserProfileScreen, MainActivity::class.java)
+        finish()
+        startActivity(intent)
+    }
 }
