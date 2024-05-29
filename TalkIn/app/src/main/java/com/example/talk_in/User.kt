@@ -7,15 +7,17 @@ class User {
     var showLocation: Boolean? = null
     var uid: String? = null
     var aboutMe: String? = null
+    var verified: Boolean? = false
 
     constructor(){}
 
-    constructor(name: String?, email: String?, mobile: String?, showLocation: Boolean?, aboutMe: String?, uid: String?){
+    constructor(name: String?, email: String?, mobile: String?, showLocation: Boolean?, aboutMe: String?, verified: Boolean?, uid: String?){
         this.name = name
         this.email = email
         this.mobile = mobile
         this.showLocation = showLocation
         this.aboutMe = aboutMe
+        this.verified = verified
         this.uid = uid
     }
 }

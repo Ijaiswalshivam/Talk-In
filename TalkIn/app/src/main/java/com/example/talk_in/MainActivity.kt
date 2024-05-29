@@ -2,6 +2,7 @@ package com.example.talk_in
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -43,8 +44,8 @@ class MainActivity : AppCompatActivity() {
                 userList.clear()
                 for (postSnapshot in snapshot.children) {
                     val currentUser = postSnapshot.getValue(User::class.java)
-                    if (mAuth.currentUser?.uid != currentUser?.uid) {
-                        userList.add(currentUser!!)
+                    if (currentUser != null && mAuth.currentUser?.uid != currentUser.uid && currentUser.verified == true) {
+                        userList.add(currentUser)
                     }
                 }
                 adapter.notifyDataSetChanged()

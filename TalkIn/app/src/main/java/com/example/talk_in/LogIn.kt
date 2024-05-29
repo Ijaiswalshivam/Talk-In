@@ -65,6 +65,9 @@ class LogIn : AppCompatActivity() {
         .addOnCompleteListener { task ->
           if (task.isSuccessful) {
             if (mAuth.currentUser?.isEmailVerified == true) {
+              val uid = mAuth.currentUser!!.uid
+
+              mDbRef.child("user").child(uid).child("verified").setValue(true)
               FirebaseMessaging.getInstance().token.addOnCompleteListener { tokenTask ->
                 if (tokenTask.isSuccessful) {
                   val deviceToken = tokenTask.result
