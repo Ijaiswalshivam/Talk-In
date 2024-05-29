@@ -16,6 +16,57 @@ class _SignInScreenState extends State<SignInScreen> {
 
   bool obscure = true;
 
+  AlertDialog showTheDialog(){
+    TextEditingController control = TextEditingController();
+    return AlertDialog(
+      title: Text("Forgot Password",style: TextStyle(color: Colors.black),),
+      content: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          width: MediaQuery.of(context).size.width/3,
+          height: 50,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: TextFormField(
+              maxLines: 1,
+              controller: control,
+              decoration: InputDecoration(
+                  icon: Icon(Icons.mail),
+                  // labelText: "Enter Email *"
+                  hintText: "Enter Your Account Email",
+                  border: InputBorder.none
+              ),
+            ),
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(onPressed: (){Navigator.of(context).pop();}, child: Text("NO")),
+        TextButton(onPressed: (){
+          if(control.text.isNotEmpty){
+            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Check your email inbox",style: TextStyle(color: Colors.white),)));
+            AuthService().forgotPassword(context, control.text);
+          }else{
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Email field is required",style: TextStyle(color: Colors.white),)));
+          }
+        }, child: Text("Yes")),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final authServiceViewModel = Provider.of<AuthService>(context);
@@ -126,6 +177,14 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ),
                       ),
+                    ),
+                    Align(
+                      alignment: FractionalOffset.bottomRight,
+                      child: TextButton(onPressed: (){
+                        showDialog(context: context, builder: (context){
+                          return showTheDialog();
+                        });
+                      }, child: Text("Forgot Password?",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 20),)),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(12.0),
