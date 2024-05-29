@@ -131,6 +131,20 @@ class DataService extends ChangeNotifier{
     }
   }
 
+  Future<void> unFriendUser(BuildContext context,String friendId) async{
+    try{
+      setLoading(true);
+      String currentUserAuthId = UserService.userData!["id"].toString();
+      await userRef.child(currentUserAuthId).child("Friends").child(friendId).remove();
+      await userRef.child(friendId).child("Friends").child(currentUserAuthId).remove();
+      setLoading(false);
+    }catch(e){
+      setLoading(false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Something went wrong",style: TextStyle(color: Colors.white),)));
+      print(e);
+    }
+  }
+
   Future<void> acceptFriendRequest(BuildContext context,Map<String,dynamic> user) async{
     try{
       setLoading(true);
