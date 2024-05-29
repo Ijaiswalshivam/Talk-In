@@ -178,22 +178,7 @@ class UserProfileScreen : AppCompatActivity() {
         }
     }
     private fun updateAboutMe(aboutMe: String, currentUserUid: String){
-
-        currentUserUid.let { uid ->
-            mDbRef.child("user").child(uid).get().addOnSuccessListener { snapshot ->
-                val currentUser = snapshot.getValue(User::class.java)
-                val name = currentUser?.name
-                val email = currentUser?.email
-                val mobile = currentUser?.mobile
-                val showLocation = currentUser?.showLocation
-
-                mDbRef.child("user").child(uid).setValue(User(name, email, mobile, showLocation, aboutMe, currentUserUid))
-            }.addOnFailureListener { exception ->
-                // Handle any potential errors here
-            }.addOnSuccessListener {
-                binding.aboutMeTextView.text = aboutMe
-            }
-        }
+        mDbRef.child("user").child(currentUserUid).child("aboutMe").setValue(aboutMe)
     }
     override fun onBackPressed() {
         super.onBackPressed()
