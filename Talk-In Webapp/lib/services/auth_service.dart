@@ -179,4 +179,15 @@ class AuthService extends ChangeNotifier{
 
   }
 
+  void forgotPassword( BuildContext context,String email) async{
+    try{
+      await auth.sendPasswordResetEmail(email: email).then((value){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Email successfully sent",style: TextStyle(color: Colors.white),),duration: Duration(seconds: 4),));
+      });
+    }catch(e){
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Something went wrong or the entered email is wrong",style: TextStyle(color: Colors.white),),duration: Duration(seconds: 3),));
+    }
+  }
+
 }
