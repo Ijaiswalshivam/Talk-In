@@ -32,7 +32,8 @@
             android:exported="false" />
         <activity
             android:name=".ChatActivity"
-            android:exported="false">
+            android:exported="true"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -56,6 +57,17 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <receiver
+            android:name=".NotificationReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.talk_in.REPLY_ACTION" />
+            </intent-filter>
+        </receiver>
+
+
 
         <meta-data
             android:name="preloaded_fonts"

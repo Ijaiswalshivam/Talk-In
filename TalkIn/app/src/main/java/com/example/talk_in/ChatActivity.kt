@@ -3,6 +3,7 @@ package com.example.talk_in
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuInflater
 import android.view.View
 import android.widget.EditText
@@ -31,14 +32,17 @@ class ChatActivity : AppCompatActivity() {
     private var senderRoom: String? = null
     private lateinit var receiverUid: String
     private lateinit var senderName: String
+    private var senderUid: String? = null
+    private var isReplyingFromNotification: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+        Log.d("ChatActivity", "onCreate() method called")
 
         val name = intent.getStringExtra("name")
         receiverUid = intent.getStringExtra("uid") ?: ""
-        val senderUid = FirebaseAuth.getInstance().currentUser?.uid
+        senderUid = FirebaseAuth.getInstance().currentUser?.uid
         mDbRef = FirebaseDatabase.getInstance().getReference()
         senderRoom = "$receiverUid$senderUid"
         receiverRoom = "$senderUid$receiverUid"
@@ -68,6 +72,14 @@ class ChatActivity : AppCompatActivity() {
                 override fun onCancelled(databaseError: DatabaseError) {
                 }
             })
+        }
+
+        val replyMessage = intent.getStringExtra("replyMessage")
+        if (!replyMessage.isNullOrEmpty() && intent.getBooleanExtra("fromNotification", false)) {
+            // If a reply message is received from notification, send it to the receiver
+            isReplyingFromNotification = true
+            val messageObject = Message(replyMessage, senderUid, System.currentTimeMillis())
+            sendMessage(messageObject)
         }
 
         // Adding message to database
@@ -121,35 +133,37 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun loadChatMessages() {
+        Log.d("ChatActivity", "loadChatMessages() method called")
         mDbRef.child("chats").child(senderRoom!!)
-                .child("messages")
-                .orderByChild("timestamp")
-                .addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        messageList.clear()
-                        var currentDate: String? = null
-                        for (postSnapshot in snapshot.children) {
-                            val message = postSnapshot.getValue(Message::class.java)
-                            message?.let {
-                                // Get the date from the timestamp
-                                val date = getDateFromTimestamp(it.timestamp ?: 0L)
+            .child("messages")
+            .orderByChild("timestamp")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    messageList.clear()
+                    var currentDate: String? = null
+                    for (postSnapshot in snapshot.children) {
+                        val message = postSnapshot.getValue(Message::class.java)
+                        message?.let {
+                            // Get the date from the timestamp
+                            val date = getDateFromTimestamp(it.timestamp ?: 0L)
 
-                                // If the date changes, add a new message with the date as a separator
-                                if (date != currentDate) {
-                                    currentDate = date
-                                    // Add separator message for the date section
-                                    messageList.add(Message(date, "", null, true))
-                                }
-                                messageList.add(it)
+                            // If the date changes, add a new message with the date as a separator
+                            if (date != currentDate) {
+                                currentDate = date
+                                // Add separator message for the date section
+                                messageList.add(Message(date, "", null, true))
                             }
+                            messageList.add(it)
                         }
-                        messageAdapter.notifyDataSetChanged()
-                        chatRecyclerView.scrollToPosition(messageAdapter.itemCount - 1)
                     }
+                    messageAdapter.notifyDataSetChanged()
+                    chatRecyclerView.scrollToPosition(messageAdapter.itemCount - 1)
+                }
 
-                    override fun onCancelled(error: DatabaseError) {
-                    }
-                })
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("ChatActivity", "loadChatMessages() onCancelled: ${error.message}")
+                }
+            })
     }
 
     private fun getDateFromTimestamp(timestamp: Long): String {
@@ -160,41 +174,50 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun sendMessage(messageObject: Message) {
+        Log.d("ChatActivity", "sendMessage() method called")
         mDbRef.child("chats").child(senderRoom!!).child("messages").push()
-                .setValue(messageObject).addOnSuccessListener {
-                    mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
-                            .setValue(messageObject)
-                            .addOnSuccessListener {
-                                sendNotificationToReceiver(receiverUid, messageObject.message!!)
-                            }
-                            .addOnFailureListener {
-                                Toast.makeText(this, "Failed to send message to receiver.", Toast.LENGTH_SHORT).show()
-                            }
+            .setValue(messageObject).addOnSuccessListener {
+                mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
+                    .setValue(messageObject)
+                    .addOnSuccessListener {
+                        sendNotificationToReceiver(receiverUid, messageObject.message!!)
+                    }
+                    .addOnFailureListener {
+                        Log.e("ChatActivity", "Failed to send message to receiver: ${it.message}")
+                        Toast.makeText(this, "Failed to send message to receiver.", Toast.LENGTH_SHORT).show()
+                    }
+
+                if (isReplyingFromNotification) {
+                    isReplyingFromNotification = false
                 }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Failed to send message.", Toast.LENGTH_SHORT).show()
-                }
+            }
+            .addOnFailureListener {
+                Log.e("ChatActivity", "Failed to send message: ${it.message}")
+                Toast.makeText(this, "Failed to send message.", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun sendNotificationToReceiver(receiverUid: String, message: String) {
+        Log.d("ChatActivity", "sendNotificationToReceiver() method called")
         // Fetch receiver's device token
         mDbRef.child("users-device-tokens").child(receiverUid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val receiverDeviceToken = dataSnapshot.child("deviceToken").value.toString()
 
                 val notificationSender = FcmNotificationsSender(
-                        receiverDeviceToken,
-                        "New Message from $senderName",
-                        message,
-                        FirebaseAuth.getInstance().currentUser?.uid ?: "",
-                        senderName,
-                        applicationContext,
-                        this@ChatActivity
+                    receiverDeviceToken,
+                    "New Message from $senderName",
+                    message,
+                    FirebaseAuth.getInstance().currentUser?.uid ?: "",
+                    senderName,
+                    applicationContext,
+                    this@ChatActivity
                 )
                 notificationSender.sendNotifications()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("ChatActivity", "sendNotificationToReceiver() onCancelled: ${databaseError.message}")
             }
         })
     }
