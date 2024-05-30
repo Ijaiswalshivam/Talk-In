@@ -58,9 +58,9 @@ class _FindPeopleState extends State<FindPeople> {
                 isRequested = true;
               }
             });
-            print(dataServiceViewModel.friendList.length);
-            print(dataServiceViewModel.sentRequestList.length);
-            print("Find People $isFriend $isRequested");
+            //print(dataServiceViewModel.friendList.length);
+            //print(dataServiceViewModel.sentRequestList.length);
+            //print("Find People $isFriend $isRequested");
             return ListTile(
               title: Text(name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),),
               leading: GestureDetector(
@@ -94,8 +94,9 @@ class _FindPeopleState extends State<FindPeople> {
                 child: profilePic=="null"?Image.asset("assets/images/profile.png",width: 30,height:30,):Image.network(profilePic,width: 30,height:30,),
               ),
               trailing: ElevatedButton(
-                onPressed: isRequested? null: isFriend? (){
-
+                onPressed: isRequested? null: isFriend? () async{
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Unfriend user",style: TextStyle(color: Colors.white),)));
+                  await dataServiceViewModel.unFriendUser(context, dataServiceViewModel.userList[index]["id"].toString());
                 } : () async{
                   await dataServiceViewModel.sendFriendRequest(context, dataServiceViewModel.userList[index]);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Sent",style: TextStyle(color: Colors.white),)));
