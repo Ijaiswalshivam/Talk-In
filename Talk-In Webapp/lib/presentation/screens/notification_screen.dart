@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:talk_in_web/generated/l10n.dart';
 import '../../services/data_service.dart';
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -37,12 +37,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   await dataServiceViewModel.acceptFriendRequest(context, dataServiceViewModel.requestList[index]);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Accepted",style: TextStyle(color: Colors.white),)));
                 },
-                child: Text("Accept friend Request"),
+                child: Text(S.of(context).AcceptRequest),
               ),
             );
           }):Align(
         alignment: Alignment.center,
-        child: Text("No Notifications to show",style: TextStyle(color: Colors.lightGreenAccent),),
+        child: Text(S.of(context).NoNotification,style: TextStyle(color: Colors.lightGreenAccent),),
       ),
     );
   }

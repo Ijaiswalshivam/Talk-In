@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:talk_in_web/services/data_service.dart';
 import 'package:talk_in_web/services/user_service.dart';
+import 'package:talk_in_web/generated/l10n.dart';
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -84,7 +85,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               setState(() {
                 isLoading = false;
               });
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("File Size exceeds 10 MB limit",style: TextStyle(color: Colors.white),)));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text(S.of(context).FileSize,style: TextStyle(color: Colors.white),)));
             }
 
           });
@@ -113,7 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black26,
-        title: Text("Your Profile",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+        title: Text(S.of(context).YourProfile,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
       ),
       body: Center(
         child: Column(
@@ -153,7 +154,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
             SizedBox(height: 20,),
-            Text("Your Name",style: TextStyle(color: Colors.green,fontSize: 15),),
+            Text(S.of(context).YourName,style: TextStyle(color: Colors.green,fontSize: 15),),
             SizedBox(height: 30,),
             Padding(
               padding: const EdgeInsets.fromLTRB(450,0,300,20),
@@ -195,9 +196,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ) ,
             ),
-            Text("This name will be visible to other users",style: TextStyle(color: Colors.grey,fontSize: 10),),
+            Text(S.of(context).NameVisibility,style: TextStyle(color: Colors.grey,fontSize: 10),),
             SizedBox(height: 20,),
-            Text("About",style: TextStyle(color: Colors.green,fontSize: 15),),
+            Text(S.of(context).About,style: TextStyle(color: Colors.green,fontSize: 15),),
             Padding(
               padding: const EdgeInsets.fromLTRB(450,0,300,20),
               child: !isEditingAbout? ListTile(
@@ -228,7 +229,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isEditingAbout = !isEditingAbout;
                     });
                     await FirebaseDatabase.instance.ref("Users").child(UserService.userData!["id"]).update({
-                      "about":about.length>0?about:"Hey! I am using TalkIn"
+                      "about":about.length>0?about:S.of(context).HeyTalkIn
                     });
 
                     UserService.userData!["about"] = about;

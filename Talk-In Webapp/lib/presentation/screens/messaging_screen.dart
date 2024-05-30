@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:talk_in_web/generated/l10n.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +55,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                 }));
               },
               icon: Icon(Icons.person,color: Colors.white,),
-              label: Text("See ${friendData["name"].toString()}'s profile",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.white),)
+              label: Text("${friendData["name"].toString()}${S.of(context).Profile}",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.white),)
           ),
         ],
       ),
@@ -318,7 +318,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                             maxLines: null,
                                             decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: 'Type Message',
+                                              hintText: S.of(context).TypeMessage1,
                                               prefixIcon: PopupMenuButton<int>(
                                                 icon: Icon(Icons.attach_file,color: Colors.black,),
                                                 iconSize: 20,
@@ -339,7 +339,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                                 maxLines: null,
                                                                 decoration: InputDecoration(
                                                                   border: InputBorder.none,
-                                                                  hintText: 'Wanna Type A Message',
+                                                                  hintText: S.of(context).TypeMessage2,
                                                                 ),
                                                               ),
                                                               actions: [
@@ -349,7 +349,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                                   Timer(Duration(milliseconds: 500), () {
                                                                     scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                   });
-                                                                }, child: Text("NO")),
+                                                                }, child: Text(S.of(context).No)),
                                                                 TextButton(onPressed: (){
                                                                   if(controller.text.isNotEmpty){
                                                                     Navigator.of(c).pop();
@@ -358,13 +358,13 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                                       scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                     });
                                                                   }
-                                                                }, child: Text("YES")),
+                                                                }, child: Text(S.of(context).Yes)),
                                                               ],
                                                             );
                                                           });
                                                         },
                                                         icon: Icon(Icons.image,color: Colors.black,),
-                                                        label:Text("Images",style: TextStyle(color: Colors.black),)
+                                                        label:Text(S.of(context).Images,style: TextStyle(color: Colors.black),)
                                                     ),
                                                   ),
                                                   PopupMenuItem(
@@ -381,7 +381,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                                 maxLines: null,
                                                                 decoration: InputDecoration(
                                                                   border: InputBorder.none,
-                                                                  hintText: 'Wanna Type A Message',
+                                                                  hintText: S.of(context).TypeMessage2,
                                                                 ),
                                                               ),
                                                               actions: [
@@ -391,7 +391,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                                   Timer(Duration(milliseconds: 500), () {
                                                                     scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                   });
-                                                                }, child: Text("NO")),
+                                                                }, child: Text(S.of(context).No)),
                                                                 TextButton(onPressed: (){
                                                                   if(controller.text.isNotEmpty){
                                                                     Navigator.of(c).pop();
@@ -400,13 +400,13 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                                       scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                     });
                                                                   }
-                                                                }, child: Text("YES")),
+                                                                }, child: Text(S.of(context).Yes)),
                                                               ],
                                                             );
                                                           });
                                                         },
                                                         icon: Icon(Icons.picture_as_pdf,color: Colors.black,),
-                                                        label:Text("Document",style: TextStyle(color: Colors.black),)
+                                                        label:Text(S.of(context).Document,style: TextStyle(color: Colors.black),)
                                                     ),
                                                   ),
                                                   PopupMenuItem(
@@ -423,7 +423,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                                 maxLines: null,
                                                                 decoration: InputDecoration(
                                                                   border: InputBorder.none,
-                                                                  hintText: 'Wanna Type A Message',
+                                                                  hintText: S.of(context).TypeMessage2,
                                                                 ),
                                                               ),
                                                               actions: [
@@ -433,7 +433,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                                   Timer(Duration(milliseconds: 500), () {
                                                                     scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                   });
-                                                                }, child: Text("NO")),
+                                                                }, child: Text(S.of(context).No)),
                                                                 TextButton(onPressed: (){
                                                                   if(controller.text.isNotEmpty){
                                                                     Navigator.of(c).pop();
@@ -442,13 +442,13 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                                       scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                     });
                                                                   }
-                                                                }, child: Text("YES")),
+                                                                }, child: Text(S.of(context).Yes)),
                                                               ],
                                                             );
                                                           });
                                                         },
                                                         icon: Icon(Icons.audio_file,color: Colors.black,),
-                                                        label:Text("Audio",style: TextStyle(color: Colors.black),)
+                                                        label:Text(S.of(context).Audio,style: TextStyle(color: Colors.black),)
                                                     ),
                                                   ),
                                                 ],

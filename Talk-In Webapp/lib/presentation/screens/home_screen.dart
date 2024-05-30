@@ -7,7 +7,7 @@ import 'package:talk_in_web/presentation/screens/my_group_screen.dart';
 import 'package:talk_in_web/presentation/screens/notification_screen.dart';
 import 'package:talk_in_web/presentation/screens/settings_screen.dart';
 import 'package:talk_in_web/services/user_service.dart';
-
+import 'package:talk_in_web/generated/l10n.dart';
 import '../../services/data_service.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return AlertDialog(
               title: Column(
                 children: [
-                  Text("Add Friends",style: TextStyle(color: Colors.black),),
+                  Text(S.of(context).AddFriends,style: TextStyle(color: Colors.black),),
                   SizedBox(height: 10,),
                   Container(
                     width: MediaQuery.of(context).size.width/2,
@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       controller: groupNameController,
                       maxLines: 1,
                       decoration: InputDecoration(
-                          hintText: "Enter a group name"
+                          hintText: S.of(context).GroupName
                       ),
                     ),
                   )
@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }),
               ),
               actions: [
-                TextButton(onPressed: (){Navigator.of(context).pop();}, child: Text("Cancel")),
+                TextButton(onPressed: (){Navigator.of(context).pop();}, child: Text(S.of(context).Cancel)),
                 TextButton(onPressed: () async{
                   if(list.length>0 && groupNameController.text.isNotEmpty){
                     //print(list.length);
@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       });
                     }
                   }
-                }, child: Text("Create")),
+                }, child: Text(S.of(context).Create)),
               ],
             );
           }
@@ -125,14 +125,14 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black26,
-        title: Text("Hello ${UserService.userData!["name"]}",style: TextStyle(color: Colors.white),),
+        title: Text("${S.of(context).Hello} ${UserService.userData!["name"]}",style: TextStyle(color: Colors.white),),
         actions: [
           TextButton.icon(onPressed: (){
             Navigator.push(context, MaterialPageRoute(builder: (context){
               return MyGroupsScreen();
             }));
           }
-            , label: Text("My Groups",style: TextStyle(color: Colors.white),),
+            , label: Text(S.of(context).MyGroups,style: TextStyle(color: Colors.white),),
             icon: Icon(Icons.people_alt,color: Colors.white,),
           ),
           TextButton.icon(onPressed: (){
@@ -141,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // }));
             createGroup(dataServiceViewModel.friendList);
           }
-            , label: Text("Create Group",style: TextStyle(color: Colors.white),),
+            , label: Text(S.of(context).CreateGroup,style: TextStyle(color: Colors.white),),
             icon: Icon(Icons.add,color: Colors.white,),
           ),
           TextButton.icon(onPressed: (){
@@ -149,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return FindPeople();
             }));
           }
-            , label: Text("Find People",style: TextStyle(color: Colors.white),),
+            , label: Text(S.of(context).FindPeople,style: TextStyle(color: Colors.white),),
             icon: Icon(Icons.search,color: Colors.white,),
           ),
           TextButton.icon(onPressed: (){
@@ -157,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return NotificationScreen();
             }));
           }
-            , label: Text("Notification",style: TextStyle(color: dataServiceViewModel.requestList.length>0? Colors.greenAccent : Colors.white),),
+            , label: Text(S.of(context).Notification,style: TextStyle(color: dataServiceViewModel.requestList.length>0? Colors.greenAccent : Colors.white),),
             icon: Icon(Icons.message,color: Colors.white,),
           ),
           IconButton(
@@ -196,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           }):Align(
         alignment: Alignment.center,
-        child: Text("No friends to show. Go and find some people, you introvert!!",style: TextStyle(color: Colors.lightGreenAccent),),
+        child: Text(S.of(context).NoFriendsToShow,style: TextStyle(color: Colors.lightGreenAccent),),
       ),
     );
   }

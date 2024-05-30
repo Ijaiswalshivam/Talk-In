@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:talk_in_web/services/data_service.dart';
+import 'package:talk_in_web/generated/l10n.dart';
 class FindPeople extends StatefulWidget {
   const FindPeople({super.key});
 
@@ -101,7 +102,7 @@ class _FindPeopleState extends State<FindPeople> {
                   await dataServiceViewModel.sendFriendRequest(context, dataServiceViewModel.userList[index]);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Sent",style: TextStyle(color: Colors.white),)));
                 },
-                child: isRequested ? Text("Requested",style: TextStyle(color: Colors.white),) : isFriend ? Text("UnFriend") : Text("Send friend Request"),
+                child: isRequested ? Text(S.of(context).Requested,style: TextStyle(color: Colors.white),) : isFriend ? Text(S.of(context).UnFriend) : Text(S.of(context).SendFriendRequest),
               ),
             );
           }),
