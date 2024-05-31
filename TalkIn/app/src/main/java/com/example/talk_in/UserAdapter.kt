@@ -63,6 +63,13 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>) :
                         val lastMessage = snapshot.children.first().getValue(Message::class.java)
                         holder.txt_last_message.setText(lastMessage?.message.toString())
                     }
+                    else{
+                        var aboutUser = currentUser.aboutMe.toString().trim()
+                        if (aboutUser.length > 30){
+                            aboutUser = aboutUser.substring(0, minOf(currentUser.aboutMe.toString().length, 30)).trim() + "..."
+                        }
+                        holder.txt_last_message.setText(aboutUser)
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
