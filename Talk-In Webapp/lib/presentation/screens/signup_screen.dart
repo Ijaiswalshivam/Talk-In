@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:talk_in_web/services/auth_service.dart';
+import 'package:talk_in_web/generated/l10n.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -52,7 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
-                        child: Text("Sign Up",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.black),),
+                        child: Text(S.of(context).SignUp,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.black),),
                       ),
                     ),
                     Padding(
@@ -80,7 +81,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             decoration: InputDecoration(
                               //labelText: "Enter Name *"
                                 icon: Icon(Icons.person),
-                                hintText: "Enter Name",
+                                hintText: S.of(context).EnterName,
                                 border: InputBorder.none
                             ),
                           ),
@@ -112,7 +113,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             decoration: InputDecoration(
                                 icon: Icon(Icons.mail),
                                 // labelText: "Enter Email *"
-                                hintText: "Enter Email",
+                                hintText: S.of(context).EnterEmail,
                                 border: InputBorder.none
                             ),
                           ),
@@ -153,7 +154,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   icon: Icon(obscure?Icons.remove_red_eye_rounded:Icons.remove_red_eye_outlined),
                                 ),
                                 // labelText: "Enter Password *",
-                                hintText: "Enter Password",
+                                hintText: S.of(context).EnterPassword,
                                 border: InputBorder.none
                             ),
                           ),
@@ -188,7 +189,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               }
                               authServiceViewModel.createAnAccount(context,name, email, password);
                             },
-                            child: Text("Create An Account",style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Colors.white),),
+                            child: Text(S.of(context).CreateAnAccount,style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Colors.white),),
                             style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
                                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(

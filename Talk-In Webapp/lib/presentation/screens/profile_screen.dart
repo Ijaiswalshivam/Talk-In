@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:talk_in_web/generated/l10n.dart';
 import 'package:expandable_menu/expandable_menu.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -55,10 +55,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                                 PopupMenuItem(
-                                  child: Text(name)
+                                    child: Text(name)
                                 ),
                                 PopupMenuItem(
-                                  child: Text(email)
+                                    child: Text(email)
                                 )
                               ]
                           );
@@ -98,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black26,
-        title: Text("${friendData["name"].toString()}'s Profile",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+        title: Text("${friendData["name"].toString()}${S.of(context).Profile}",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
       ),
       body: Center(
         child: Column(
@@ -113,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             SizedBox(height: 15,),
-            Text("UserName",style: TextStyle(color: Colors.green,fontSize: 15),),
+            Text(S.of(context).UserName,style: TextStyle(color: Colors.green,fontSize: 15),),
             SizedBox(height: 20,),
             Padding(
               padding: const EdgeInsets.fromLTRB(450,0,300,20),
@@ -122,7 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             SizedBox(height: 15,),
-            Text("About",style: TextStyle(color: Colors.green,fontSize: 15),),
+            Text(S.of(context).About,style: TextStyle(color: Colors.green,fontSize: 15),),
             Padding(
               padding: const EdgeInsets.fromLTRB(450,0,300,20),
               child: ListTile(
@@ -130,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             SizedBox(height: 15,),
-            Text("User Email",style: TextStyle(color: Colors.green,fontSize: 15),),
+            Text(S.of(context).UserEmail,style: TextStyle(color: Colors.green,fontSize: 15),),
             Padding(
               padding: const EdgeInsets.fromLTRB(450,0,300,20),
               child: ListTile(
@@ -138,7 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             SizedBox(height: 15,),
-            Text("Mutual Friends",style: TextStyle(color: Colors.green,fontSize: 15),),
+            Text(S.of(context).MutualFriends1,style: TextStyle(color: Colors.green,fontSize: 15),),
             mutualFriends.length>0 ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(
@@ -159,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
 
-            ) : Text("No Mutual Friends",style: TextStyle(color: Colors.green,fontSize: 17,fontWeight: FontWeight.bold),),
+            ) : Text(S.of(context).MutualFriends2,style: TextStyle(color: Colors.green,fontSize: 17,fontWeight: FontWeight.bold),),
           ],
         ),
       ),

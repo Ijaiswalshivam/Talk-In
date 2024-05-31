@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:talk_in_web/generated/l10n.dart';
 import '../../services/auth_service.dart';
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -19,7 +19,7 @@ class _SignInScreenState extends State<SignInScreen> {
   AlertDialog showTheDialog(){
     TextEditingController control = TextEditingController();
     return AlertDialog(
-      title: Text("Forgot Password",style: TextStyle(color: Colors.black),),
+      title: Text(S.of(context).ForgotPassword,style: TextStyle(color: Colors.black),),
       content: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -45,7 +45,7 @@ class _SignInScreenState extends State<SignInScreen> {
               decoration: InputDecoration(
                   icon: Icon(Icons.mail),
                   // labelText: "Enter Email *"
-                  hintText: "Enter Your Account Email",
+                  hintText: S.of(context).EnterEmail,
                   border: InputBorder.none
               ),
             ),
@@ -53,7 +53,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       ),
       actions: [
-        TextButton(onPressed: (){Navigator.of(context).pop();}, child: Text("NO")),
+        TextButton(onPressed: (){Navigator.of(context).pop();}, child: Text(S.of(context).No)),
         TextButton(onPressed: (){
           if(control.text.isNotEmpty){
             Navigator.of(context).pop();
@@ -62,7 +62,7 @@ class _SignInScreenState extends State<SignInScreen> {
           }else{
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.black26,content: Text("Email field is required",style: TextStyle(color: Colors.white),)));
           }
-        }, child: Text("Yes")),
+        }, child: Text(S.of(context).Yes)),
       ],
     );
   }
@@ -102,7 +102,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
-                        child: Text("Sign In",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.black),),
+                        child: Text(S.of(context).SignIn,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.black),),
                       ),
                     ),
                     Padding(
@@ -130,7 +130,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             decoration: InputDecoration(
                                 icon: Icon(Icons.mail),
                                 // labelText: "Enter Email *"
-                                hintText: "Enter Email",
+                                hintText: S.of(context).EnterEmail,
                                 border: InputBorder.none
                             ),
                           ),
@@ -171,7 +171,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                   icon: Icon(obscure?Icons.remove_red_eye_rounded:Icons.remove_red_eye_outlined),
                                 ),
                                 // labelText: "Enter Password *",
-                                hintText: "Enter Password",
+                                hintText: S.of(context).EnterPassword,
                                 border: InputBorder.none
                             ),
                           ),
@@ -184,7 +184,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         showDialog(context: context, builder: (context){
                           return showTheDialog();
                         });
-                      }, child: Text("Forgot Password?",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 20),)),
+                      }, child: Text(S.of(context).ForgotPassword,style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 20),)),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(12.0),
@@ -211,7 +211,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               authServiceViewModel.logIntoAccount(context,email, password);
 
                             },
-                            child: Text("Log Into Account",style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Colors.white),),
+                            child: Text(S.of(context).LogIntoAccount,style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Colors.white),),
                             style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
                                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
