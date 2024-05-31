@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:talk_in_web/presentation/screens/group_profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../services/data_service.dart';
@@ -32,6 +33,16 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
       appBar: AppBar(
         backgroundColor: Colors.black26,
         title: Text(groupData["name"].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),),
+        actions: [
+          IconButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                  return GroupProfile(groupData);
+                }));
+              },
+              icon: Icon(Icons.settings,color: Colors.white,)
+          ),
+        ],
       ),
       body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -128,7 +139,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                               ),
                               child: data["tag"]=="text"? Text(
                                 data["Message"]!=null?data["Message"].toString():"Waiting for the message...",
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.black),
                               ): data["tag"] == "image"? Column(
                                 children: [
                                   Stack(
@@ -141,7 +152,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                       )
                                     ],
                                   ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white)),
+                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.black)),
                                 ],
                               ) : data["tag"] == "document"? Column(
                                 children: [
@@ -155,7 +166,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                       )
                                     ],
                                   ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white)),
+                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.black)),
                                 ],
                               ) : Column(
                                 children: [
@@ -169,7 +180,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                       )
                                     ],
                                   ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white)),
+                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.black)),
                                 ],
                               ),
                             ),

@@ -100,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         "name":groupNameController.text,
                         "Members":list,
                         "Admin":UserService.userData!["id"].toString(),
+                        "groupDescription":"No Description to show"
                       }).then((value){
                         print("send");
                         Navigator.of(context).pop();
