@@ -1,5 +1,6 @@
 package com.example.talk_in
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -23,6 +24,17 @@ class ResetPasswordActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.emailResetPassword
+        binding.btnBack.setOnClickListener{
+            val intent = Intent(this@ResetPasswordActivity, LogIn::class.java)
+            finish()
+            startActivity(intent)
+        }
+
+        binding.signupEmail.setOnClickListener{
+            val intent = Intent(this@ResetPasswordActivity, SignUp::class.java)
+            finish()
+            startActivity(intent)
+        }
     }
 
     fun resetPasswordNow(view: View) {
@@ -36,6 +48,7 @@ class ResetPasswordActivity : AppCompatActivity() {
             view1.layoutParams = params
             FirebaseAuth.getInstance().sendPasswordResetEmail(binding.emailResetPassword.text.toString())
             snack.show()
+            binding.emailResetPassword.setText("")
         }
     }
 }
