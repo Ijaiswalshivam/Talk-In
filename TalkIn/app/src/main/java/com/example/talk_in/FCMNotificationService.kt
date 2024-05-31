@@ -20,6 +20,15 @@ class FCMNotificationService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
+        // Extract data payload
+        val senderUid = remoteMessage.data["senderUid"]
+        val senderName = remoteMessage.data["senderName"]
+
+        // Check if ChatActivity is active and matches the sender UID
+        if (ChatActivity.isActive && ChatActivity.currentChatUser == senderUid) {
+            return
+        }
+
         // Play notification sound
         val notification: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val r = RingtoneManager.getRingtone(applicationContext, notification)
@@ -35,12 +44,8 @@ class FCMNotificationService : FirebaseMessagingService() {
 
         val resourceImage = resources.getIdentifier(remoteMessage.notification?.icon, "drawable", packageName)
 
-        val builder = NotificationCompat.Builder(this, "CHANNEL_ID")
+        val builder = NotificationCompat.Builder(this, "Your_channel_id")
             .setSmallIcon(resourceImage)
-
-        // Extract data payload
-        val senderUid = remoteMessage.data["senderUid"]
-        val senderName = remoteMessage.data["senderName"]
 
         // Open ChatActivity when notification is clicked
         val resultIntent = Intent(this, ChatActivity::class.java).apply {
@@ -57,15 +62,18 @@ class FCMNotificationService : FirebaseMessagingService() {
         )
 
         // Add action for reply to notification
-        val replyIntent = Intent(this, NotificationReceiver::class.java)
-        replyIntent.action = "com.example.talk_in.REPLY_ACTION"
-        replyIntent.putExtra("uid", senderUid)
-        replyIntent.putExtra("name", senderName)
+        val replyIntent = Intent(this, NotificationReceiver::class.java).apply {
+            action = NotificationReceiver.REPLY_ACTION
+            putExtra("uid", senderUid)
+            putExtra("name", senderName)
+        }
+
         val replyPendingIntent = PendingIntent.getBroadcast(
             this,
             0,
             replyIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            else PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val remoteInput = androidx.core.app.RemoteInput.Builder(NotificationReceiver.KEY_REPLY)

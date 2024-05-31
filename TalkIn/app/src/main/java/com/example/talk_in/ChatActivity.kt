@@ -35,6 +35,11 @@ class ChatActivity : AppCompatActivity() {
     private var senderUid: String? = null
     private var isReplyingFromNotification: Boolean = false
 
+    companion object {
+        var currentChatUser: String? = null
+        var isActive: Boolean = false
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -221,4 +226,17 @@ class ChatActivity : AppCompatActivity() {
             }
         })
     }
+
+    override fun onResume() {
+        super.onResume()
+        currentChatUser = receiverUid
+        isActive = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        currentChatUser = null
+        isActive = false
+    }
+
 }
