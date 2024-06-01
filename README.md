@@ -158,3 +158,9 @@ If you find this project useful, please consider giving it a star! ⭐️
 2. Mentors- Aman Nishad , Amanpreet Kaur
    For questions or inquiries, please contact [Aman Nishad](mailto:amannishad0512@gmail.com)
    For questions or inquiries, please contact [Amanpreet Kaur](mailto:preetkaur93@gmail.com) 
+
+
+# Our Contributors 🌟
+<a href="https://github.com/Ijaiswalshivam/Talk-In/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Ijaiswalshivam/Talk-In" />
+</a>
