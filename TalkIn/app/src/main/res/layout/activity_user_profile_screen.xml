@@ -67,6 +67,7 @@
                     android:id="@+id/userprofileImage"
                     android:layout_width="160dp"
                     android:layout_height="160dp"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/user_profile_icon" />
                 <ImageButton
                     android:id="@+id/userprofileImageBtn"

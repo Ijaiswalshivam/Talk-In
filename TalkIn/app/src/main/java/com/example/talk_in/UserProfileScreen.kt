@@ -105,10 +105,17 @@ class UserProfileScreen : AppCompatActivity() {
         }
 
         binding.editAboutIcon.setOnClickListener {
-            // Call the function passing the activity context and a lambda for handling the result
             showCustomDialog(this) { newText ->
                 // Handle the result (newText) here
-                Toast.makeText(this, "New text: $newText", Toast.LENGTH_SHORT).show()
+                mAuth.currentUser?.let { it1 ->
+                    mDbRef.child("user").child(it1.uid).child("aboutMe").setValue(newText)
+                        .addOnSuccessListener {
+                            binding.aboutMeTextView.setText(newText)
+                        }
+                        .addOnFailureListener{
+                            Toast.makeText(this@UserProfileScreen, "Failed to update value!!", Toast.LENGTH_SHORT).show()
+                        }
+                }
             }
         }
 
