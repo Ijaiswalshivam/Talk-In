@@ -90,14 +90,16 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>) :
     }
 
     private fun setProfileImage(uid: String, holder: UserViewHolder) {
-        storageReference = FirebaseStorage.getInstance().reference.child("user_profile_images")
-            .child("$uid.jpg")
+        val storageReference = FirebaseStorage.getInstance().reference.child("user_profile_images").child("$uid.jpg")
+
         try {
             val localFile = File.createTempFile("tempfile", ".jpg")
             storageReference.getFile(localFile)
                 .addOnSuccessListener {
                     val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
-                    holder.userprofileImage.setImageBitmap(bitmap)
+                    val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(holder.itemView.resources, bitmap)
+                    circularBitmapDrawable.isCircular = true
+                    holder.userprofileImage.setImageDrawable(circularBitmapDrawable)
                 }.addOnFailureListener{
                     holder.userprofileImage.setImageResource(R.drawable.user_profile_icon)
                 }
