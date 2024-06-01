@@ -95,7 +95,7 @@ class ChatActivity : AppCompatActivity() {
         if (!replyMessage.isNullOrEmpty() && intent.getBooleanExtra("fromNotification", false)) {
             // If a reply message is received from notification, send it to the receiver
             isReplyingFromNotification = true
-            val messageObject = Message(AESUtils.encrypt(replyMessage), senderUid, System.currentTimeMillis())
+            val messageObject = Message(replyMessage, senderUid, System.currentTimeMillis())
             sendMessage(messageObject)
         }
 
@@ -117,7 +117,7 @@ class ChatActivity : AppCompatActivity() {
         sendButton.setOnClickListener {
             val messageText = messageBox.text.toString().trim()
             if (messageText.isNotEmpty()) {
-                val messageObject = Message(AESUtils.encrypt(messageText), senderUid, System.currentTimeMillis())
+                val messageObject = Message(messageText, senderUid, System.currentTimeMillis())
                 sendMessage(messageObject)
                 messageBox.setText("")
             }
@@ -176,7 +176,7 @@ class ChatActivity : AppCompatActivity() {
                     messageList.clear()
                     var currentDate: String? = null
                     for (postSnapshot in snapshot.children) {
-                        var message = postSnapshot.getValue(Message::class.java)
+                        val message = postSnapshot.getValue(Message::class.java)
                         message?.let {
                             // Get the date from the timestamp
                             val date = getDateFromTimestamp(it.timestamp ?: 0L)
