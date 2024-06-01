@@ -1,7 +1,6 @@
 package com.example.talk_in
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MessageAdapter(private val context: Context, private var messageList: ArrayList<Message>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val ITEM_RECEIVE = 1
     private val ITEM_SENT = 2
@@ -55,11 +54,11 @@ class MessageAdapter(private val context: Context, private var messageList: Arra
 
             when (holder) {
                 is SentViewHolder -> {
-                    holder.sentMessage.text = AESUtils.decrypt(currentMessage.message.toString())
+                    holder.sentMessage.text = currentMessage.message
                     holder.sendTimestamp.text = formattedTime
                 }
                 is ReceiveViewHolder -> {
-                    holder.receiveMessage.text = AESUtils.decrypt(currentMessage.message.toString())
+                    holder.receiveMessage.text = currentMessage.message
                     holder.receiveTimestamp.text = formattedTime
                 }
             }
