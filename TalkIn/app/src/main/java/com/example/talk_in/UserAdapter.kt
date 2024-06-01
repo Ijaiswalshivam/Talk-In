@@ -61,7 +61,7 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>) :
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         val lastMessage = snapshot.children.first().getValue(Message::class.java)
-                        holder.txt_last_message.setText(lastMessage?.message.toString())
+                        holder.txt_last_message.setText(AESUtils.decrypt(lastMessage?.message.toString()))
                     }
                     else{
                         var aboutUser = currentUser.aboutMe.toString().trim()
