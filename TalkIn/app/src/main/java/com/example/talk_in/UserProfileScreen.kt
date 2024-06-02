@@ -54,7 +54,7 @@ class UserProfileScreen : AppCompatActivity() {
             mDbRef.child("user").child(uid).get().addOnSuccessListener { snapshot ->
                 val currentUser = snapshot.getValue(User::class.java)
                 currentUser?.let {
-                    binding.nameOfUser.text = it.name
+                    binding.tvName.text=it.name
                     binding.emailid.text = it.email
                     binding.showLocationToggleBtn.isChecked = it.showLocation!!
                     binding.aboutMeTextView.text = it.aboutMe
@@ -63,6 +63,7 @@ class UserProfileScreen : AppCompatActivity() {
                     } else {
                         binding.phoneNumber.text = it.mobile
                     }
+                    binding.talkinId.text = "TalkIn ID:  ${it.talkinid ?: ""}"
                 }
             }.addOnFailureListener { exception ->
                 // Handle any potential errors here
