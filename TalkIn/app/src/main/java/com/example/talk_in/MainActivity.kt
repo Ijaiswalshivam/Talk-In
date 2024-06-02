@@ -1,8 +1,13 @@
 package com.example.talk_in
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -56,16 +61,26 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        binding.userSearchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                return false
+        binding.userSearchBar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // No needed to implement
             }
 
-            override fun onQueryTextChange(newText: String): Boolean {
-                filterList(newText)
-                return true
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // No needed to implement
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                filterList(s.toString())
             }
         })
+
+        binding.searchIcon.setOnClickListener {
+            binding.userSearchBar.visibility = View.VISIBLE
+            binding.userSearchBar.requestFocus()
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(binding.userSearchBar, InputMethodManager.SHOW_IMPLICIT)
+        }
 
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -100,10 +115,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        val intent = Intent(Intent.ACTION_MAIN)
-        intent.addCategory(Intent.CATEGORY_HOME)
-        finish()
-        startActivity(intent)
+        if (binding.userSearchBar.visibility == View.VISIBLE) {
+            binding.userSearchBar.setText("")
+            binding.userSearchBar.visibility = View.GONE
+        } else {
+            super.onBackPressed()
+        }
     }
 }
