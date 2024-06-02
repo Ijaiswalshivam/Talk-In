@@ -10,6 +10,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginLeft="10dp"
+            android:scaleType="centerCrop"
             app:srcCompat="@drawable/user_profile_icon" />
 
         <TextView
