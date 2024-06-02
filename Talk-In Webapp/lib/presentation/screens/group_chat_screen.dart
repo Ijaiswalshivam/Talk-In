@@ -6,6 +6,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:talk_in_web/presentation/screens/group_profile.dart';
+import 'package:talk_in_web/services/encryption_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../services/data_service.dart';
@@ -81,7 +82,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                 maxWidth: MediaQuery.of(context).size.width * 0.7,
                               ),
                               child: data["tag"]=="text"? Text(
-                                data["Message"]!=null?data["Message"].toString():"Waiting for the message...",
+                                data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...",
                                 style: TextStyle(color: Colors.white),
                               ): data["tag"] == "image"? Column(
                                 children: [
@@ -95,7 +96,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                       )
                                     ],
                                   ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white)),
+                                  Text(data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...", style: TextStyle(color: Colors.white)),
                                 ],
                               ) : data["tag"] == "document"? Column(
                                 children: [
@@ -109,7 +110,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                       )
                                     ],
                                   ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white)),
+                                  Text(data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...", style: TextStyle(color: Colors.white)),
                                 ],
                               ) : Column(
                                 children: [
@@ -123,7 +124,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                       )
                                     ],
                                   ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white)),
+                                  Text(data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...", style: TextStyle(color: Colors.white)),
                                 ],
                               ),
                             ),
@@ -138,7 +139,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                 maxWidth: MediaQuery.of(context).size.width * 0.7,
                               ),
                               child: data["tag"]=="text"? Text(
-                                data["Message"]!=null?data["Message"].toString():"Waiting for the message...",
+                                data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...",
                                 style: TextStyle(color: Colors.black),
                               ): data["tag"] == "image"? Column(
                                 children: [
@@ -152,7 +153,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                       )
                                     ],
                                   ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.black)),
+                                  Text(data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...", style: TextStyle(color: Colors.black)),
                                 ],
                               ) : data["tag"] == "document"? Column(
                                 children: [
@@ -166,7 +167,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                       )
                                     ],
                                   ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.black)),
+                                  Text(data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...", style: TextStyle(color: Colors.black)),
                                 ],
                               ) : Column(
                                 children: [
@@ -180,7 +181,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                       )
                                     ],
                                   ),
-                                  Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.black)),
+                                  Text(data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...", style: TextStyle(color: Colors.black)),
                                 ],
                               ),
                             ),
@@ -249,7 +250,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                                                 TextButton(onPressed: (){
                                                                   Navigator.of(c).pop();
                                                                   //DataService().addChatToDatabase(context, messageId, "", UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"image");
-                                                                  DataService().addGroupChatToDatabase(context, "", UserService.userData!["id"].toString(), "image", DateTime.now(), groupData["id"].toString());
+                                                                  DataService().addGroupChatToDatabase(context, vigenereEncrypt(" ", "KEY"), UserService.userData!["id"].toString(), "image", DateTime.now(), groupData["id"].toString());
                                                                   Timer(Duration(milliseconds: 500), () {
                                                                     scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                   });
@@ -258,7 +259,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                                                   if(controller.text.isNotEmpty){
                                                                     Navigator.of(c).pop();
                                                                     //DataService().addChatToDatabase(context, messageId, controller.text, UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"image");
-                                                                    DataService().addGroupChatToDatabase(context, controller.text, UserService.userData!["id"].toString(), "image", DateTime.now(), groupData["id"].toString());
+                                                                    DataService().addGroupChatToDatabase(context, vigenereEncrypt(controller.text, "KEY"), UserService.userData!["id"].toString(), "image", DateTime.now(), groupData["id"].toString());
                                                                     Timer(Duration(milliseconds: 500), () {
                                                                       scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                     });
@@ -293,7 +294,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                                                 TextButton(onPressed: (){
                                                                   Navigator.of(c).pop();
                                                                   //DataService().addChatToDatabase(context, messageId, "", UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"document");
-                                                                  DataService().addGroupChatToDatabase(context, "", UserService.userData!["id"].toString(), "document", DateTime.now(), groupData["id"].toString());
+                                                                  DataService().addGroupChatToDatabase(context, vigenereEncrypt(" ", "KEY"), UserService.userData!["id"].toString(), "document", DateTime.now(), groupData["id"].toString());
                                                                   Timer(Duration(milliseconds: 500), () {
                                                                     scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                   });
@@ -302,7 +303,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                                                   if(controller.text.isNotEmpty){
                                                                     Navigator.of(c).pop();
                                                                     //DataService().addChatToDatabase(context, messageId, controller.text, UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"document");
-                                                                    DataService().addGroupChatToDatabase(context, controller.text, UserService.userData!["id"].toString(), "document", DateTime.now(), groupData["id"].toString());
+                                                                    DataService().addGroupChatToDatabase(context, vigenereEncrypt(controller.text, "KEY"), UserService.userData!["id"].toString(), "document", DateTime.now(), groupData["id"].toString());
                                                                     Timer(Duration(milliseconds: 500), () {
                                                                       scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                     });
@@ -337,7 +338,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                                                 TextButton(onPressed: (){
                                                                   Navigator.of(c).pop();
                                                                   //DataService().addChatToDatabase(context, messageId, "", UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"audio");
-                                                                  DataService().addGroupChatToDatabase(context, "", UserService.userData!["id"].toString(), "audio", DateTime.now(), groupData["id"].toString());
+                                                                  DataService().addGroupChatToDatabase(context, vigenereEncrypt(" ", "KEY"), UserService.userData!["id"].toString(), "audio", DateTime.now(), groupData["id"].toString());
                                                                   Timer(Duration(milliseconds: 500), () {
                                                                     scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                   });
@@ -346,7 +347,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                                                   if(controller.text.isNotEmpty){
                                                                     Navigator.of(c).pop();
                                                                     //DataService().addChatToDatabase(context, messageId, controller.text, UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"audio");
-                                                                    DataService().addGroupChatToDatabase(context, controller.text, UserService.userData!["id"].toString(), "audio", DateTime.now(), groupData["id"].toString());
+                                                                    DataService().addGroupChatToDatabase(context, vigenereEncrypt(controller.text, "KEY"), UserService.userData!["id"].toString(), "audio", DateTime.now(), groupData["id"].toString());
                                                                     Timer(Duration(milliseconds: 500), () {
                                                                       scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                     });
@@ -384,7 +385,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
 
                                             if(messageController.text.isNotEmpty){
                                               //DataService().addChatToDatabase(context,messageId, messageController.text, UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"text");
-                                              DataService().addGroupChatToDatabase(context, messageController.text, UserService.userData!["id"].toString(), "text", DateTime.now(), groupData["id"].toString());
+                                              DataService().addGroupChatToDatabase(context, vigenereEncrypt(messageController.text, "KEY"), UserService.userData!["id"].toString(), "text", DateTime.now(), groupData["id"].toString());
                                               messageController.clear();
                                               Timer(Duration(milliseconds: 500), () {
                                                 scrollController.jumpTo(scrollController.position.maxScrollExtent);
