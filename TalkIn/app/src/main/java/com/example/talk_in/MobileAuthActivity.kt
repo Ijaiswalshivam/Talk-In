@@ -30,25 +30,18 @@ class MobileAuthActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
 
         binding.btnOtp.setOnClickListener {
-            if (binding.edtName.text.isNullOrBlank() || binding.edtPhone.text.isNullOrBlank() || binding.edttalkinId.text.isNullOrBlank()) {
+            if (binding.edtName.text.isNullOrBlank() || binding.edtPhone.text.isNullOrBlank()) {
                 if (binding.edtName.text.isNullOrBlank())
                     binding.edtName.error = "Enter Name"
                 if (binding.edtPhone.text.isNullOrBlank())
                     binding.edtPhone.error = "Enter Phone number"
-                if (binding.edttalkinId.text.isNullOrBlank())
-                    binding.edttalkinId.error = "Enter TalkIn ID"
             } else {
-                checkMobileNumberExists("+91${binding.edtPhone.text.toString()}") { mobileExists ->
-                    if (mobileExists) {
+                checkMobileNumberExists("+91${binding.edtPhone.text.toString()}") { isExists ->
+                    if (isExists) {
+                        // Mobile number already registered
                         binding.edtPhone.error = "Mobile Number already registered"
                     } else {
-                        checkTalkinIdExists(binding.edttalkinId.text.toString()) { talkinIdExists ->
-                            if (talkinIdExists) {
-                                binding.edttalkinId.error = "TalkIn ID already taken"
-                            } else {
-                                verifyAndSubmit()
-                            }
-                        }
+                        verifyAndSubmit()
                     }
                 }
             }
@@ -100,13 +93,7 @@ class MobileAuthActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = task.result?.user
-                    addUserToDatabase(
-                        binding.edttalkinId.text.toString(),
-                        binding.edtName.text.toString(),
-                        null,
-                        "+91${binding.edtPhone.text.toString()}",
-                        mAuth.currentUser?.uid!!
-                    )
+                    addUserToDatabase(binding.edtName.text.toString(), null, "+91${binding.edtPhone.text.toString()}", mAuth.currentUser?.uid!!)
                     binding.progressSignUp.visibility = View.GONE
                     val intent = Intent(this@MobileAuthActivity, MainActivity::class.java)
                     finish()
@@ -123,9 +110,8 @@ class MobileAuthActivity : AppCompatActivity() {
     private fun verifyAndSubmit() {
         binding.edtPhone.isEnabled = false
         binding.edtName.isEnabled = false
-        binding.edttalkinId.isEnabled = false
         if (!isSubmit) {
-            if (!isVerified && !binding.edtPhone.text.isNullOrBlank() && !binding.edtName.text.isNullOrBlank() && !binding.edttalkinId.text.isNullOrBlank()) {
+            if (!isVerified && !binding.edtPhone.text.isNullOrBlank() && !binding.edtName.text.isNullOrBlank()) {
                 val phoneNumber = "+91${binding.edtPhone.text.toString()}"
                 val options = PhoneAuthOptions.newBuilder(mAuth)
                     .setPhoneNumber(phoneNumber)
@@ -163,24 +149,8 @@ class MobileAuthActivity : AppCompatActivity() {
         })
     }
 
-    private fun checkTalkinIdExists(talkinId: String, callback: (Boolean) -> Unit) {
-        val usersRef = FirebaseDatabase.getInstance().getReference("user")
-        val query = usersRef.orderByChild("talkinid").equalTo(talkinId)
-
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val isExists = dataSnapshot.exists()
-                callback(isExists)
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                callback(false)
-            }
-        })
-    }
-
-    private fun addUserToDatabase(talkinId: String, name: String, email: String?, mobile: String, uid: String) {
+    private fun addUserToDatabase(name: String, email: String?, mobile: String, uid: String) {
         mDbref = FirebaseDatabase.getInstance().getReference()
-        mDbref.child("user").child(uid).setValue(User(talkinId, name, email, mobile, false, "Hey There! I am using Talk-In", true, uid))
+        mDbref.child("user").child(uid).setValue(User(name, email, mobile, false, "Hey There! I am using Talk-In", true, uid))
     }
 }

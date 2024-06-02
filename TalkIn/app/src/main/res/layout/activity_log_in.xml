@@ -98,6 +98,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            app:endIconDrawable="@drawable/baseline_remove_red_eye_24"
+            app:endIconMode="password_toggle"
             android:hint="Password"
             app:startIconDrawable="@android:drawable/ic_lock_idle_lock">
 
