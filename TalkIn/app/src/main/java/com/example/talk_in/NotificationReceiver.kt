@@ -26,15 +26,15 @@ class NotificationReceiver : BroadcastReceiver() {
                     val receiverUid = intent.getStringExtra("uid")
                     val senderUid = FirebaseAuth.getInstance().currentUser?.uid
 
-                    // Encrypt the message before storing in Firebase
-                    val encryptedMessage = AESUtils.encrypt(messageText)
+
+                    Log.d("NotificationReceiver", "Received reply: $messageText")
 
                     // Store the reply message in Firebase
                     mDbRef = FirebaseDatabase.getInstance().reference
                     val senderRoom = "$receiverUid$senderUid"
                     val receiverRoom = "$senderUid$receiverUid"
 
-                    val messageObject = Message(encryptedMessage, senderUid, System.currentTimeMillis())
+                    val messageObject = Message(messageText, senderUid, System.currentTimeMillis())
 
                     mDbRef.child("chats").child(senderRoom).child("messages").push()
                         .setValue(messageObject).addOnSuccessListener {
@@ -58,11 +58,12 @@ class NotificationReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun fetchSenderNameAndSendNotification(context: Context, receiverUid: String, encryptedMessage: String, senderUid: String) {
+    private fun fetchSenderNameAndSendNotification(context: Context, receiverUid: String, message: String, senderUid: String) {
+        Log.d("NotificationReceiver", "fetchSenderNameAndSendNotification() method called")
         mDbRef.child("user").child(senderUid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val senderName = dataSnapshot.child("name").value.toString()
-                sendNotificationToReceiver(context, receiverUid, encryptedMessage, senderName)
+                sendNotificationToReceiver(context, receiverUid, message, senderName)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -71,26 +72,17 @@ class NotificationReceiver : BroadcastReceiver() {
         })
     }
 
-    private fun sendNotificationToReceiver(context: Context, receiverUid: String, encryptedMessage: String, senderName: String) {
+    private fun sendNotificationToReceiver(context: Context, receiverUid: String, message: String, senderName: String) {
+        Log.d("NotificationReceiver", "sendNotificationToReceiver() method called")
         // Fetch receiver's device token
         mDbRef.child("users-device-tokens").child(receiverUid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val receiverDeviceToken = dataSnapshot.child("deviceToken").value.toString()
 
-                val decryptedMessage = try {
-                    AESUtils.decrypt(encryptedMessage)
-                } catch (e: IllegalArgumentException) {
-                    Log.e("Decryption Error", "Failed to decrypt message: ${e.message}")
-                    "Invalid message"
-                } catch (e: Exception) {
-                    Log.e("Decryption Error", "An error occurred during decryption: ${e.message}")
-                    "Error decrypting message"
-                }
-
                 val notificationSender = FcmNotificationsSender(
                     receiverDeviceToken,
                     "New Message from $senderName",
-                    decryptedMessage,
+                    message,
                     FirebaseAuth.getInstance().currentUser?.uid ?: "",
                     senderName,
                     context,
