@@ -1,11 +1,8 @@
 package com.example.talk_in
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.MenuInflater
 import android.view.View
@@ -14,15 +11,10 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import java.io.File
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -33,7 +25,6 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var nameOfUser: TextView
     private lateinit var sendButton: ImageView
     private lateinit var backbtnImage: ImageView
-    private lateinit var userprofileImage: ImageView
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
@@ -43,7 +34,6 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var senderName: String
     private var senderUid: String? = null
     private var isReplyingFromNotification: Boolean = false
-    private lateinit var storageReference: StorageReference
 
     companion object {
         var currentChatUser: String? = null
@@ -68,12 +58,10 @@ class ChatActivity : AppCompatActivity() {
         sendButton = findViewById(R.id.sendButton)
         nameOfUser = findViewById(R.id.nameOfUser)
         backbtnImage = findViewById(R.id.backbtnImage)
-        userprofileImage = findViewById(R.id.userprofileImage)
         messageList = ArrayList()
         messageAdapter = MessageAdapter(this, messageList)
 
         nameOfUser.text = name
-        setProfileImage(receiverUid)
 
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
         chatRecyclerView.adapter = messageAdapter
@@ -95,29 +83,15 @@ class ChatActivity : AppCompatActivity() {
         if (!replyMessage.isNullOrEmpty() && intent.getBooleanExtra("fromNotification", false)) {
             // If a reply message is received from notification, send it to the receiver
             isReplyingFromNotification = true
-            val messageObject = Message(AESUtils.encrypt(replyMessage), senderUid, System.currentTimeMillis())
+            val messageObject = Message(replyMessage, senderUid, System.currentTimeMillis())
             sendMessage(messageObject)
         }
-
-        messageBox.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (messageBox.text.toString().isNotEmpty()){
-                    sendButton.setImageResource(R.drawable.send_icon_dark)
-                }
-                else{
-                    sendButton.setImageResource(R.drawable.send_icon_dull)
-                }
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun afterTextChanged(editable: Editable?) {}
-        })
 
         // Adding message to database
         sendButton.setOnClickListener {
             val messageText = messageBox.text.toString().trim()
             if (messageText.isNotEmpty()) {
-                val messageObject = Message(AESUtils.encrypt(messageText), senderUid, System.currentTimeMillis())
+                val messageObject = Message(messageText, senderUid, System.currentTimeMillis())
                 sendMessage(messageObject)
                 messageBox.setText("")
             }
@@ -142,10 +116,7 @@ class ChatActivity : AppCompatActivity() {
         popupMenu.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.viewProfile -> {
-                    val intent = Intent(this@ChatActivity, UserProfileScreen::class.java)
-                    intent.putExtra("MODE", "RECEIVER_USER")
-                    intent.putExtra("RECEIVER_UID", receiverUid)
-                    startActivity(intent)
+                    Toast.makeText(this, "View Profile Clicked", Toast.LENGTH_SHORT).show()
                     true
                 }
                 R.id.sharedMedia -> {
@@ -176,7 +147,7 @@ class ChatActivity : AppCompatActivity() {
                     messageList.clear()
                     var currentDate: String? = null
                     for (postSnapshot in snapshot.children) {
-                        var message = postSnapshot.getValue(Message::class.java)
+                        val message = postSnapshot.getValue(Message::class.java)
                         message?.let {
                             // Get the date from the timestamp
                             val date = getDateFromTimestamp(it.timestamp ?: 0L)
@@ -256,24 +227,6 @@ class ChatActivity : AppCompatActivity() {
         })
     }
 
-    private fun setProfileImage(currentUserUid: String) {
-        storageReference = FirebaseStorage.getInstance().reference.child("user_profile_images")
-            .child("$currentUserUid.jpg")
-        try {
-            val localFile = File.createTempFile("tempfile", ".jpg")
-            storageReference.getFile(localFile)
-                .addOnSuccessListener {
-                    val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
-                    val circularBitmapDrawable =
-                        RoundedBitmapDrawableFactory.create(resources, bitmap)
-                    circularBitmapDrawable.isCircular = true
-                    userprofileImage.setImageDrawable(circularBitmapDrawable)
-                }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         currentChatUser = receiverUid
@@ -285,4 +238,5 @@ class ChatActivity : AppCompatActivity() {
         currentChatUser = null
         isActive = false
     }
+
 }

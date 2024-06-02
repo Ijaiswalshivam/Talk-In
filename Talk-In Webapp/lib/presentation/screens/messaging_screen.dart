@@ -6,7 +6,6 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:talk_in_web/presentation/screens/profile_screen.dart';
-import 'package:talk_in_web/services/encryption_service.dart';
 import 'package:talk_in_web/services/user_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -106,7 +105,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                   child: data["tag"]=="text"? Column(
                                     children: [
                                       Text(
-                                        data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...",
+                                        data["Message"]!=null?data["Message"].toString():"Waiting for the message...",
                                         style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
                                       ),
                                       // Row(
@@ -129,7 +128,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                           )
                                         ],
                                       ),
-                                      Text(data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
+                                      Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
                                       // Row(
                                       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       //   children: [
@@ -150,7 +149,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                           )
                                         ],
                                       ),
-                                      Text(data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
+                                      Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
                                       // Row(
                                       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       //   children: [
@@ -171,7 +170,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                           )
                                         ],
                                       ),
-                                      Text(data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
+                                      Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
                                       // Row(
                                       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       //   children: [
@@ -200,7 +199,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                   child: data["tag"]=="text"? Column(
                                     children: [
                                       Text(
-                                        data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...",
+                                        data["Message"]!=null?data["Message"].toString():"Waiting for the message...",
                                         style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
                                       ),
                                       // Row(
@@ -223,7 +222,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                           )
                                         ],
                                       ),
-                                      Text(data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+                                      Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
                                       // Row(
                                       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       //   children: [
@@ -244,7 +243,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                           )
                                         ],
                                       ),
-                                      Text(data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+                                      Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
                                       // Row(
                                       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       //   children: [
@@ -265,7 +264,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                           )
                                         ],
                                       ),
-                                      Text(data["Message"]!=null?vigenereDecrypt(data["Message"].toString(), "KEY"):"Waiting for the message...", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+                                      Text(data["Message"]!=null?data["Message"].toString():"Waiting for the message...", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
                                       // Row(
                                       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       //   children: [
@@ -346,7 +345,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                               actions: [
                                                                 TextButton(onPressed: (){
                                                                   Navigator.of(c).pop();
-                                                                  DataService().addChatToDatabase(context, messageId, vigenereEncrypt(" ", "KEY"), UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"image");
+                                                                  DataService().addChatToDatabase(context, messageId, "", UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"image");
                                                                   Timer(Duration(milliseconds: 500), () {
                                                                     scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                   });
@@ -354,7 +353,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                                 TextButton(onPressed: (){
                                                                   if(controller.text.isNotEmpty){
                                                                     Navigator.of(c).pop();
-                                                                    DataService().addChatToDatabase(context, messageId, vigenereEncrypt(controller.text, "KEY"), UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"image");
+                                                                    DataService().addChatToDatabase(context, messageId, controller.text, UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"image");
                                                                     Timer(Duration(milliseconds: 500), () {
                                                                       scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                     });
@@ -388,7 +387,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                               actions: [
                                                                 TextButton(onPressed: (){
                                                                   Navigator.of(c).pop();
-                                                                  DataService().addChatToDatabase(context, messageId, vigenereEncrypt(" ", "KEY"), UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"document");
+                                                                  DataService().addChatToDatabase(context, messageId, "", UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"document");
                                                                   Timer(Duration(milliseconds: 500), () {
                                                                     scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                   });
@@ -396,7 +395,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                                 TextButton(onPressed: (){
                                                                   if(controller.text.isNotEmpty){
                                                                     Navigator.of(c).pop();
-                                                                    DataService().addChatToDatabase(context, messageId, vigenereEncrypt(controller.text, "KEY"), UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"document");
+                                                                    DataService().addChatToDatabase(context, messageId, controller.text, UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"document");
                                                                     Timer(Duration(milliseconds: 500), () {
                                                                       scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                     });
@@ -430,7 +429,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                               actions: [
                                                                 TextButton(onPressed: (){
                                                                   Navigator.of(c).pop();
-                                                                  DataService().addChatToDatabase(context, messageId, vigenereEncrypt(" ", "KEY"), UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"audio");
+                                                                  DataService().addChatToDatabase(context, messageId, "", UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"audio");
                                                                   Timer(Duration(milliseconds: 500), () {
                                                                     scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                   });
@@ -438,7 +437,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                                                 TextButton(onPressed: (){
                                                                   if(controller.text.isNotEmpty){
                                                                     Navigator.of(c).pop();
-                                                                    DataService().addChatToDatabase(context, messageId, vigenereEncrypt(controller.text, "KEY"), UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"audio");
+                                                                    DataService().addChatToDatabase(context, messageId, controller.text, UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"audio");
                                                                     Timer(Duration(milliseconds: 500), () {
                                                                       scrollController.jumpTo(scrollController.position.maxScrollExtent);
                                                                     });
@@ -475,7 +474,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                                           onPressed: () async{
 
                                             if(messageController.text.isNotEmpty){
-                                              DataService().addChatToDatabase(context,messageId, vigenereEncrypt(messageController.text, "KEY"), UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"text");
+                                              DataService().addChatToDatabase(context,messageId, messageController.text, UserService.userData!["id"].toString(), friendData["id"].toString(),DateTime.now(),"text");
                                               messageController.clear();
                                               Timer(Duration(milliseconds: 500), () {
                                                 scrollController.jumpTo(scrollController.position.maxScrollExtent);
