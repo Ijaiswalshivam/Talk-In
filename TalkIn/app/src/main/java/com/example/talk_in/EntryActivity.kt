@@ -75,7 +75,7 @@ class   EntryActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.slide_out_bottom, R.anim.slide_in_bottom);
         }
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestIdToken(getString(R.string.defaul_web_client_id))
             .requestEmail()
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
