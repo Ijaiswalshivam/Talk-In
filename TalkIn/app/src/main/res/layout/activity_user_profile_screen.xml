@@ -67,18 +67,15 @@
                     android:id="@+id/userprofileImage"
                     android:layout_width="160dp"
                     android:layout_height="160dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/default_profile_image" />
-
+                    android:src="@drawable/user_profile_icon" />
                 <ImageButton
                     android:id="@+id/userprofileImageBtn"
-                    android:layout_width="43dp"
-                    android:layout_height="39dp"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginTop="-35dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/camera_icon_profile"
                     android:background="@drawable/rounded_corners"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/camera_icon_profile" />
+                    android:layout_marginTop="-35dp"
+                    android:layout_marginLeft="40dp"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -113,7 +110,6 @@
                 <TextView
                     android:id="@+id/personalinfobtn"
                     android:layout_width="wrap_content"
-
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="center"
@@ -237,13 +233,22 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/proximanovaregular"
                             android:text="Contact"
                             android:textColor="@color/black"
                             android:textSize="17sp"
                             android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/editContactIcon"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/edit_icon"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginEnd="10dp"
+                            android:textSize="14sp" />
                     </RelativeLayout>
 
                     <LinearLayout
@@ -291,8 +296,6 @@
                                 android:src="@drawable/ic_call_24dp" />
 
                             <TextView
-                                android:id="@+id/phoneNumber"
-                                android:hint="Contact"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
@@ -300,17 +303,6 @@
                                 android:textSize="15sp"
                                 android:textColor="#535353"
                                 android:fontFamily="@font/proximanovaregular" />
-                            <ImageView
-                                android:id="@+id/editContactIcon"
-                                android:clickable="true"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_marginStart="25dp"
-                                android:src="@drawable/edit_icon"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginEnd="10dp"
-                                android:textSize="14sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:talk_in_web/presentation/screens/entry_screen.dart';
-import 'package:talk_in_web/presentation/screens/splash_screen.dart';
 import 'package:talk_in_web/services/auth_service.dart';
 import 'package:talk_in_web/services/data_service.dart';
 import 'package:talk_in_web/services/language_service.dart';
@@ -59,7 +58,7 @@ class MyApp extends StatelessWidget {
                 AppLocalizationDelegate(),
                 ...localization.FlutterLocalization.instance.localizationsDelegates
               ],
-              home: SplashScreen(),
+              home: EntryScreen(),
             );
           },
         ),

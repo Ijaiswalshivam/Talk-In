@@ -82,7 +82,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 val notificationSender = FcmNotificationsSender(
                     receiverDeviceToken,
                     "New Message from $senderName",
-                    AESUtils.decrypt(message),
+                    message,
                     FirebaseAuth.getInstance().currentUser?.uid ?: "",
                     senderName,
                     context,
