@@ -45,13 +45,13 @@ class FcmNotificationsSender(
             mainObj.put("data", dataObject)
 
             val request = object : JsonObjectRequest(
-                    Request.Method.POST, postUrl, mainObj,
-                    Response.Listener { response ->
+                Request.Method.POST, postUrl, mainObj,
+                Response.Listener { response ->
 
-                    },
-                    Response.ErrorListener { error ->
+                },
+                Response.ErrorListener { error ->
 
-                    }
+                }
             ) {
                 @Throws(AuthFailureError::class)
                 override fun getHeaders(): Map<String, String> {

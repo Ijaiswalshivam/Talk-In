@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -61,7 +62,7 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>) :
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         val lastMessage = snapshot.children.first().getValue(Message::class.java)
-                        holder.txt_last_message.setText(lastMessage?.message.toString())
+                        holder.txt_last_message.setText(AESUtils.decrypt(lastMessage?.message.toString()))
                     }
                     else{
                         var aboutUser = currentUser.aboutMe.toString().trim()
@@ -89,14 +90,16 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>) :
     }
 
     private fun setProfileImage(uid: String, holder: UserViewHolder) {
-        storageReference = FirebaseStorage.getInstance().reference.child("user_profile_images")
-            .child("$uid.jpg")
+        val storageReference = FirebaseStorage.getInstance().reference.child("user_profile_images").child("$uid.jpg")
+
         try {
             val localFile = File.createTempFile("tempfile", ".jpg")
             storageReference.getFile(localFile)
                 .addOnSuccessListener {
                     val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
-                    holder.userprofileImage.setImageBitmap(bitmap)
+                    val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(holder.itemView.resources, bitmap)
+                    circularBitmapDrawable.isCircular = true
+                    holder.userprofileImage.setImageDrawable(circularBitmapDrawable)
                 }.addOnFailureListener{
                     holder.userprofileImage.setImageResource(R.drawable.user_profile_icon)
                 }
