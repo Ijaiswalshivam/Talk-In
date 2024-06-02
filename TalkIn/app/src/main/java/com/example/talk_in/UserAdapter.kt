@@ -44,7 +44,12 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>) :
 
         val chatRoom = senderUid + currentUser.uid
 
-        holder.textName.text = currentUser.name
+        var name = currentUser.name!!.toString().trim()
+        if (currentUser.name?.length!! > 25)
+            name = name.substring(0, minOf(name.length, 25)) + "..."
+
+
+        holder.textName.text = name
         holder.itemView.setOnClickListener {
             val intent = Intent(context, ChatActivity::class.java)
             intent.putExtra("name", currentUser.name)
