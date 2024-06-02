@@ -208,7 +208,6 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun sendMessage(messageObject: Message) {
-        Log.d("ChatActivity", "sendMessage() method called")
         mDbRef.child("chats").child(senderRoom!!).child("messages").push()
             .setValue(messageObject).addOnSuccessListener {
                 mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
@@ -232,16 +231,30 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun sendNotificationToReceiver(receiverUid: String, message: String) {
-        Log.d("ChatActivity", "sendNotificationToReceiver() method called")
         // Fetch receiver's device token
         mDbRef.child("users-device-tokens").child(receiverUid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val receiverDeviceToken = dataSnapshot.child("deviceToken").value.toString()
 
+                // Decrypt the message if it's in valid hexadecimal format
+                val decryptedMessage = try {
+                    if (isHex(message)) {
+                        AESUtils.decrypt(message)
+                    } else {
+                        "Invalid message format"
+                    }
+                } catch (e: IllegalArgumentException) {
+                    Log.e("Decryption Error", "Failed to decrypt message: ${e.message}")
+                    "Invalid message"
+                } catch (e: Exception) {
+                    Log.e("Decryption Error", "An error occurred during decryption: ${e.message}")
+                    "Error decrypting message"
+                }
+
                 val notificationSender = FcmNotificationsSender(
                     receiverDeviceToken,
                     "New Message from $senderName",
-                    message,
+                    decryptedMessage,
                     FirebaseAuth.getInstance().currentUser?.uid ?: "",
                     senderName,
                     applicationContext,
@@ -255,6 +268,12 @@ class ChatActivity : AppCompatActivity() {
             }
         })
     }
+
+    // Helper function to check if a string is in valid hexadecimal format
+    private fun isHex(str: String): Boolean {
+        return str.all { it in '0'..'9' || it in 'a'..'f' || it in 'A'..'F' }
+    }
+
 
     private fun setProfileImage(currentUserUid: String) {
         storageReference = FirebaseStorage.getInstance().reference.child("user_profile_images")
