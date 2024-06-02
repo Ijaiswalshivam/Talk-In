@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
@@ -42,10 +43,9 @@ class FCMNotificationService : FirebaseMessagingService() {
         val pattern = longArrayOf(100, 300, 300, 300)
         v.vibrate(pattern, -1)
 
-        val resourceImage = resources.getIdentifier(remoteMessage.notification?.icon, "drawable", packageName)
-
         val builder = NotificationCompat.Builder(this, "Your_channel_id")
-            .setSmallIcon(resourceImage)
+            .setSmallIcon(R.drawable.talkin)
+
 
         // Open ChatActivity when notification is clicked
         val resultIntent = Intent(this, ChatActivity::class.java).apply {
