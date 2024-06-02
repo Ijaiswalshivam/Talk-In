@@ -8,11 +8,10 @@ class User {
     var uid: String? = null
     var aboutMe: String? = null
     var verified: Boolean? = false
-    var talkinid: String?=null
 
     constructor(){}
 
-    constructor( talkinid: String?, name: String?, email: String?, mobile: String?, showLocation: Boolean?, aboutMe: String?, verified: Boolean?, uid: String?){
+    constructor(name: String?, email: String?, mobile: String?, showLocation: Boolean?, aboutMe: String?, verified: Boolean?, uid: String?){
         this.name = name
         this.email = email
         this.mobile = mobile
@@ -20,6 +19,5 @@ class User {
         this.aboutMe = aboutMe
         this.verified = verified
         this.uid = uid
-        this.talkinid = talkinid
     }
 }
