@@ -31,14 +31,19 @@ class SignUp : AppCompatActivity() {
     binding.apply {
       btnSignup.setOnClickListener {
         val email = edtEmail.text.toString().trim()
-        val password = edtPassword.text.toString().trim()
+        val createPassword = createPassword.text.toString().trim()
+        val confirmPassword = confirmPassword.text.toString().trim()
         val username = edtName.text.toString().trim()
 
-        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(email) || TextUtils.isEmpty(createPassword) || TextUtils.isEmpty(confirmPassword)) {
           Toast.makeText(this@SignUp, "Enter Details", Toast.LENGTH_SHORT).show()
-        } else {
+        }
+        else if (createPassword != confirmPassword) {
+          Toast.makeText(this@SignUp, "Passwords are not matching !!", Toast.LENGTH_SHORT).show()
+        }
+        else {
           progressSignUp.visibility = View.VISIBLE
-          signUp(username, email, password)
+          signUp(username, email, createPassword)
         }
       }
 
