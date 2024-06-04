@@ -45,5 +45,14 @@
             android:layout_below="@id/txt_name"
             android:layout_marginTop="40dp"
             android:background="#f2f2f2" />
+        
+        <ImageView
+            android:id="@+id/selection_icon"
+            android:layout_width="35dp"
+            android:layout_height="34dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="30dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/icon_select_group_member" />
 
 </RelativeLayout>

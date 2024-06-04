@@ -17,9 +17,21 @@
         android:theme="@style/Theme.TalkIn"
         tools:targetApi="31">
         <activity
-            android:name=".UserProfileScreen"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:name=".CreateGroupActivity"
             android:exported="false" />
+        <activity
+            android:name=".GroupChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GroupMemberSelection"
+            android:exported="false" />
+        <activity
+            android:name=".Groups"
+            android:exported="false" />
+        <activity
+            android:name=".UserProfileScreen"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".ResetPasswordActivity"
             android:exported="false"
@@ -66,8 +78,6 @@
                 <action android:name="com.example.talk_in.REPLY_ACTION" />
             </intent-filter>
         </receiver>
-
-
 
         <meta-data
             android:name="preloaded_fonts"

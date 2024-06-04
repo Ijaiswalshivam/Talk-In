@@ -85,7 +85,12 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_chat -> true
-                R.id.menu_send -> true
+                R.id.menu_group -> {
+                    val intent = Intent(this, Groups::class.java)
+                    finish()
+                    startActivity(intent)
+                    true
+                }
                 R.id.menu_profile -> {
                     val intent = Intent(this, UserProfileScreen::class.java)
                     intent.putExtra("MODE", "CURRENT_USER")
