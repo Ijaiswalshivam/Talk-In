@@ -18,6 +18,8 @@ class CreateGroupActivity : AppCompatActivity() {
         binding = ActivityCreateGroupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.hide()
+
         val groupMembers: ArrayList<String>? = intent.getStringArrayListExtra("GROUP_MEMBERS")
         binding.confirmButton.setOnClickListener {
             val groupName = binding.groupNameTextfield.text.toString().trim()

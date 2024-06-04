@@ -25,6 +25,8 @@ class GroupMemberSelection : AppCompatActivity() {
         binding = ActivityGroupMemberSelectionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.hide()
+
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
