@@ -4,9 +4,9 @@
     android:icon="@drawable/img_2"
     android:id="@+id/menu_chat"
     />
-    <item android:title="Send"
+    <item android:title="Groups"
         android:icon="@drawable/img"
-        android:id="@+id/menu_send"
+        android:id="@+id/menu_group"
         />
     <item android:title="Profile"
         android:icon="@drawable/img_1"
