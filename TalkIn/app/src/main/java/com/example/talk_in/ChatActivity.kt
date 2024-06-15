@@ -1,19 +1,27 @@
 package com.example.talk_in
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.ViewGroup
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.PopupMenu
+import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -291,6 +299,204 @@ class ChatActivity : AppCompatActivity() {
         } catch (e: IOException) {
             e.printStackTrace()
         }
+    }
+
+    public fun showContextMenu(anchorView: View, message: Message) {
+        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val popupView = inflater.inflate(R.layout.custom_context_menu, null)
+
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        popupView.findViewById<TextView>(R.id.action_delete_for_you).setOnClickListener {
+            deleteMessageForYou(message)
+            popupWindow.dismiss()
+        }
+
+        popupView.findViewById<TextView>(R.id.action_reply).setOnClickListener {
+            replyToMessage(message)
+            popupWindow.dismiss()
+        }
+
+        popupView.findViewById<TextView>(R.id.action_copy).setOnClickListener {
+            copyMessageToClipboard(message)
+            popupWindow.dismiss()
+        }
+
+        // Check if the current user is the sender and if the message is not deleted
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        if (message.senderId == currentUserUid && !message.isDeleted) {
+            popupView.findViewById<TextView>(R.id.action_deleted_for_everyone).setOnClickListener {
+                deleteMessageForEveryone(message)
+                popupWindow.dismiss()
+            }
+        } else {
+            popupView.findViewById<TextView>(R.id.action_deleted_for_everyone).visibility = View.GONE
+        }
+
+        popupWindow.showAsDropDown(anchorView)
+    }
+
+    private fun deleteMessageForEveryone(message: Message) {
+        if (senderRoom == null || receiverRoom == null) {
+            Toast.makeText(this, "Error: Cannot delete message. Room not found.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val senderMessagesRef = mDbRef.child("chats").child(senderRoom!!).child("messages")
+        val receiverMessagesRef = mDbRef.child("chats").child(receiverRoom!!).child("messages")
+
+
+        val senderQuery = senderMessagesRef.orderByChild("timestamp").equalTo(message.timestamp?.toDouble() ?: 0.0)
+
+        // Listener for sender's chat
+        senderQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(senderSnapshot: DataSnapshot) {
+                if (senderSnapshot.exists()) {
+                    for (senderChildSnapshot in senderSnapshot.children) {
+                        val senderMsg = senderChildSnapshot.getValue(Message::class.java)
+                        if (senderMsg != null && senderMsg.senderId == message.senderId && senderMsg.timestamp == message.timestamp) {
+                            val senderPlaceholder = Message(
+                                senderId = message.senderId,
+                                timestamp = message.timestamp,
+                                message = AESUtils.encrypt("You deleted this message"), // Encrypt message
+                                isDeleted = true,
+                                messageType = "deleted_sender"
+                            )
+
+                            senderChildSnapshot.ref.removeValue().addOnSuccessListener {
+                                // Update local list and UI for sender
+                                messageList.find { it.timestamp == message.timestamp && it.senderId == message.senderId }?.let { originalMessage ->
+                                    val index = messageList.indexOf(originalMessage)
+                                    messageList[index] = senderPlaceholder
+                                    messageAdapter.notifyDataSetChanged()
+                                }
+
+                                // Query to find the message to delete in receiver's chat
+                                val receiverQuery = receiverMessagesRef.orderByChild("timestamp").equalTo(message.timestamp?.toDouble() ?: 0.0)
+
+                                // Listener for receiver's chat
+                                receiverQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onDataChange(receiverSnapshot: DataSnapshot) {
+                                        if (receiverSnapshot.exists()) {
+                                            for (receiverChildSnapshot in receiverSnapshot.children) {
+                                                val receiverMsg = receiverChildSnapshot.getValue(Message::class.java)
+                                                if (receiverMsg != null && receiverMsg.senderId == message.senderId && receiverMsg.timestamp == message.timestamp) {
+                                                    // Encrypt placeholder message for receiver
+                                                    val receiverPlaceholder = Message(
+                                                        senderId = message.senderId,
+                                                        timestamp = message.timestamp,
+                                                        message = AESUtils.encrypt("This message was deleted"), // Encrypt message
+                                                        isDeleted = true,
+                                                        messageType = "deleted_receiver"
+                                                    )
+
+                                                    // Remove the message from receiver's chat
+                                                    receiverChildSnapshot.ref.removeValue().addOnSuccessListener {
+                                                        Toast.makeText(this@ChatActivity, "Message deleted", Toast.LENGTH_SHORT).show()
+
+                                                        // Update local list and UI for receiver
+                                                        messageList.find { it.timestamp == message.timestamp && it.senderId != message.senderId }?.let { originalMessage ->
+                                                            val index = messageList.indexOf(originalMessage)
+                                                            messageList[index] = receiverPlaceholder
+                                                            messageAdapter.notifyDataSetChanged()
+                                                        }
+                                                    }.addOnFailureListener {
+                                                        Toast.makeText(this@ChatActivity, "Error: Could not delete message for receiver.", Toast.LENGTH_SHORT).show()
+                                                    }
+                                                    break
+                                                }
+                                            }
+                                        } else {
+                                            Toast.makeText(this@ChatActivity, "Error: Message not found in receiver's chat.", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+
+                                    override fun onCancelled(receiverDatabaseError: DatabaseError) {
+                                        Toast.makeText(this@ChatActivity, "Error: ${receiverDatabaseError.message}", Toast.LENGTH_SHORT).show()
+                                    }
+                                })
+
+                            }.addOnFailureListener {
+                                Toast.makeText(this@ChatActivity, "Error: Could not delete message from sender's chat.", Toast.LENGTH_SHORT).show()
+                            }
+                            break
+                        }
+                    }
+                } else {
+                    Toast.makeText(this@ChatActivity, "Error: Message not found in sender's chat.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onCancelled(senderDatabaseError: DatabaseError) {
+                Toast.makeText(this@ChatActivity, "Error: ${senderDatabaseError.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+
+
+
+
+    private fun replyToMessage(message: Message) {
+        // Logic to reply to the message
+        Toast.makeText(this, "Replying to message: ${message.message}", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun copyMessageToClipboard(message: Message) {
+        // Logic to copy the message to clipboard
+        Toast.makeText(this, "Message copied to clipboard", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun deleteMessageForYou(message: Message) {
+        if (senderRoom == null || receiverRoom == null) {
+            Toast.makeText(this, "Error: Cannot delete message. Room not found.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val userRoom = if (message.senderId == FirebaseAuth.getInstance().currentUser?.uid) senderRoom else receiverRoom
+        val userMessagesRef = mDbRef.child("chats").child(userRoom!!).child("messages")
+
+        // Query to find the message to delete for the current user
+        val query = userMessagesRef.orderByChild("timestamp").equalTo(message.timestamp?.toDouble() ?: 0.0)
+
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    for (childSnapshot in snapshot.children) {
+                        val msg = childSnapshot.getValue(Message::class.java)
+                        if (msg != null) {
+                            if (msg.senderId == message.senderId && msg.timestamp == message.timestamp) {
+                                // Remove the message from the current user's view
+                                childSnapshot.ref.removeValue().addOnSuccessListener {
+                                    Toast.makeText(this@ChatActivity, "Message deleted for you", Toast.LENGTH_SHORT).show()
+
+                                    // Remove the message from the local list and update the UI
+                                    messageList.find { it.timestamp == message.timestamp && it.senderId == message.senderId }?.let { originalMessage ->
+                                        val index = messageList.indexOf(originalMessage)
+                                        messageList.removeAt(index)
+                                        messageAdapter.notifyDataSetChanged()
+                                    }
+                                }.addOnFailureListener {
+                                    Toast.makeText(this@ChatActivity, "Error: Could not delete the message for you.", Toast.LENGTH_SHORT).show()
+                                }
+                                break
+                            }
+                        }
+                    }
+                } else {
+                    Toast.makeText(this@ChatActivity, "Error: Message not found.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Toast.makeText(this@ChatActivity, "Error: ${databaseError.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onResume() {
