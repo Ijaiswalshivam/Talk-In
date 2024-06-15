@@ -4,5 +4,7 @@ data class Message(
         var message: String? = null,
         val senderId: String? = null,
         val timestamp: Long? = null,
-        val isDateSection: Boolean = false
+        val isDateSection: Boolean = false,
+        val isDeleted: Boolean = false,
+        val messageType: String? = null
 )

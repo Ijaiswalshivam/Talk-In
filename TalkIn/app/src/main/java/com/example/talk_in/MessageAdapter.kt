@@ -1,7 +1,6 @@
 package com.example.talk_in
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,12 +54,32 @@ class MessageAdapter(private val context: Context, private var messageList: Arra
 
             when (holder) {
                 is SentViewHolder -> {
-                    holder.sentMessage.text = AESUtils.decrypt(currentMessage.message.toString())
-                    holder.sendTimestamp.text = formattedTime
+                    if (!currentMessage.isDeleted) {
+                        holder.sentMessage.text = AESUtils.decrypt(currentMessage.message.toString())
+                        holder.sendTimestamp.text = formattedTime
+
+                        holder.sentMessage.setOnClickListener {
+                            (context as? ChatActivity)?.showContextMenu(holder.sentMessage, currentMessage)
+                        }
+                    } else {
+                        holder.sentMessage.text = "You deleted the message"
+                        holder.sendTimestamp.text = formattedTime
+                        holder.sentMessage.setOnClickListener(null)
+                    }
                 }
                 is ReceiveViewHolder -> {
-                    holder.receiveMessage.text = AESUtils.decrypt(currentMessage.message.toString())
-                    holder.receiveTimestamp.text = formattedTime
+                    if (!currentMessage.isDeleted) {
+                        holder.receiveMessage.text = AESUtils.decrypt(currentMessage.message.toString())
+                        holder.receiveTimestamp.text = formattedTime
+
+                        holder.receiveMessage.setOnClickListener {
+                            (context as? ChatActivity)?.showContextMenu(holder.receiveMessage, currentMessage)
+                        }
+                    } else {
+                        holder.receiveMessage.text = "This message was deleted"
+                        holder.receiveTimestamp.text = formattedTime
+                        holder.receiveMessage.setOnClickListener(null)
+                    }
                 }
             }
         }

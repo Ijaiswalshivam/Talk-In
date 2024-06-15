@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@color/transparent_gray">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/transparent_gray">
+
+
+        <TextView
+            android:id="@+id/action_reply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/reply"
+            android:gravity="center_vertical"
+            android:drawablePadding="8dp"
+            android:clickable="true"
+            android:background="@color/transparent_gray"
+            app:drawableStartCompat="@drawable/reply" />
+
+        <TextView
+            android:id="@+id/action_copy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/copy"
+            android:gravity="center_vertical"
+            android:drawablePadding="8dp"
+            android:clickable="true"
+            android:background="@color/transparent_gray"
+            app:drawableStartCompat="@drawable/copy" />
+
+        <TextView
+            android:id="@+id/action_delete_for_you"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/delete_for_me"
+            android:gravity="center_vertical"
+            android:drawablePadding="8dp"
+            android:clickable="true"
+            android:background="@color/transparent_gray"
+            app:drawableStartCompat="@drawable/delete" />
+
+        <TextView
+            android:id="@+id/action_deleted_for_everyone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/delete_for_everyone"
+            android:textColor="@color/red"
+            android:gravity="center_vertical"
+            android:drawablePadding="8dp"
+            android:clickable="true"
+            android:background="@color/transparent_gray"
+            app:drawableStartCompat="@drawable/unsend" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
