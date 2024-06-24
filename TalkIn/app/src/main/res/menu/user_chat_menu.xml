@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/viewProfile" android:title="View Profile"/>
-    <item android:id="@+id/sharedMedia" android:title="Shared Media"/>
-    <item android:id="@+id/search" android:title="Search"/>
-    <item android:id="@+id/locateNow" android:title="Locate Now"/>
-</menu>
