@@ -1,7 +1,41 @@
-# Talk-In: Text Messaging Chat App
+<center>
+<img  src="https://readme-typing-svg.herokuapp.com?color=45ffaa&size=40&width=900&height=80&lines=Welcome-to-Talk-In"/>
+</center>
+
    ![App Logo](https://media.licdn.com/dms/image/D4D0BAQEpT4N2-geGhw/company-logo_200_200/0/1688662723423?e=1723680000&v=beta&t=N_GRW7j75ddQzmfINVyqArWKv7mEMmoRS0wfW62iCq0)
 
+# Talk-In: Text Messaging Chat App
+
 This is a simple text messaging chat app developed using Kotlin. It allows users to send and receive text messages in real-time.
+
+## 🏆 Featured in:
+
+<table>
+  <thead>
+    <tr>
+      <th>Event Name</th>
+      <th>Event Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GirlScript Summer of Code 2024</td>
+      <td>GirlScript Summer of Code is a three-month-long Open Source Program conducted every summer by GirlScript Foundation. It is an initiative to bring more beginners to Open-Source Software Development.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Table of Contents
+
+- [Upcoming Features](#upcoming-features)
+- [Technologies Used](#technologies-used)
+- [Code of Conduct](#code-of-conduct)
+- [Contributing Guidelines](#contributing-guidelines)
+- [Installation](#installation)
+- [Contributing](#contributing)
+- [TalkIn Website](#talkin-website)
+- [License](#license)
+
 
 ## Upcoming Features:
 
@@ -40,6 +74,15 @@ This is a simple text messaging chat app developed using Kotlin. It allows users
    [Retrofit website](https://square.github.io/retrofit/)
 - **Glide:** For efficient image loading and caching.
    [glide website](https://github.com/bumptech/glide)
+
+  
+## Code of Conduct
+
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+
+## Contributing Guidelines
+
+We believe in the power of collaboration. If you have ideas to improve College.ai, feel free to contribute! Check out our [Contribution Guidelines](CONTRIBUTING.md) to get started.
 
 ## Installation:
 
@@ -149,6 +192,9 @@ Contributions are welcome! If you'd like to contribute to this project, follow t
 
 If you find this project useful, please consider giving it a star! ⭐️
 
+## Learn More
+To learn more about the project you must refer to [Learn](learn.md)
+
 
 ## Contact for help:
 1. Admin- Shivam Jaiswal
@@ -158,6 +204,10 @@ If you find this project useful, please consider giving it a star! ⭐️
 2. Mentors- Aman Nishad , Amanpreet Kaur
    For questions or inquiries, please contact [Aman Nishad](mailto:amannishad0512@gmail.com)
    For questions or inquiries, please contact [Amanpreet Kaur](mailto:preetkaur93@gmail.com)
+
+## License
+
+Refer to [LICENSE](LICENSE) file for details.
    
 ## 💪 Thanks to all Contributors
 
